@@ -101,17 +101,13 @@ export const Home = ({ isAdmin }: HomeProps) => {
         {/* Hero Section */}
         <div className="text-center py-12 animate-fade-in">
           <div className="flex justify-center mb-6">
-            <img src={gticLogo} alt="GTIC Logo" className="h-24 w-24 animate-float" />
+            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-24 w-24 animate-float" />
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="hero-text">GTIC</span>
+            <span className="hero-text">Gorilla Tag Intermediate COMP</span>
           </h1>
-          <h2 className="text-2xl md:text-3xl mb-4 text-muted-foreground">
-            Gorilla Tag Intermediate Competition
-          </h2>
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-muted-foreground">
-            The premier competitive league for intermediate Gorilla Tag players. 
-            Swing into action with intense tournaments, skilled teams, and epic battles in the trees!
+            Unleash Your Inner Gorilla.
           </p>
           <Button size="lg" className="glow-primary">
             <Trophy className="mr-2 h-5 w-5" />
