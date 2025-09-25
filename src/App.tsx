@@ -9,7 +9,7 @@ import { Home } from "./pages/Home";
 import { TournamentBracket } from "./pages/TournamentBracket";
 import { OfficialTeams } from "./pages/OfficialTeams";
 import { HallOfFame } from "./pages/HallOfFame";
-import { LeaksAndRumors } from "./pages/LeaksAndRumors";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,7 +30,7 @@ const App = () => {
               <Route path="/bracket" element={<TournamentBracket isAdmin={isAdmin} />} />
               <Route path="/teams" element={<OfficialTeams isAdmin={isAdmin} />} />
               <Route path="/hall-of-fame" element={<HallOfFame isAdmin={isAdmin} />} />
-              <Route path="/leaks" element={<LeaksAndRumors isAdmin={isAdmin} />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

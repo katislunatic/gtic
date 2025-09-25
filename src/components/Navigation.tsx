@@ -24,7 +24,6 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
     { name: "Tournament Bracket", path: "/bracket" },
     { name: "Official Teams", path: "/teams" },
     { name: "Hall of Fame", path: "/hall-of-fame" },
-    { name: "Leaks & Rumors", path: "/leaks" },
   ];
 
   const handleAdminLogin = () => {
