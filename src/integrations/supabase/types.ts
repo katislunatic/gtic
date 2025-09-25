@@ -14,7 +14,171 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      champions: {
+        Row: {
+          captain: string
+          created_at: string
+          final_score: string
+          id: string
+          members: string[]
+          mvp_name: string
+          mvp_stats: string
+          notes: string | null
+          season: string
+          team_name: string
+          updated_at: string
+        }
+        Insert: {
+          captain: string
+          created_at?: string
+          final_score: string
+          id?: string
+          members?: string[]
+          mvp_name: string
+          mvp_stats: string
+          notes?: string | null
+          season: string
+          team_name: string
+          updated_at?: string
+        }
+        Update: {
+          captain?: string
+          created_at?: string
+          final_score?: string
+          id?: string
+          members?: string[]
+          mvp_name?: string
+          mvp_stats?: string
+          notes?: string | null
+          season?: string
+          team_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      leaks: {
+        Row: {
+          author: string
+          comments: number
+          content: string
+          created_at: string
+          credibility: string
+          id: string
+          reactions: number
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          comments?: number
+          content: string
+          created_at?: string
+          credibility: string
+          id?: string
+          reactions?: number
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          comments?: number
+          content?: string
+          created_at?: string
+          credibility?: string
+          id?: string
+          reactions?: number
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      matches: {
+        Row: {
+          created_at: string
+          id: string
+          match_id: string
+          round: string
+          status: string
+          team1: string
+          team1_score: number | null
+          team2: string
+          team2_score: number | null
+          updated_at: string
+          winner: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          match_id: string
+          round: string
+          status?: string
+          team1: string
+          team1_score?: number | null
+          team2: string
+          team2_score?: number | null
+          updated_at?: string
+          winner?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          match_id?: string
+          round?: string
+          status?: string
+          team1?: string
+          team1_score?: number | null
+          team2?: string
+          team2_score?: number | null
+          updated_at?: string
+          winner?: string | null
+        }
+        Relationships: []
+      }
+      teams: {
+        Row: {
+          captain: string
+          created_at: string
+          founded: string | null
+          id: string
+          logo: string | null
+          losses: number
+          members: string[]
+          name: string
+          region: string
+          updated_at: string
+          wins: number
+        }
+        Insert: {
+          captain: string
+          created_at?: string
+          founded?: string | null
+          id?: string
+          logo?: string | null
+          losses?: number
+          members?: string[]
+          name: string
+          region: string
+          updated_at?: string
+          wins?: number
+        }
+        Update: {
+          captain?: string
+          created_at?: string
+          founded?: string | null
+          id?: string
+          logo?: string | null
+          losses?: number
+          members?: string[]
+          name?: string
+          region?: string
+          updated_at?: string
+          wins?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

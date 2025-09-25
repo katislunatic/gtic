@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit2, Trash2, Users, Trophy, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Team {
   id: string;
@@ -23,68 +24,8 @@ interface OfficialTeamsProps {
 
 export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
   const { toast } = useToast();
-  const [teams, setTeams] = useState<Team[]>([
-    {
-      id: "1",
-      name: "Tree Hoppers",
-      captain: "MonkeyMaster",
-      members: ["BranchSwinger", "LeafDancer", "VineRider"],
-      wins: 15,
-      losses: 3,
-      region: "North America",
-      founded: "2023-08-15"
-    },
-    {
-      id: "2", 
-      name: "Jungle Kings",
-      captain: "GorillaChamp",
-      members: ["TreeLord", "BananaKing", "SwingMaster"],
-      wins: 12,
-      losses: 6,
-      region: "Europe",
-      founded: "2023-09-01"
-    },
-    {
-      id: "3",
-      name: "Canopy Crusaders", 
-      captain: "ForestRanger",
-      members: ["TreeGuard", "LeafStorm", "BranchBender"],
-      wins: 10,
-      losses: 8,
-      region: "Asia",
-      founded: "2023-09-15"
-    },
-    {
-      id: "4",
-      name: "Banana Bandits",
-      captain: "YellowFlash",
-      members: ["FruitThief", "PeelMaster", "TropicalAce"],
-      wins: 8,
-      losses: 10,
-      region: "South America",
-      founded: "2023-10-01"
-    },
-    {
-      id: "5",
-      name: "Grove Guardians",
-      captain: "NatureDefender",
-      members: ["EcoWarrior", "GreenGiant", "EarthShaker"],
-      wins: 7,
-      losses: 11,
-      region: "North America", 
-      founded: "2023-10-15"
-    },
-    {
-      id: "6",
-      name: "Vine Swingers",
-      captain: "AerialAce",
-      members: ["SkyDancer", "CloudRider", "WindWalker"],
-      wins: 9,
-      losses: 9,
-      region: "Europe",
-      founded: "2023-11-01"
-    }
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [newTeam, setNewTeam] = useState({
     name: "",
@@ -95,7 +36,45 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
 
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const addTeam = () => {
+  useEffect(() => {
+    fetchTeams();
+  }, []);
+
+  const fetchTeams = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedTeams = data.map(team => ({
+        id: team.id,
+        name: team.name,
+        captain: team.captain,
+        members: team.members,
+        wins: team.wins,
+        losses: team.losses,
+        region: team.region,
+        logo: team.logo,
+        founded: team.founded || team.created_at.split('T')[0]
+      }));
+
+      setTeams(formattedTeams);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load teams",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addTeam = async () => {
     if (!newTeam.name || !newTeam.captain || newTeam.members.some(m => !m)) {
       toast({
         title: "Error",
@@ -105,29 +84,74 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
       return;
     }
 
-    const team: Team = {
-      id: Date.now().toString(),
-      ...newTeam,
-      wins: 0,
-      losses: 0,
-      founded: new Date().toISOString().split('T')[0]
-    };
+    try {
+      const { data, error } = await supabase
+        .from('teams')
+        .insert([{
+          name: newTeam.name,
+          captain: newTeam.captain,
+          members: newTeam.members,
+          wins: 0,
+          losses: 0,
+          region: newTeam.region,
+          founded: new Date().toISOString().split('T')[0]
+        }])
+        .select()
+        .single();
 
-    setTeams([...teams, team]);
-    setNewTeam({ name: "", captain: "", members: ["", "", ""], region: "North America" });
-    setShowAddForm(false);
-    toast({
-      title: "Success",
-      description: "Team added successfully"
-    });
+      if (error) throw error;
+
+      const newFormattedTeam: Team = {
+        id: data.id,
+        name: data.name,
+        captain: data.captain,
+        members: data.members,
+        wins: data.wins,
+        losses: data.losses,
+        region: data.region,
+        logo: data.logo,
+        founded: data.founded
+      };
+
+      setTeams([newFormattedTeam, ...teams]);
+      setNewTeam({ name: "", captain: "", members: ["", "", ""], region: "North America" });
+      setShowAddForm(false);
+      toast({
+        title: "Success",
+        description: "Team added successfully"
+      });
+    } catch (error) {
+      console.error('Error adding team:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add team",
+        variant: "destructive"
+      });
+    }
   };
 
-  const deleteTeam = (id: string) => {
-    setTeams(teams.filter(t => t.id !== id));
-    toast({
-      title: "Success",
-      description: "Team removed"
-    });
+  const deleteTeam = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('teams')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setTeams(teams.filter(t => t.id !== id));
+      toast({
+        title: "Success",
+        description: "Team removed"
+      });
+    } catch (error) {
+      console.error('Error deleting team:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete team",
+        variant: "destructive"
+      });
+    }
   };
 
   const getWinRate = (wins: number, losses: number) => {
@@ -150,6 +174,17 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
     const bWinRate = parseFloat(getWinRate(b.wins, b.losses));
     return bWinRate - aWinRate;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20 pb-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading teams...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20 pb-8">

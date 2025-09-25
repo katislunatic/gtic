@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Star, Crown, Award, Plus, Edit2, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Champion {
   id: string;
@@ -24,32 +25,47 @@ interface HallOfFameProps {
 
 export const HallOfFame = ({ isAdmin }: HallOfFameProps) => {
   const { toast } = useToast();
-  const [champions, setChampions] = useState<Champion[]>([
-    {
-      id: "1",
-      season: "Season 1",
-      teamName: "Jungle Legends",
-      captain: "TreeKing99",
-      members: ["BranchMaster", "VineSwinger", "LeafDancer"],
-      finalScore: "3-1",
-      mvp: "TreeKing99",
-      mvpStats: "15 wins, 2 losses, 85% accuracy",
-      date: "2023-12-15",
-      specialNotes: "First ever GTIC champions! Set the standard for competitive Gorilla Tag."
-    },
-    {
-      id: "2", 
-      season: "Season 2",
-      teamName: "Tree Hoppers",
-      captain: "MonkeyMaster",
-      members: ["BranchSwinger", "LeafDancer", "VineRider"],
-      finalScore: "3-2",
-      mvp: "BranchSwinger",
-      mvpStats: "18 wins, 3 losses, 90% accuracy",
-      date: "2023-12-30",
-      specialNotes: "Epic comeback from 0-2 down in the finals. Most thrilling championship match yet!"
+  const [champions, setChampions] = useState<Champion[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchChampions();
+  }, []);
+
+  const fetchChampions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('champions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedChampions = data.map(champion => ({
+        id: champion.id,
+        season: champion.season,
+        teamName: champion.team_name,
+        captain: champion.captain,
+        members: champion.members,
+        finalScore: champion.final_score,
+        mvp: champion.mvp_name,
+        mvpStats: champion.mvp_stats,
+        date: champion.created_at.split('T')[0],
+        specialNotes: champion.notes
+      }));
+
+      setChampions(formattedChampions);
+    } catch (error) {
+      console.error('Error fetching champions:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load champions",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const [newChampion, setNewChampion] = useState({
     season: "",
@@ -64,7 +80,7 @@ export const HallOfFame = ({ isAdmin }: HallOfFameProps) => {
 
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const addChampion = () => {
+  const addChampion = async () => {
     if (!newChampion.season || !newChampion.teamName || !newChampion.captain || !newChampion.mvp) {
       toast({
         title: "Error",
@@ -74,36 +90,85 @@ export const HallOfFame = ({ isAdmin }: HallOfFameProps) => {
       return;
     }
 
-    const champion: Champion = {
-      id: Date.now().toString(),
-      ...newChampion,
-      date: new Date().toISOString().split('T')[0]
-    };
+    try {
+      const { data, error } = await supabase
+        .from('champions')
+        .insert([{
+          season: newChampion.season,
+          team_name: newChampion.teamName,
+          captain: newChampion.captain,
+          members: newChampion.members.filter(m => m),
+          final_score: newChampion.finalScore,
+          mvp_name: newChampion.mvp,
+          mvp_stats: newChampion.mvpStats,
+          notes: newChampion.specialNotes
+        }])
+        .select()
+        .single();
 
-    setChampions([champion, ...champions]);
-    setNewChampion({
-      season: "",
-      teamName: "",
-      captain: "",
-      members: ["", "", ""],
-      finalScore: "",
-      mvp: "",
-      mvpStats: "",
-      specialNotes: ""
-    });
-    setShowAddForm(false);
-    toast({
-      title: "Success",
-      description: "Champion added to Hall of Fame"
-    });
+      if (error) throw error;
+
+      const formattedChampion: Champion = {
+        id: data.id,
+        season: data.season,
+        teamName: data.team_name,
+        captain: data.captain,
+        members: data.members,
+        finalScore: data.final_score,
+        mvp: data.mvp_name,
+        mvpStats: data.mvp_stats,
+        date: data.created_at.split('T')[0],
+        specialNotes: data.notes
+      };
+
+      setChampions([formattedChampion, ...champions]);
+      setNewChampion({
+        season: "",
+        teamName: "",
+        captain: "",
+        members: ["", "", ""],
+        finalScore: "",
+        mvp: "",
+        mvpStats: "",
+        specialNotes: ""
+      });
+      setShowAddForm(false);
+      toast({
+        title: "Success",
+        description: "Champion added to Hall of Fame"
+      });
+    } catch (error) {
+      console.error('Error adding champion:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add champion",
+        variant: "destructive"
+      });
+    }
   };
 
-  const deleteChampion = (id: string) => {
-    setChampions(champions.filter(c => c.id !== id));
-    toast({
-      title: "Success",
-      description: "Champion removed from Hall of Fame"
-    });
+  const deleteChampion = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('champions')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setChampions(champions.filter(c => c.id !== id));
+      toast({
+        title: "Success",
+        description: "Champion removed from Hall of Fame"
+      });
+    } catch (error) {
+      console.error('Error deleting champion:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete champion",
+        variant: "destructive"
+      });
+    }
   };
 
   const getSeasonIcon = (season: string) => {
@@ -111,6 +176,17 @@ export const HallOfFame = ({ isAdmin }: HallOfFameProps) => {
     if (season.includes("2")) return <Trophy className="h-6 w-6 text-primary" />;
     return <Award className="h-6 w-6 text-secondary" />;
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20 pb-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading Hall of Fame...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20 pb-8">

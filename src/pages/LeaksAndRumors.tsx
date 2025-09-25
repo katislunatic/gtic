@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Eye, MessageCircle, Zap, Plus, Edit2, Trash2, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Leak {
   id: string;
@@ -24,52 +25,46 @@ interface LeaksAndRumorsProps {
 
 export const LeaksAndRumors = ({ isAdmin }: LeaksAndRumorsProps) => {
   const { toast } = useToast();
-  const [leaks, setLeaks] = useState<Leak[]>([
-    {
-      id: "1",
-      title: "🔥 New Tournament Format Coming?",
-      content: "Whispers from insider sources suggest Season 4 might introduce a revolutionary double-elimination bracket system. Teams would get a second chance after their first loss, making tournaments more exciting and fair!",
-      type: "leak",
-      credibility: "high",
-      date: "2024-01-16",
-      author: "InsiderMonkey",
-      reactions: 47,
-      comments: 23
-    },
-    {
-      id: "2",
-      title: "🎯 Special Gorilla Tag Tournament Rules?",
-      content: "Rumor has it that GTIC Season 4 will feature special tournament modes including 'King of the Tree' and 'Banana Rush' variants. Could this shake up the competitive meta?",
-      type: "rumor", 
-      credibility: "medium",
-      date: "2024-01-14",
-      author: "TreeTalker",
-      reactions: 32,
-      comments: 18
-    },
-    {
-      id: "3",
-      title: "👑 Mystery Team Registration",
-      content: "A new team has quietly registered for Season 3 with the cryptic name 'Shadow Swingers.' Their roster is completely unknown, but early practice sessions suggest they might be former pros under new identities...",
-      type: "speculation",
-      credibility: "low",
-      date: "2024-01-12",
-      author: "SpectatorApe",
-      reactions: 28,
-      comments: 15
-    },
-    {
-      id: "4",
-      title: "🚨 CONFIRMED: Prize Pool Increase",
-      content: "OFFICIAL CONFIRMATION: Season 3 prize pool has been increased by 50%! Winners will receive premium Gorilla Tag cosmetics and exclusive GTIC merchandise. This is going to be the biggest season yet!",
-      type: "teaser",
-      credibility: "confirmed",
-      date: "2024-01-10",
-      author: "GTIC_Official",
-      reactions: 156,
-      comments: 67
+  const [leaks, setLeaks] = useState<Leak[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchLeaks();
+  }, []);
+
+  const fetchLeaks = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('leaks')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedLeaks = data.map(leak => ({
+        id: leak.id,
+        title: leak.title,
+        content: leak.content,
+        type: leak.type as "leak" | "rumor" | "teaser" | "speculation",
+        credibility: leak.credibility as "low" | "medium" | "high" | "confirmed",
+        date: leak.created_at.split('T')[0],
+        author: leak.author,
+        reactions: leak.reactions,
+        comments: leak.comments
+      }));
+
+      setLeaks(formattedLeaks);
+    } catch (error) {
+      console.error('Error fetching leaks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load leaks",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const [newLeak, setNewLeak] = useState({
     title: "",
@@ -80,7 +75,7 @@ export const LeaksAndRumors = ({ isAdmin }: LeaksAndRumorsProps) => {
 
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const addLeak = () => {
+  const addLeak = async () => {
     if (!newLeak.title || !newLeak.content) {
       toast({
         title: "Error",
@@ -90,30 +85,74 @@ export const LeaksAndRumors = ({ isAdmin }: LeaksAndRumorsProps) => {
       return;
     }
 
-    const leak: Leak = {
-      id: Date.now().toString(),
-      ...newLeak,
-      date: new Date().toISOString().split('T')[0],
-      author: "Admin",
-      reactions: 0,
-      comments: 0
-    };
+    try {
+      const { data, error } = await supabase
+        .from('leaks')
+        .insert([{
+          title: newLeak.title,
+          content: newLeak.content,
+          type: newLeak.type,
+          credibility: newLeak.credibility,
+          author: "Admin",
+          reactions: 0,
+          comments: 0
+        }])
+        .select()
+        .single();
 
-    setLeaks([leak, ...leaks]);
-    setNewLeak({ title: "", content: "", type: "rumor", credibility: "low" });
-    setShowAddForm(false);
-    toast({
-      title: "Success",
-      description: "Leak/rumor posted successfully"
-    });
+      if (error) throw error;
+
+      const formattedLeak: Leak = {
+        id: data.id,
+        title: data.title,
+        content: data.content,
+        type: data.type as "leak" | "rumor" | "teaser" | "speculation",
+        credibility: data.credibility as "low" | "medium" | "high" | "confirmed",
+        date: data.created_at.split('T')[0],
+        author: data.author,
+        reactions: data.reactions,
+        comments: data.comments
+      };
+
+      setLeaks([formattedLeak, ...leaks]);
+      setNewLeak({ title: "", content: "", type: "rumor", credibility: "low" });
+      setShowAddForm(false);
+      toast({
+        title: "Success",
+        description: "Leak/rumor posted successfully"
+      });
+    } catch (error) {
+      console.error('Error adding leak:', error);
+      toast({
+        title: "Error",
+        description: "Failed to post leak/rumor",
+        variant: "destructive"
+      });
+    }
   };
 
-  const deleteLeak = (id: string) => {
-    setLeaks(leaks.filter(l => l.id !== id));
-    toast({
-      title: "Success",
-      description: "Post deleted"
-    });
+  const deleteLeak = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('leaks')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setLeaks(leaks.filter(l => l.id !== id));
+      toast({
+        title: "Success",
+        description: "Post deleted"
+      });
+    } catch (error) {
+      console.error('Error deleting leak:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete post",
+        variant: "destructive"
+      });
+    }
   };
 
   const getTypeColor = (type: string) => {
@@ -142,6 +181,17 @@ export const LeaksAndRumors = ({ isAdmin }: LeaksAndRumorsProps) => {
       default: return <AlertTriangle className="h-4 w-4" />;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20 pb-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading leaks & rumors...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20 pb-8">

@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Edit2, Trophy, Users, Calendar } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Match {
   id: string;
@@ -20,38 +22,103 @@ interface TournamentBracketProps {
 }
 
 export const TournamentBracket = ({ isAdmin }: TournamentBracketProps) => {
-  const [matches, setMatches] = useState<Match[]>([
-    // Round 1
-    { id: "1", team1: "Tree Hoppers", team2: "Branch Breakers", score1: 3, score2: 1, round: "Round 1", status: "completed", winner: "Tree Hoppers" },
-    { id: "2", team1: "Jungle Kings", team2: "Vine Swingers", score1: 2, score2: 1, round: "Round 1", status: "completed", winner: "Jungle Kings" },
-    { id: "3", team1: "Canopy Crusaders", team2: "Leaf Legends", score1: null, score2: null, round: "Round 1", status: "live" },
-    { id: "4", team1: "Banana Bandits", team2: "Grove Guardians", score1: null, score2: null, round: "Round 1", status: "upcoming" },
-    
-    // Semi Finals
-    { id: "5", team1: "Tree Hoppers", team2: "Jungle Kings", score1: null, score2: null, round: "Semi Finals", status: "upcoming" },
-    { id: "6", team1: "TBD", team2: "TBD", score1: null, score2: null, round: "Semi Finals", status: "upcoming" },
-    
-    // Finals
-    { id: "7", team1: "TBD", team2: "TBD", score1: null, score2: null, round: "Finals", status: "upcoming" },
-  ]);
+  const { toast } = useToast();
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const updateScore = (matchId: string, team: 1 | 2, score: number) => {
-    setMatches(matches.map(match => {
-      if (match.id === matchId) {
-        const updated = { ...match };
-        if (team === 1) updated.score1 = score;
-        else updated.score2 = score;
-        
-        // Determine winner if both scores are set
-        if (updated.score1 !== null && updated.score2 !== null) {
-          updated.winner = updated.score1 > updated.score2 ? updated.team1 : updated.team2;
-          updated.status = "completed";
-        }
-        
-        return updated;
+  useEffect(() => {
+    fetchMatches();
+  }, []);
+
+  const fetchMatches = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('matches')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      const formattedMatches = data.map(match => ({
+        id: match.id,
+        team1: match.team1,
+        team2: match.team2,
+        score1: match.team1_score,
+        score2: match.team2_score,
+        round: match.round,
+        status: match.status as "upcoming" | "live" | "completed",
+        winner: match.winner
+      }));
+
+      setMatches(formattedMatches);
+    } catch (error) {
+      console.error('Error fetching matches:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load matches",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateScore = async (matchId: string, team: 1 | 2, score: number) => {
+    try {
+      // Find the current match to get both scores
+      const currentMatch = matches.find(m => m.id === matchId);
+      if (!currentMatch) return;
+
+      const team1Score = team === 1 ? score : currentMatch.score1;
+      const team2Score = team === 2 ? score : currentMatch.score2;
+      
+      let winner = null;
+      let status = currentMatch.status;
+      
+      // Determine winner if both scores are set
+      if (team1Score !== null && team2Score !== null) {
+        winner = team1Score > team2Score ? currentMatch.team1 : currentMatch.team2;
+        status = "completed";
       }
-      return match;
-    }));
+
+      const { error } = await supabase
+        .from('matches')
+        .update({
+          team1_score: team1Score,
+          team2_score: team2Score,
+          winner,
+          status
+        })
+        .eq('id', matchId);
+
+      if (error) throw error;
+
+      // Update local state
+      setMatches(matches.map(match => {
+        if (match.id === matchId) {
+          return {
+            ...match,
+            score1: team1Score,
+            score2: team2Score,
+            winner,
+            status: status as "upcoming" | "live" | "completed"
+          };
+        }
+        return match;
+      }));
+
+      toast({
+        title: "Success",
+        description: "Match updated successfully"
+      });
+    } catch (error) {
+      console.error('Error updating match:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update match",
+        variant: "destructive"
+      });
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -71,6 +138,17 @@ export const TournamentBracket = ({ isAdmin }: TournamentBracketProps) => {
   };
 
   const roundMatches = (round: string) => matches.filter(m => m.round === round);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20 pb-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading tournament bracket...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20 pb-8">
