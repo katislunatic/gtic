@@ -117,7 +117,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
         {/* Stats Grid */}
         <div className="flex flex-wrap justify-center gap-4 mb-12 animate-bounce-in">
           {stats.map((stat, index) => (
-            <Card key={index} className="team-card text-center">
+            <Card key={index} className="team-card text-center w-48">
               <CardContent className="p-6">
                 <stat.icon className={`h-8 w-8 mx-auto mb-2 ${stat.color}`} />
                 <div className="text-2xl font-bold mb-1">{stat.value}</div>
