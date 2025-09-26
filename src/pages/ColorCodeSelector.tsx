@@ -89,7 +89,7 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
                   onValueChange={setRed}
                   max={255}
                   min={0}
-                  step={1}
+                  step={5}
                   className="w-full [&_.range]:bg-red-500"
                 />
               </div>
@@ -109,7 +109,7 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
                   onValueChange={setGreen}
                   max={255}
                   min={0}
-                  step={1}
+                  step={5}
                   className="w-full [&_.range]:bg-green-500"
                 />
               </div>
@@ -129,7 +129,7 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
                   onValueChange={setBlue}
                   max={255}
                   min={0}
-                  step={1}
+                  step={5}
                   className="w-full [&_.range]:bg-blue-500"
                 />
               </div>
