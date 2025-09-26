@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Home } from "./pages/Home";
 import { OfficialTeams } from "./pages/OfficialTeams";
+import { ColorCodeSelector } from "./pages/ColorCodeSelector";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
@@ -27,6 +28,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home isAdmin={isAdmin} />} />
               <Route path="/teams" element={<OfficialTeams isAdmin={isAdmin} />} />
+              <Route path="/color-selector" element={<ColorCodeSelector isAdmin={isAdmin} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

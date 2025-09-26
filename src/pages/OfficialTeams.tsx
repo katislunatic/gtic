@@ -47,6 +47,18 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
           </h1>
         </div>
 
+        {/* Emoji Key */}
+        <Card className="team-card mb-8">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold mb-4 text-center">Key</h2>
+            <div className="flex items-center justify-center space-x-2 text-sm">
+              <span className="text-lg">🔄</span>
+              <span className="font-medium">= Returning Team</span>
+              <span className="text-muted-foreground">— Teams returning from last season competing again this season.</span>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="team-card">
           <CardContent className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
