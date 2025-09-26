@@ -6,11 +6,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Home } from "./pages/Home";
-import { TournamentBracket } from "./pages/TournamentBracket";
 import { OfficialTeams } from "./pages/OfficialTeams";
-import { HallOfFame } from "./pages/HallOfFame";
 
 import NotFound from "./pages/NotFound";
+import { Footer } from "./components/Footer";
 
 const queryClient = new QueryClient();
 
@@ -27,10 +26,7 @@ const App = () => {
             <Navigation onAdminAccess={setIsAdmin} isAdmin={isAdmin} />
             <Routes>
               <Route path="/" element={<Home isAdmin={isAdmin} />} />
-              <Route path="/bracket" element={<TournamentBracket isAdmin={isAdmin} />} />
               <Route path="/teams" element={<OfficialTeams isAdmin={isAdmin} />} />
-              <Route path="/hall-of-fame" element={<HallOfFame isAdmin={isAdmin} />} />
-              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2 } from "lucide-react";
+import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Footer } from "@/components/Footer";
 import gticLogo from "@/assets/gtic-logo.png";
 
 interface Announcement {
@@ -24,23 +25,9 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([
     {
       id: "1",
-      title: "Season 3 Tournament Begins!",
-      content: "The third season of GTIC is officially underway! 32 teams have registered and brackets are now live. May the best gorillas win!",
+      title: "Welcome to the official GTIC website!",
+      content: "Welcome to the official GTIC website!",
       date: "2024-01-15",
-      type: "tournament"
-    },
-    {
-      id: "2", 
-      title: "New Team Registration Rules",
-      content: "Updated registration requirements now include team logo submission and captain verification. Check the teams page for details.",
-      date: "2024-01-10",
-      type: "update"
-    },
-    {
-      id: "3",
-      title: "Hall of Fame Updated",
-      content: "Season 2 champions Tree Hoppers have been added to our Hall of Fame! Congratulations on an amazing run.",
-      date: "2024-01-05",
       type: "news"
     }
   ]);
@@ -108,9 +95,11 @@ export const Home = ({ isAdmin }: HomeProps) => {
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-muted-foreground">
             Unleash Your Inner Gorilla.
           </p>
-          <Button size="lg" className="glow-primary">
-            <Trophy className="mr-2 h-5 w-5" />
-            Join the Competition
+          <Button size="lg" className="glow-primary" asChild>
+            <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer">
+              <Trophy className="mr-2 h-5 w-5" />
+              Join the Competition
+            </a>
           </Button>
         </div>
 
@@ -125,6 +114,41 @@ export const Home = ({ isAdmin }: HomeProps) => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Info Sections */}
+        <div className="space-y-8 mb-12">
+          <Card className="team-card animate-fade-in">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Info className="mr-2 h-5 w-5 text-primary" />
+                What is Gorilla Tag Intermediate COMP?
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                GTIC is a competitive Gorilla Tag league, focusing on Gorilla Tag and its one-of-a-kind movement system. GTIC unites players of all skills and is the hub for all competitive Gorilla Tag players.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="team-card animate-fade-in" style={{animationDelay: '100ms'}}>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <GamepadIcon className="mr-2 h-5 w-5 text-secondary" />
+                Tournament
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Watch or participate against the best Gorilla Tag teams in the GTIC tournament. For more info join the{" "}
+                <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                  Discord
+                </a>
+                .
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Admin Add Announcement */}
@@ -168,7 +192,6 @@ export const Home = ({ isAdmin }: HomeProps) => {
 
         {/* Announcements */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-center mb-8">Latest Announcements</h2>
           {announcements.map((announcement, index) => (
             <Card key={announcement.id} className="team-card animate-fade-in" style={{animationDelay: `${index * 100}ms`}}>
               <CardHeader>
@@ -199,6 +222,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
