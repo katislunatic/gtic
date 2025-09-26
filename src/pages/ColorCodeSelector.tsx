@@ -9,6 +9,8 @@ interface ColorCodeSelectorProps {
 }
 
 export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
+  const rgbSnapValues = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255];
+  
   const [boxSize, setBoxSize] = useState([200]);
   const [red, setRed] = useState([0]);
   const [green, setGreen] = useState([0]);
@@ -21,7 +23,10 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
     setBlue([0]);
   };
 
-  const rgbColor = `rgb(${red[0]}, ${green[0]}, ${blue[0]})`;
+  const getRgbValue = (sliderValue: number) => rgbSnapValues[sliderValue];
+  const getPositionIndex = (sliderValue: number) => sliderValue;
+
+  const rgbColor = `rgb(${getRgbValue(red[0])}, ${getRgbValue(green[0])}, ${getRgbValue(blue[0])})`;
 
   return (
     <div className="min-h-screen pt-20 pb-8">
@@ -79,17 +84,17 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-red-500">R</label>
                   <div className="flex items-center space-x-2 text-sm">
-                    <span>{red[0]}</span>
+                    <span>{getPositionIndex(red[0])}</span>
                     <span className="text-muted-foreground">|</span>
-                    <span>{red[0]}</span>
+                    <span>{getRgbValue(red[0])}</span>
                   </div>
                 </div>
                 <Slider
                   value={red}
                   onValueChange={setRed}
-                  max={255}
+                  max={9}
                   min={0}
-                  step={5}
+                  step={1}
                   className="w-full [&_.range]:bg-red-500"
                 />
               </div>
@@ -99,17 +104,17 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-green-500">G</label>
                   <div className="flex items-center space-x-2 text-sm">
-                    <span>{green[0]}</span>
+                    <span>{getPositionIndex(green[0])}</span>
                     <span className="text-muted-foreground">|</span>
-                    <span>{green[0]}</span>
+                    <span>{getRgbValue(green[0])}</span>
                   </div>
                 </div>
                 <Slider
                   value={green}
                   onValueChange={setGreen}
-                  max={255}
+                  max={9}
                   min={0}
-                  step={5}
+                  step={1}
                   className="w-full [&_.range]:bg-green-500"
                 />
               </div>
@@ -119,17 +124,17 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-blue-500">B</label>
                   <div className="flex items-center space-x-2 text-sm">
-                    <span>{blue[0]}</span>
+                    <span>{getPositionIndex(blue[0])}</span>
                     <span className="text-muted-foreground">|</span>
-                    <span>{blue[0]}</span>
+                    <span>{getRgbValue(blue[0])}</span>
                   </div>
                 </div>
                 <Slider
                   value={blue}
                   onValueChange={setBlue}
-                  max={255}
+                  max={9}
                   min={0}
-                  step={5}
+                  step={1}
                   className="w-full [&_.range]:bg-blue-500"
                 />
               </div>
