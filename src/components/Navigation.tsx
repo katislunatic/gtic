@@ -3,7 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Settings, Menu, X, Youtube, Music, Tv, MessageCircle } from "lucide-react";
+import { Settings, Menu, X } from "lucide-react";
+import youtubeLogo from "@/assets/youtube-logo.svg";
+import tiktokLogo from "@/assets/tiktok-logo.svg";
+import twitchLogo from "@/assets/twitch-logo.svg";
+import discordLogo from "@/assets/discord-logo.svg";
 import { useToast } from "@/hooks/use-toast";
 import gticLogo from "@/assets/gtic-logo.png";
 
@@ -86,7 +90,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               className="text-muted-foreground hover:text-primary transition-colors"
             >
               <Button variant="ghost" size="icon">
-                <Youtube className="h-4 w-4" />
+                <img src={youtubeLogo} alt="YouTube" className="h-4 w-4" />
               </Button>
             </a>
             <a
@@ -96,7 +100,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               className="text-muted-foreground hover:text-primary transition-colors"
             >
               <Button variant="ghost" size="icon">
-                <Music className="h-4 w-4" />
+                <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
               </Button>
             </a>
             <a
@@ -106,7 +110,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               className="text-muted-foreground hover:text-primary transition-colors"
             >
               <Button variant="ghost" size="icon">
-                <Tv className="h-4 w-4" />
+                <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
               </Button>
             </a>
             <a
@@ -116,7 +120,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               className="text-muted-foreground hover:text-primary transition-colors"
             >
               <Button variant="ghost" size="icon">
-                <MessageCircle className="h-4 w-4" />
+                <img src={discordLogo} alt="Discord" className="h-4 w-4" />
               </Button>
             </a>
             
@@ -188,7 +192,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     <Button variant="ghost" size="icon">
-                      <Youtube className="h-4 w-4" />
+                      <img src={youtubeLogo} alt="YouTube" className="h-4 w-4" />
                     </Button>
                   </a>
                   <a
@@ -198,7 +202,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     <Button variant="ghost" size="icon">
-                      <Music className="h-4 w-4" />
+                      <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
                     </Button>
                   </a>
                   <a
@@ -208,7 +212,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     <Button variant="ghost" size="icon">
-                      <Tv className="h-4 w-4" />
+                      <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
                     </Button>
                   </a>
                   <a
@@ -218,7 +222,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     <Button variant="ghost" size="icon">
-                      <MessageCircle className="h-4 w-4" />
+                      <img src={discordLogo} alt="Discord" className="h-4 w-4" />
                     </Button>
                   </a>
                 </div>
