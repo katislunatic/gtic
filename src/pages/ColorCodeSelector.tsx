@@ -40,7 +40,7 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
           </p>
         </div>
 
-        <Card className="team-card">
+        <Card className="border bg-card text-card-foreground shadow-sm">
           <CardContent className="p-8 space-y-8">
             {/* Color Preview Box */}
             <div className="flex justify-center">
