@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Settings, Menu, X } from "lucide-react";
+import { Settings, Menu, X, Youtube, Music, Tv, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import gticLogo from "@/assets/gtic-logo.png";
 
@@ -76,8 +76,51 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             ))}
           </div>
 
-          {/* Admin Button */}
+          {/* Social Media Icons & Admin Button */}
           <div className="hidden md:flex items-center space-x-2">
+            {/* Social Media Links */}
+            <a
+              href="https://www.youtube.com/@gticleague"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Button variant="ghost" size="icon">
+                <Youtube className="h-4 w-4" />
+              </Button>
+            </a>
+            <a
+              href="https://www.tiktok.com/@gtic_league?_t=ZT-8xSOoLf3VDJ&_r=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Button variant="ghost" size="icon">
+                <Music className="h-4 w-4" />
+              </Button>
+            </a>
+            <a
+              href="https://www.twitch.tv/gticleague"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Button variant="ghost" size="icon">
+                <Tv className="h-4 w-4" />
+              </Button>
+            </a>
+            <a
+              href="https://discord.gg/hB4V4ywqxj"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Button variant="ghost" size="icon">
+                <MessageCircle className="h-4 w-4" />
+              </Button>
+            </a>
+            
+            {/* Admin Button */}
             {isAdmin ? (
               <Button variant="outline" onClick={handleAdminLogout} className="text-secondary">
                 Admin Mode
@@ -136,6 +179,50 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                 </Link>
               ))}
               <div className="pt-2 border-t border-border">
+                {/* Social Media Links */}
+                <div className="flex justify-center space-x-2 mb-4">
+                  <a
+                    href="https://www.youtube.com/@gticleague"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Button variant="ghost" size="icon">
+                      <Youtube className="h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@gtic_league?_t=ZT-8xSOoLf3VDJ&_r=1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Button variant="ghost" size="icon">
+                      <Music className="h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://www.twitch.tv/gticleague"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Button variant="ghost" size="icon">
+                      <Tv className="h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://discord.gg/hB4V4ywqxj"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Button variant="ghost" size="icon">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                  </a>
+                </div>
+                
                 {isAdmin ? (
                   <Button variant="outline" onClick={handleAdminLogout} className="w-full text-secondary">
                     Logout Admin
