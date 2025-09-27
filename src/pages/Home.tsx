@@ -87,7 +87,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
         {/* Hero Section */}
         <div className="text-center py-12 animate-fade-in">
           <div className="flex justify-center mb-6">
-            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-24 w-24 animate-float" />
+            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-32 w-32 animate-float" />
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="hero-text">Gorilla Tag Intermediate COMP</span>

@@ -63,7 +63,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-10 w-10 animate-float" />
+            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-10 w-10" />
             <span className="text-xl font-bold hero-text">Gorilla Tag Intermediate COMP</span>
           </Link>
 
