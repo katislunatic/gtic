@@ -45,7 +45,7 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
             {/* Color Preview Box */}
             <div className="flex justify-center">
               <div 
-                className="border-2 border-muted rounded-lg transition-all duration-200"
+                className="border-2 border-muted rounded-lg"
                 style={{ 
                   width: `${boxSize[0]}px`, 
                   height: `${boxSize[0]}px`,
@@ -143,7 +143,7 @@ export const ColorCodeSelector = ({ isAdmin }: ColorCodeSelectorProps) => {
             {/* Color Information */}
             <div className="bg-muted/20 rounded-lg p-4 text-center">
               <p className="text-sm text-muted-foreground mb-2">Current Color:</p>
-              <p className="font-mono text-sm">{rgbColor}</p>
+              <p className="font-mono text-sm">R: {red[0]}, G: {green[0]}, B: {blue[0]}</p>
             </div>
           </CardContent>
         </Card>
