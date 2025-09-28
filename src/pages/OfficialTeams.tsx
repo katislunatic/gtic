@@ -25,7 +25,6 @@ const teams = [
   { code: "MNTY", name: "Mentality", returning: false },
   { code: "TSM", name: "The Sexy Monkeys", returning: false },
   { code: "GLTY", name: "Glitchy", returning: false },
-  { code: "556", name: "556", returning: false },
   { code: "PRX", name: "Paper Rex", returning: true },
   { code: "TTC", name: "The Time Cappers", returning: false },
   { code: "TLM", name: "The Lazy Monkeys", returning: false },
@@ -35,6 +34,10 @@ const teams = [
   { code: "SV", name: "Sugar Virus", returning: false },
   { code: "TFR", name: "The Forest Runners", returning: false },
   { code: "CDD", name: "Cod Doodle Destroyers", returning: false },
+  { code: "ITZ", name: "In The Zone", returning: false },
+  { code: "SVL", name: "SALVATION", returning: false },
+  { code: "TAM", name: "The Astro Monks", returning: false },
+  { code: "GL", name: "Goblins Lagoon", returning: false },
 ];
 
 export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
