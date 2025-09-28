@@ -26,7 +26,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
     {
       id: "1",
       title: "Welcome to the official GTIC website!",
-      content: "Welcome to the official GTIC website!",
+      content: "The GTIC website is the official home of Gorilla Tag Intermediate COMP. Here you can stay updated with the latest news and announcements, explore the official list of registered teams, and use the built-in color code selector to test and pick your in-game colors. The FAQ section is available to answer common questions, and you can also find direct links to GTIC's YouTube, TikTok, Twitch, and Discord. Everything you need to follow or compete in GTIC is all in one place.",
       date: "2024-01-15",
       type: "news"
     }
