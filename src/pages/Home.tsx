@@ -213,7 +213,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
                     </div>
                   )}
                 </div>
-                <CardTitle>{announcement.title}</CardTitle>
+                <CardTitle>Welcome to the official GTIC Website!</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">{announcement.content}</p>
