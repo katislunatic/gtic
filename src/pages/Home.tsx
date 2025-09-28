@@ -197,11 +197,10 @@ export const Home = ({ isAdmin }: HomeProps) => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Badge className={getTypeColor(announcement.type)}>
-                      {announcement.type.charAt(0).toUpperCase() + announcement.type.slice(1)}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">{announcement.date}</span>
-                  </div>
+                     <Badge className={getTypeColor(announcement.type)}>
+                       {announcement.type.charAt(0).toUpperCase() + announcement.type.slice(1)}
+                     </Badge>
+                   </div>
                   {isAdmin && (
                     <div className="flex space-x-2">
                       <Button variant="ghost" size="sm" onClick={() => setEditingId(announcement.id)}>
