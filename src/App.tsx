@@ -8,6 +8,7 @@ import { Navigation } from "@/components/Navigation";
 import { Home } from "./pages/Home";
 import { OfficialTeams } from "./pages/OfficialTeams";
 import { ColorCodeSelector } from "./pages/ColorCodeSelector";
+import { FAQ } from "./pages/FAQ";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
@@ -29,6 +30,7 @@ const App = () => {
               <Route path="/" element={<Home isAdmin={isAdmin} />} />
               <Route path="/teams" element={<OfficialTeams isAdmin={isAdmin} />} />
               <Route path="/color-selector" element={<ColorCodeSelector isAdmin={isAdmin} />} />
+              <Route path="/faq" element={<FAQ isAdmin={isAdmin} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

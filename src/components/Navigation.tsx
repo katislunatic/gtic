@@ -27,6 +27,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
     { name: "Home", path: "/" },
     { name: "Official Teams", path: "/teams" },
     { name: "Color Code Selector", path: "/color-selector" },
+    { name: "FAQ", path: "/faq" },
   ];
 
   const handleAdminLogin = () => {
