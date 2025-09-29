@@ -24,10 +24,10 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   const { toast } = useToast();
 
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "Official Teams", path: "/team" },
-    { name: "Color Code Selector", path: "/color-selector" },
-    { name: "FAQ", path: "/faq" },
+    { name: "Home", path: "https://gticomp.short.gy/" },
+    { name: "Official Teams", path: "https://gticomp.short.gy/team" },
+    { name: "Color Code Selector", path: "https://gticomp.short.gy/color-selector" },
+    { name: "FAQ", path: "https://gticomp.short.gy/faq" },
   ];
 
   const handleAdminLogin = () => {
@@ -63,21 +63,21 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <a href="https://gticomp.short.gy/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-10 w-10" />
             <span className="text-xl font-bold hero-text">Gorilla Tag Intermediate COMP</span>
-          </Link>
+          </a>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
-              <Link
+              <a
                 key={item.name}
-                to={item.path}
-                className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
+                href={item.path}
+                className="nav-link"
               >
                 {item.name}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -174,14 +174,14 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
           <div className="md:hidden pb-4 animate-slide-in">
             <div className="flex flex-col space-y-2">
               {navItems.map((item) => (
-                <Link
+                <a
                   key={item.name}
-                  to={item.path}
-                  className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
+                  href={item.path}
+                  className="nav-link"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
-                </Link>
+                </a>
               ))}
               <div className="pt-2 border-t border-border">
                 {/* Social Media Links */}
