@@ -25,7 +25,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
 
   const navItems = [
     { name: "Home", path: "https://gticomp.short.gy/" },
-    { name: "Official Teams", path: "https://gticomp.short.gy/team" },
+    { name: "Official Teams", path: "https://gticomp.short.gy/teams" },
     { name: "Color Code Selector", path: "https://gticomp.short.gy/color-selector" },
     { name: "FAQ", path: "https://gticomp.short.gy/faq" },
   ];

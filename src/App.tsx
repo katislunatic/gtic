@@ -28,7 +28,7 @@ const App = () => {
             <Navigation onAdminAccess={setIsAdmin} isAdmin={isAdmin} />
             <Routes>
               <Route path="/" element={<Home isAdmin={isAdmin} />} />
-              <Route path="/team" element={<OfficialTeams isAdmin={isAdmin} />} />
+              <Route path="/teams" element={<OfficialTeams isAdmin={isAdmin} />} />
               <Route path="/color-selector" element={<ColorCodeSelector isAdmin={isAdmin} />} />
               <Route path="/faq" element={<FAQ isAdmin={isAdmin} />} />
               <Route path="*" element={<NotFound />} />
