@@ -32,12 +32,12 @@ const faqData = [
     answer: "Absolutely! You can watch matches on our Twitch channel at twitch.tv/gticleague and catch highlights on our YouTube channel."
   },
   {
-    question: "How are teams matched up?",
-    answer: "Teams are matched based on skill level and tournament brackets. The specific format depends on the tournament type and is announced before each competition."
+    question: "Are there any age restrictions for joining?",
+    answer: "Yes, participants must be 13+ years old to comply with Discord's Terms of Service. You can review Discord's terms at https://discord.com/terms."
   },
   {
-    question: "What happens if my team wins?",
-    answer: "Winning teams are featured on our Champions page and receive recognition across our social media platforms. Specific prizes and rewards vary by tournament."
+    question: "Can I change teams after signing up?",
+    answer: "Yes, you can change teams after signing up. Please contact the moderation team in our Discord server for assistance with team transfers."
   },
   {
     question: "How can I stay updated with GTIC news?",
