@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Settings, Menu, X } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { Settings, Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import youtubeLogo from "@/assets/youtube-logo.svg";
 import tiktokLogo from "@/assets/tiktok-logo.svg";
 import twitchLogo from "@/assets/twitch-logo.svg";
@@ -20,8 +25,10 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [adminCode, setAdminCode] = useState("");
   const [isAdminDialogOpen, setIsAdminDialogOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const location = useLocation();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -126,37 +133,89 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               </Button>
             </a>
             
-            {/* Admin Button */}
-            {isAdmin ? (
-              <Button variant="outline" onClick={handleAdminLogout} className="text-secondary">
-                Admin Mode
-              </Button>
-            ) : (
-              <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="card-gradient">
-                  <DialogHeader>
-                    <DialogTitle>Admin Access</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input
-                      type="password"
-                      placeholder="Enter admin code"
-                      value={adminCode}
-                      onChange={(e) => setAdminCode(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
-                    />
-                    <Button onClick={handleAdminLogin} className="w-full">
-                      Access Admin Panel
-                    </Button>
+            {/* Settings Menu */}
+            <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-popover" align="end">
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg">Settings</h3>
+                  
+                  {/* Theme Toggle */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Theme</Label>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Moon className="h-4 w-4" />
+                        <span className="text-sm">Dark Mode</span>
+                      </div>
+                      <Switch
+                        checked={theme === "light"}
+                        onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
+                      />
+                      <div className="flex items-center gap-2">
+                        <Sun className="h-4 w-4" />
+                        <span className="text-sm">Light Mode</span>
+                      </div>
+                    </div>
                   </div>
-                </DialogContent>
-              </Dialog>
-            )}
+
+                  <Separator />
+
+                  {/* Admin Access */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">Admin Access</Label>
+                    {isAdmin ? (
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          handleAdminLogout();
+                          setIsSettingsOpen(false);
+                        }} 
+                        className="w-full text-secondary"
+                      >
+                        Logout Admin
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          setIsAdminDialogOpen(true);
+                          setIsSettingsOpen(false);
+                        }}
+                        className="w-full"
+                      >
+                        Admin Login
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            {/* Admin Dialog */}
+            <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
+              <DialogContent className="card-gradient">
+                <DialogHeader>
+                  <DialogTitle>Admin Access</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    type="password"
+                    placeholder="Enter admin code"
+                    value={adminCode}
+                    onChange={(e) => setAdminCode(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+                  />
+                  <Button onClick={handleAdminLogin} className="w-full">
+                    Access Admin Panel
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Mobile Menu Button */}
@@ -229,37 +288,14 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                   </a>
                 </div>
                 
-                {isAdmin ? (
-                  <Button variant="outline" onClick={handleAdminLogout} className="w-full text-secondary">
-                    Logout Admin
-                  </Button>
-                ) : (
-                  <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button variant="ghost" className="w-full">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Admin Access
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="card-gradient">
-                      <DialogHeader>
-                        <DialogTitle>Admin Access</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <Input
-                          type="password"
-                          placeholder="Enter admin code"
-                          value={adminCode}
-                          onChange={(e) => setAdminCode(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
-                        />
-                        <Button onClick={handleAdminLogin} className="w-full">
-                          Access Admin Panel
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                )}
+                <Button 
+                  variant="ghost" 
+                  className="w-full"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </Button>
               </div>
             </div>
           </div>

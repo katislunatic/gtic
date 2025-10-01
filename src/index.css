@@ -69,6 +69,37 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  .light {
+    /* Light mode - lighter version of GTIC theme */
+    --background: 210 30% 96%;
+    --foreground: 210 50% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 50% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 50% 10%;
+
+    --primary: 212 100% 50%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 100% 60%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 210 30% 92%;
+    --muted-foreground: 215 20% 40%;
+
+    --accent: 212 100% 95%;
+    --accent-foreground: 212 100% 50%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 30% 85%;
+    --input: 210 30% 92%;
+    --ring: 212 100% 50%;
+  }
+
   .dark {
     /* Dark mode uses same theme as default for GTIC */
     --background: 210 100% 6%;
