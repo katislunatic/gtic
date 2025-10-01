@@ -13,6 +13,7 @@ import { FAQ } from "./pages/FAQ";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
+import { CookieConsent } from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => {
               <Route path="/faq" element={<FAQ isAdmin={isAdmin} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CookieConsent />
           </div>
         </BrowserRouter>
       </TooltipProvider>
