@@ -19,7 +19,7 @@ export const Bracket = ({ isAdmin }: BracketProps) => {
           </p>
         </div>
 
-        <Card className="team-card max-w-7xl mx-auto">
+        <Card className="card-gradient max-w-7xl mx-auto border">
           <CardHeader>
             <CardTitle className="text-center">GTIC Season 3 Bracket</CardTitle>
           </CardHeader>
