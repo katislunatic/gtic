@@ -291,7 +291,10 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                 <Button 
                   variant="ghost" 
                   className="w-full"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setIsSettingsOpen(true);
+                  }}
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
