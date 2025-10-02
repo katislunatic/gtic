@@ -35,6 +35,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
     { name: "Official Teams", path: "/teams" },
     { name: "Bracket", path: "/bracket" },
     { name: "Color Code Selector", path: "/color-selector" },
+    { name: "Sponsorships", path: "/sponsorships" },
     { name: "FAQ", path: "/faq" },
   ];
 

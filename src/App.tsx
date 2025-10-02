@@ -12,6 +12,7 @@ import { Bracket } from "./pages/Bracket";
 import { FAQ } from "./pages/FAQ";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { CookiePolicy } from "./pages/CookiePolicy";
+import { Sponsorships } from "./pages/Sponsorships";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
@@ -35,6 +36,7 @@ const App = () => {
               <Route path="/teams" element={<OfficialTeams isAdmin={isAdmin} />} />
               <Route path="/bracket" element={<Bracket isAdmin={isAdmin} />} />
               <Route path="/color-selector" element={<ColorCodeSelector isAdmin={isAdmin} />} />
+              <Route path="/sponsorships" element={<Sponsorships isAdmin={isAdmin} />} />
               <Route path="/faq" element={<FAQ isAdmin={isAdmin} />} />
               <Route path="/policy/privacy" element={<PrivacyPolicy />} />
               <Route path="/policy/cookie" element={<CookiePolicy />} />
