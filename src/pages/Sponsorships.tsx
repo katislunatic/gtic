@@ -106,7 +106,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
             <span className="hero-text">Our Sponsors & Partners</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Meet the amazing organizations that support GTIC and help make competitive Gorilla Tag possible.
+            Meet the amazing organizations that support GTIC and help make Gorilla Tag Intermediate COMP possible.
           </p>
         </div>
 
@@ -206,7 +206,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
             <HandshakeIcon className="h-12 w-12 mx-auto mb-4 text-primary" />
             <h2 className="text-2xl font-bold mb-4">Interested in Sponsoring GTIC?</h2>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join our growing community of sponsors and partners. Help support competitive Gorilla Tag and reach thousands of passionate players.
+              Join our growing community of sponsors and partners. Help support Gorilla Tag Intermediate COMP and reach thousands of passionate players.
             </p>
             <Button size="lg" className="glow-primary" asChild>
               <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer">
