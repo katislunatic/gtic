@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export const CookieConsent = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const hasAccepted = localStorage.getItem("cookieConsentAccepted");
+    if (!hasAccepted) {
+      setIsVisible(true);
+    }
+  }, []);
 
   const handleAccept = () => {
+    localStorage.setItem("cookieConsentAccepted", "true");
     setIsVisible(false);
   };
 
