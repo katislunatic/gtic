@@ -35,11 +35,11 @@ export const Bracket = ({ isAdmin }: BracketProps) => {
                   />
                 </div>
               </DialogTrigger>
-              <DialogContent className="max-w-[95vw] max-h-[95vh] w-auto h-auto p-0 border-0 bg-transparent">
+              <DialogContent className="max-w-[98vw] max-h-[98vh] w-auto h-auto p-2 border-0 bg-transparent">
                 <img 
                   src={bracketImage} 
                   alt="GTIC Season 3 Tournament Bracket - Full View" 
-                  className="w-full h-full object-contain rounded-lg"
+                  className="w-full h-auto max-h-[96vh] object-contain rounded-lg"
                 />
               </DialogContent>
             </Dialog>
