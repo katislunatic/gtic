@@ -1,18 +1,23 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-type Message = { role: "user" | "assistant"; content: string };
+type Message = { 
+  role: "user" | "assistant"; 
+  content: string | Array<{ type: string; text?: string; image_url?: { url: string } }>;
+};
 
 export const AIAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -26,10 +31,18 @@ export const AIAssistant = () => {
     }
   }, [isOpen]);
 
-  const streamChat = async (userMessage: string) => {
-    const newMessages = [...messages, { role: "user" as const, content: userMessage }];
+  const streamChat = async (userMessage: string, imageUrl?: string | null) => {
+    const messageContent = imageUrl
+      ? [
+          { type: "text", text: userMessage },
+          { type: "image_url", image_url: { url: imageUrl } },
+        ]
+      : userMessage;
+
+    const newMessages = [...messages, { role: "user" as const, content: messageContent }];
     setMessages(newMessages);
     setInput("");
+    setUploadedImage(null);
     setIsLoading(true);
 
     let assistantContent = "";
@@ -118,7 +131,18 @@ export const AIAssistant = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    streamChat(input);
+    streamChat(input, uploadedImage);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleOpen = () => {
@@ -179,7 +203,19 @@ export const AIAssistant = () => {
                         : "bg-muted text-foreground"
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    {typeof msg.content === "string" ? (
+                      <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {msg.content.map((item, i) => (
+                          item.type === "text" ? (
+                            <p key={i} className="text-sm whitespace-pre-wrap">{item.text}</p>
+                          ) : item.type === "image_url" ? (
+                            <img key={i} src={item.image_url?.url} alt="Uploaded" className="rounded-lg max-w-full" />
+                          ) : null
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -194,8 +230,38 @@ export const AIAssistant = () => {
           </ScrollArea>
 
           {/* Input */}
-          <form onSubmit={handleSubmit} className="p-4 border-t border-border">
+          <form onSubmit={handleSubmit} className="p-4 border-t border-border space-y-2">
+            {uploadedImage && (
+              <div className="relative inline-block">
+                <img src={uploadedImage} alt="Upload preview" className="h-20 rounded-lg" />
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+                  onClick={() => setUploadedImage(null)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
             <div className="flex gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <Button
+                type="button"
+                size="icon"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+              >
+                <ImagePlus className="h-4 w-4" />
+              </Button>
               <Input
                 ref={inputRef}
                 value={input}

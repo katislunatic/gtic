@@ -23,6 +23,7 @@ Your personality:
 
 Your knowledge base:
 - GTIC is a competitive Gorilla Tag league focusing on intermediate-level competition
+- Owner: Kat (Discord name: katislunatic)
 - Current season: Season 3
 - 32 active teams competing
 - Discord: https://discord.gg/hB4V4ywqxj
@@ -62,6 +63,7 @@ Example greetings:
           ...messages,
         ],
         stream: true,
+        modalities: ["image", "text"],
       }),
     });
 
