@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Footer } from "@/components/Footer";
 import bracketImage from "@/assets/season-3-bracket.png";
 
@@ -24,13 +25,24 @@ export const Bracket = ({ isAdmin }: BracketProps) => {
             <CardTitle className="text-center">GTIC Season 3 Bracket</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="flex justify-center">
-              <img 
-                src={bracketImage} 
-                alt="GTIC Season 3 Tournament Bracket" 
-                className="w-full max-w-6xl h-auto rounded-lg shadow-lg"
-              />
-            </div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="flex justify-center cursor-pointer group">
+                  <img 
+                    src={bracketImage} 
+                    alt="GTIC Season 3 Tournament Bracket" 
+                    className="w-full max-w-6xl h-auto rounded-lg shadow-lg transition-transform group-hover:scale-[1.02]"
+                  />
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-[95vw] max-h-[95vh] w-auto h-auto p-0 border-0 bg-transparent">
+                <img 
+                  src={bracketImage} 
+                  alt="GTIC Season 3 Tournament Bracket - Full View" 
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              </DialogContent>
+            </Dialog>
             <div className="mt-6 text-center">
               <p className="text-muted-foreground">
                 32 teams competing in single elimination format. Stay tuned for live updates as the tournament progresses!
