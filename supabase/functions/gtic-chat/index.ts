@@ -63,7 +63,6 @@ Example greetings:
           ...messages,
         ],
         stream: true,
-        modalities: ["image", "text"],
       }),
     });
 
