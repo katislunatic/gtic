@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, ImagePlus } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, ImagePlus, Mic, Phone, PhoneOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 type Message = { 
   role: "user" | "assistant"; 
   content: string | Array<{ type: string; text?: string; image_url?: { url: string } }>;
 };
+
+type ChatMode = "text" | "voice-to-text" | "full-voice";
 
 export const AIAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,9 +19,13 @@ export const AIAssistant = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [chatMode, setChatMode] = useState<ChatMode>("text");
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -31,7 +39,7 @@ export const AIAssistant = () => {
     }
   }, [isOpen]);
 
-  const streamChat = async (userMessage: string, imageUrl?: string | null) => {
+  const streamChat = async (userMessage: string, imageUrl?: string | null): Promise<string> => {
     const messageContent = imageUrl
       ? [
           { type: "text", text: userMessage },
@@ -117,12 +125,15 @@ export const AIAssistant = () => {
           }
         }
       }
+
+      return assistantContent;
     } catch (error) {
       console.error("Chat error:", error);
       setMessages([
         ...newMessages,
         { role: "assistant", content: "Sorry, I encountered an error. Please try again." },
       ]);
+      return "";
     } finally {
       setIsLoading(false);
     }
@@ -132,6 +143,107 @@ export const AIAssistant = () => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
     streamChat(input, uploadedImage);
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        await processAudio(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: "Microphone Error",
+        description: "Could not access microphone. Please check permissions.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const processAudio = async (audioBlob: Blob) => {
+    try {
+      setIsLoading(true);
+      
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      
+      reader.onloadend = async () => {
+        const base64Audio = reader.result?.toString().split(',')[1];
+        
+        if (!base64Audio) {
+          throw new Error('Failed to convert audio');
+        }
+
+        const { data, error } = await supabase.functions.invoke('speech-to-text', {
+          body: { audio: base64Audio }
+        });
+
+        if (error) throw error;
+
+        const transcribedText = data.text;
+        
+        if (chatMode === "voice-to-text") {
+          await streamChat(transcribedText);
+        } else if (chatMode === "full-voice") {
+          const response = await streamChat(transcribedText);
+          if (response) {
+            await speakText(response);
+          }
+        }
+      };
+    } catch (error) {
+      console.error('Error processing audio:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process audio. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const speakText = async (text: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: { text, voice: 'alloy' }
+      });
+
+      if (error) throw error;
+
+      const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+      await audio.play();
+    } catch (error) {
+      console.error('Error speaking text:', error);
+      toast({
+        title: "Audio Error",
+        description: "Failed to play audio response.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,6 +289,32 @@ export const AIAssistant = () => {
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5 text-primary" />
               <h3 className="font-semibold text-lg">GTIC Assistant</h3>
+              <div className="flex gap-1 ml-2">
+                <Button
+                  variant={chatMode === "text" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setChatMode("text")}
+                  className="h-6 px-2 text-xs"
+                >
+                  Text
+                </Button>
+                <Button
+                  variant={chatMode === "voice-to-text" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setChatMode("voice-to-text")}
+                  className="h-6 px-2 text-xs"
+                >
+                  <Mic className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant={chatMode === "full-voice" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setChatMode("full-voice")}
+                  className="h-6 px-2 text-xs"
+                >
+                  <Phone className="h-3 w-3" />
+                </Button>
+              </div>
             </div>
             <Button
               variant="ghost"
@@ -231,49 +369,81 @@ export const AIAssistant = () => {
 
           {/* Input */}
           <form onSubmit={handleSubmit} className="p-4 border-t border-border space-y-2">
-            {uploadedImage && (
-              <div className="relative inline-block">
-                <img src={uploadedImage} alt="Upload preview" className="h-20 rounded-lg" />
+            {chatMode === "text" ? (
+              <>
+                {uploadedImage && (
+                  <div className="relative inline-block">
+                    <img src={uploadedImage} alt="Upload preview" className="h-20 rounded-lg" />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+                      onClick={() => setUploadedImage(null)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isLoading}
+                  >
+                    <ImagePlus className="h-4 w-4" />
+                  </Button>
+                  <Input
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Ask me anything about GTIC..."
+                    disabled={isLoading}
+                    className="flex-1"
+                  />
+                  <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2 items-center">
                 <Button
                   type="button"
-                  size="icon"
-                  variant="destructive"
-                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                  onClick={() => setUploadedImage(null)}
+                  variant={isRecording ? "destructive" : "default"}
+                  size="lg"
+                  onClick={isRecording ? stopRecording : startRecording}
+                  disabled={isLoading}
+                  className="w-full"
                 >
-                  <X className="h-3 w-3" />
+                  {isRecording ? (
+                    <>
+                      <PhoneOff className="h-5 w-5 mr-2" />
+                      Stop Recording
+                    </>
+                  ) : (
+                    <>
+                      {chatMode === "voice-to-text" ? <Mic className="h-5 w-5 mr-2" /> : <Phone className="h-5 w-5 mr-2" />}
+                      {chatMode === "voice-to-text" ? "Tap to Speak" : "Start Voice Chat"}
+                    </>
+                  )}
                 </Button>
+                {isRecording && (
+                  <p className="text-sm text-muted-foreground animate-pulse">
+                    Listening...
+                  </p>
+                )}
               </div>
             )}
-            <div className="flex gap-2">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                size="icon"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isLoading}
-              >
-                <ImagePlus className="h-4 w-4" />
-              </Button>
-              <Input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything about GTIC..."
-                disabled={isLoading}
-                className="flex-1"
-              />
-              <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
           </form>
         </div>
       )}
