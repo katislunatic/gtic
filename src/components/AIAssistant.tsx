@@ -21,6 +21,7 @@ export const AIAssistant = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [chatMode, setChatMode] = useState<ChatMode>("text");
   const [isRecording, setIsRecording] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -201,7 +202,27 @@ export const AIAssistant = () => {
           body: { audio: base64Audio }
         });
 
-        if (error) throw error;
+        if (error) {
+          const errorMsg = error.message || 'Unknown error';
+          if (errorMsg.includes('quota') || errorMsg.includes('insufficient_quota')) {
+            toast({
+              title: "OpenAI API Quota Exceeded",
+              description: "Please add credits to your OpenAI account to use voice features.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Speech Recognition Error",
+              description: "Failed to transcribe audio. Please try again.",
+              variant: "destructive",
+            });
+          }
+          throw error;
+        }
+
+        if (!data?.text) {
+          throw new Error('No transcription received');
+        }
 
         const transcribedText = data.text;
         
@@ -216,11 +237,6 @@ export const AIAssistant = () => {
       };
     } catch (error) {
       console.error('Error processing audio:', error);
-      toast({
-        title: "Error",
-        description: "Failed to process audio. Please try again.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }
@@ -228,21 +244,48 @@ export const AIAssistant = () => {
 
   const speakText = async (text: string) => {
     try {
+      setIsSpeaking(true);
+      
       const { data, error } = await supabase.functions.invoke('text-to-speech', {
         body: { text, voice: 'alloy' }
       });
 
-      if (error) throw error;
+      if (error) {
+        const errorMsg = error.message || 'Unknown error';
+        if (errorMsg.includes('quota') || errorMsg.includes('insufficient_quota')) {
+          toast({
+            title: "OpenAI API Quota Exceeded",
+            description: "Please add credits to your OpenAI account to use voice features.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Text-to-Speech Error",
+            description: "Failed to generate audio response.",
+            variant: "destructive",
+          });
+        }
+        throw error;
+      }
+
+      if (!data?.audioContent) {
+        throw new Error('No audio content received');
+      }
 
       const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        toast({
+          title: "Audio Playback Error",
+          description: "Failed to play audio response.",
+          variant: "destructive",
+        });
+      };
       await audio.play();
     } catch (error) {
       console.error('Error speaking text:', error);
-      toast({
-        title: "Audio Error",
-        description: "Failed to play audio response.",
-        variant: "destructive",
-      });
+      setIsSpeaking(false);
     }
   };
 
@@ -422,7 +465,7 @@ export const AIAssistant = () => {
                   variant={isRecording ? "destructive" : "default"}
                   size="lg"
                   onClick={isRecording ? stopRecording : startRecording}
-                  disabled={isLoading}
+                  disabled={isLoading || isSpeaking}
                   className="w-full"
                 >
                   {isRecording ? (
@@ -438,9 +481,28 @@ export const AIAssistant = () => {
                   )}
                 </Button>
                 {isRecording && (
-                  <p className="text-sm text-muted-foreground animate-pulse">
-                    Listening...
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                    <p className="text-sm text-muted-foreground">
+                      Listening...
+                    </p>
+                  </div>
+                )}
+                {isSpeaking && (
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                    <p className="text-sm text-muted-foreground">
+                      AI is speaking...
+                    </p>
+                  </div>
+                )}
+                {isLoading && !isRecording && !isSpeaking && (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    <p className="text-sm text-muted-foreground">
+                      Processing...
+                    </p>
+                  </div>
                 )}
               </div>
             )}
