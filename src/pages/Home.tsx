@@ -77,7 +77,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
 
   const stats = [
     { icon: Trophy, label: "Active Teams", value: "32", color: "text-primary" },
-    { icon: Users, label: "Members", value: "400+", color: "text-secondary" },
+    { icon: Users, label: "Members", value: "550+", color: "text-secondary" },
     { icon: Calendar, label: "Seasons Played", value: "3", color: "text-primary" }
   ];
 
