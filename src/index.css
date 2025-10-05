@@ -70,39 +70,39 @@ All colors MUST be HSL.
   }
 
   .light {
-    /* Light mode - lighter version of GTIC theme */
-    --background: 210 30% 96%;
-    --foreground: 210 50% 10%;
+    /* Light mode - lighter version of GTIC dark theme */
+    --background: 210 60% 20%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 50% 10%;
+    --card: 210 50% 24%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 50% 10%;
+    --popover: 210 50% 24%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 212 100% 50%;
+    --primary: 212 100% 60%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 0 100% 60%;
+    --secondary: 0 100% 65%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 30% 92%;
-    --muted-foreground: 215 20% 35%;
+    --muted: 210 50% 28%;
+    --muted-foreground: 215 20% 75%;
 
-    --accent: 212 100% 95%;
-    --accent-foreground: 212 100% 40%;
+    --accent: 212 100% 60%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 30% 85%;
-    --input: 210 30% 92%;
-    --ring: 212 100% 50%;
+    --border: 210 50% 30%;
+    --input: 210 50% 28%;
+    --ring: 212 100% 60%;
 
     /* Light mode custom tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(210 30% 96%), hsl(210 30% 92%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 30% 98%));
-    --shadow-card: 0 10px 30px -10px hsl(210 30% 20% / 0.2);
+    --gradient-hero: linear-gradient(135deg, hsl(210 60% 20%), hsl(210 50% 24%));
+    --gradient-card: linear-gradient(145deg, hsl(210 50% 24%), hsl(210 50% 26%));
+    --shadow-card: 0 10px 30px -10px hsl(210 60% 10% / 0.6);
   }
 
   .dark {
