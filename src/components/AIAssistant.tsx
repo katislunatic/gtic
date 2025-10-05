@@ -57,18 +57,12 @@ export const AIAssistant = () => {
     let assistantContent = "";
     let assistantImages: Array<{ type: string; image_url: { url: string } }> = [];
     
-    const addAssistantMessage = (chunk: string) => {
-      assistantContent += chunk;
+    const updateAssistantMessage = () => {
       const content = assistantImages.length > 0 
-        ? [...(assistantContent ? [{ type: "text", text: assistantContent }] : []), ...assistantImages]
-        : assistantContent;
-      setMessages([...newMessages, { role: "assistant", content }]);
-    };
-
-    const addAssistantImage = (imageUrl: string) => {
-      assistantImages.push({ type: "image_url", image_url: { url: imageUrl } });
-      const content = assistantImages.length > 0 
-        ? [...(assistantContent ? [{ type: "text", text: assistantContent }] : []), ...assistantImages]
+        ? [
+            ...(assistantContent ? [{ type: "text", text: assistantContent }] : []),
+            ...assistantImages
+          ]
         : assistantContent;
       setMessages([...newMessages, { role: "assistant", content }]);
     };
@@ -113,17 +107,26 @@ export const AIAssistant = () => {
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-            if (content) addAssistantMessage(content);
             
-            // Handle images in the response
-            const images = parsed.choices?.[0]?.message?.images;
-            if (images && Array.isArray(images)) {
-              images.forEach((img: any) => {
+            // Handle text content in delta
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              updateAssistantMessage();
+            }
+            
+            // Handle images in complete message (not delta)
+            const messageImages = parsed.choices?.[0]?.message?.images;
+            if (messageImages && Array.isArray(messageImages)) {
+              messageImages.forEach((img: any) => {
                 if (img?.image_url?.url) {
-                  addAssistantImage(img.image_url.url);
+                  assistantImages.push({
+                    type: "image_url",
+                    image_url: { url: img.image_url.url }
+                  });
                 }
               });
+              updateAssistantMessage();
             }
           } catch {
             textBuffer = line + "\n" + textBuffer;
@@ -143,15 +146,22 @@ export const AIAssistant = () => {
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-            if (content) addAssistantMessage(content);
+            if (content) {
+              assistantContent += content;
+              updateAssistantMessage();
+            }
             
-            const images = parsed.choices?.[0]?.message?.images;
-            if (images && Array.isArray(images)) {
-              images.forEach((img: any) => {
+            const messageImages = parsed.choices?.[0]?.message?.images;
+            if (messageImages && Array.isArray(messageImages)) {
+              messageImages.forEach((img: any) => {
                 if (img?.image_url?.url) {
-                  addAssistantImage(img.image_url.url);
+                  assistantImages.push({
+                    type: "image_url",
+                    image_url: { url: img.image_url.url }
+                  });
                 }
               });
+              updateAssistantMessage();
             }
           } catch {
             /* ignore */
