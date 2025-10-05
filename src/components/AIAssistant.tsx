@@ -55,9 +55,22 @@ export const AIAssistant = () => {
     setIsLoading(true);
 
     let assistantContent = "";
+    let assistantImages: Array<{ type: string; image_url: { url: string } }> = [];
+    
     const addAssistantMessage = (chunk: string) => {
       assistantContent += chunk;
-      setMessages([...newMessages, { role: "assistant", content: assistantContent }]);
+      const content = assistantImages.length > 0 
+        ? [...(assistantContent ? [{ type: "text", text: assistantContent }] : []), ...assistantImages]
+        : assistantContent;
+      setMessages([...newMessages, { role: "assistant", content }]);
+    };
+
+    const addAssistantImage = (imageUrl: string) => {
+      assistantImages.push({ type: "image_url", image_url: { url: imageUrl } });
+      const content = assistantImages.length > 0 
+        ? [...(assistantContent ? [{ type: "text", text: assistantContent }] : []), ...assistantImages]
+        : assistantContent;
+      setMessages([...newMessages, { role: "assistant", content }]);
     };
 
     try {
@@ -102,6 +115,16 @@ export const AIAssistant = () => {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) addAssistantMessage(content);
+            
+            // Handle images in the response
+            const images = parsed.choices?.[0]?.message?.images;
+            if (images && Array.isArray(images)) {
+              images.forEach((img: any) => {
+                if (img?.image_url?.url) {
+                  addAssistantImage(img.image_url.url);
+                }
+              });
+            }
           } catch {
             textBuffer = line + "\n" + textBuffer;
             break;
@@ -121,6 +144,15 @@ export const AIAssistant = () => {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) addAssistantMessage(content);
+            
+            const images = parsed.choices?.[0]?.message?.images;
+            if (images && Array.isArray(images)) {
+              images.forEach((img: any) => {
+                if (img?.image_url?.url) {
+                  addAssistantImage(img.image_url.url);
+                }
+              });
+            }
           } catch {
             /* ignore */
           }
