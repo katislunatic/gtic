@@ -23,6 +23,7 @@ export const AIAssistant = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -75,7 +76,10 @@ export const AIAssistant = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ 
+          messages: [newMessages[newMessages.length - 1]], // Only send the latest message
+          conversationId 
+        }),
       });
 
       if (!resp.ok || !resp.body) throw new Error("Failed to start stream");
@@ -342,9 +346,27 @@ export const AIAssistant = () => {
     }
   };
 
-  const handleOpen = () => {
+  const handleOpen = async () => {
     setIsOpen(true);
     if (messages.length === 0) {
+      // Create a new conversation
+      const { data, error } = await supabase
+        .from('conversations')
+        .insert({ title: 'New Chat' })
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Error creating conversation:', error);
+        toast({
+          title: "Error",
+          description: "Failed to start conversation. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setConversationId(data.id);
       setMessages([
         {
           role: "assistant",

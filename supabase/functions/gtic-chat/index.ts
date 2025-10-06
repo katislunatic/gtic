@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,9 +10,32 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages } = await req.json();
+    const { messages, conversationId } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) throw new Error("Supabase credentials not configured");
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // Load conversation history if conversationId is provided
+    let conversationMessages = messages;
+    if (conversationId) {
+      const { data: historyData, error: historyError } = await supabase
+        .from('messages')
+        .select('role, content')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true });
+
+      if (historyError) {
+        console.error('Error loading conversation history:', historyError);
+      } else if (historyData && historyData.length > 0) {
+        // Use history + new message
+        conversationMessages = [...historyData, ...messages];
+      }
+    }
 
     const systemPrompt = `You are the GTIC AI Assistant - a helpful, friendly, yet professional guide for the Gorilla Tag Intermediate COMP (GTIC) website.
 
@@ -23,7 +47,7 @@ Your personality:
 
 Your knowledge base:
 - GTIC is a competitive Gorilla Tag league for all ranks, but mainly pros
-- Founder: Kat (Discord name: katislunatic)
+- Founder: Kat (Discord name: katislunatic, also known as [PPP] Tig in the GTIC server)
 - Board of Directors: Bakerzz (Discord name: kdmello.), Poopy/Po3py (Discord name: po3py.lul)
 - Current season: Season 3
 - 32 active teams competing
@@ -53,6 +77,20 @@ Example greetings:
 - "Hey there! 👋 I'm the GTIC Assistant. Need help finding something or have questions about the league?"
 - "Welcome! I'm here to help you navigate GTIC. What can I help you with?"`;
 
+    // Save user message to database if conversationId exists
+    if (conversationId && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      const messageContent = typeof lastMessage.content === 'string' 
+        ? lastMessage.content 
+        : JSON.stringify(lastMessage.content);
+      
+      await supabase.from('messages').insert({
+        conversation_id: conversationId,
+        role: lastMessage.role,
+        content: messageContent,
+      });
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -63,7 +101,7 @@ Example greetings:
         model: "google/gemini-2.5-flash-image-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          ...messages,
+          ...conversationMessages,
         ],
         stream: true,
         modalities: ["text", "image"],
@@ -91,7 +129,53 @@ Example greetings:
       });
     }
 
-    return new Response(response.body, {
+    // Stream response back to client while collecting assistant's response
+    const reader = response.body?.getReader();
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    let assistantMessage = "";
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          while (true) {
+            const { done, value } = await reader!.read();
+            if (done) break;
+            
+            // Collect assistant response for saving
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n');
+            for (const line of lines) {
+              if (line.startsWith('data: ') && !line.includes('[DONE]')) {
+                try {
+                  const json = JSON.parse(line.slice(6));
+                  const content = json.choices?.[0]?.delta?.content;
+                  if (content) assistantMessage += content;
+                } catch {}
+              }
+            }
+            
+            controller.enqueue(value);
+          }
+          
+          // Save assistant message to database if conversationId exists
+          if (conversationId && assistantMessage) {
+            await supabase.from('messages').insert({
+              conversation_id: conversationId,
+              role: 'assistant',
+              content: assistantMessage,
+            });
+          }
+          
+          controller.close();
+        } catch (error) {
+          console.error('Stream error:', error);
+          controller.error(error);
+        }
+      },
+    });
+
+    return new Response(stream, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (e) {
