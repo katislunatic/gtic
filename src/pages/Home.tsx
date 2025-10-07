@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon } 
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
 import gticLogo from "@/assets/gtic-logo.png";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Announcement {
   id: string;
@@ -22,20 +23,37 @@ interface HomeProps {
 
 export const Home = ({ isAdmin }: HomeProps) => {
   const { toast } = useToast();
-  const [announcements, setAnnouncements] = useState<Announcement[]>([
-    {
-      id: "1",
-      title: "Welcome to the official GTIC website!",
-      content: "The GTIC website is the official home of Gorilla Tag Intermediate COMP. Here you can stay updated with the latest news and announcements, explore the official list of registered teams, and use the built-in color code selector to test and pick your in-game colors. The FAQ section is available to answer common questions, and you can also find direct links to GTIC's YouTube, TikTok, Twitch, and Discord. Everything you need to follow or compete in GTIC is all in one place.",
-      date: "2024-01-15",
-      type: "news"
-    }
-  ]);
-
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [newAnnouncement, setNewAnnouncement] = useState({ title: "", content: "", type: "news" as const });
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const addAnnouncement = () => {
+  useEffect(() => {
+    loadAnnouncements();
+  }, []);
+
+  const loadAnnouncements = async () => {
+    const { data, error } = await supabase
+      .from('announcements')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error loading announcements:', error);
+      return;
+    }
+
+    if (data) {
+      setAnnouncements(data.map(a => ({
+        id: a.id,
+        title: a.title,
+        content: a.content,
+        date: a.date,
+        type: a.type as "news" | "tournament" | "update"
+      })));
+    }
+  };
+
+  const addAnnouncement = async () => {
     if (!newAnnouncement.title || !newAnnouncement.content) {
       toast({
         title: "Error",
@@ -45,22 +63,48 @@ export const Home = ({ isAdmin }: HomeProps) => {
       return;
     }
 
-    const announcement: Announcement = {
-      id: Date.now().toString(),
-      ...newAnnouncement,
-      date: new Date().toISOString().split('T')[0]
-    };
+    const { error } = await supabase
+      .from('announcements')
+      .insert([{
+        title: newAnnouncement.title,
+        content: newAnnouncement.content,
+        type: newAnnouncement.type,
+        date: new Date().toISOString().split('T')[0]
+      }]);
 
-    setAnnouncements([announcement, ...announcements]);
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add announcement: " + error.message,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setNewAnnouncement({ title: "", content: "", type: "news" });
+    await loadAnnouncements();
     toast({
       title: "Success",
       description: "Announcement added successfully"
     });
   };
 
-  const deleteAnnouncement = (id: string) => {
-    setAnnouncements(announcements.filter(a => a.id !== id));
+  const deleteAnnouncement = async (id: string) => {
+    const { error } = await supabase
+      .from('announcements')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete announcement",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    await loadAnnouncements();
     toast({
       title: "Success", 
       description: "Announcement deleted"

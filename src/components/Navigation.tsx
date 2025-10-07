@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,6 +15,7 @@ import twitchLogo from "@/assets/twitch-logo.svg";
 import discordLogo from "@/assets/discord-logo.svg";
 import { useToast } from "@/hooks/use-toast";
 import gticLogo from "@/assets/gtic-logo.png";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NavigationProps {
   onAdminAccess: (isAdmin: boolean) => void;
@@ -23,12 +24,47 @@ interface NavigationProps {
 
 export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [adminCode, setAdminCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isAdminDialogOpen, setIsAdminDialogOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      } else {
+        onAdminAccess(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const checkAdminRole = async (userId: string) => {
+    const { data, error } = await supabase
+      .rpc('has_role', { _user_id: userId, _role: 'admin' });
+    
+    if (!error && data) {
+      onAdminAccess(true);
+    } else {
+      onAdminAccess(false);
+    }
+  };
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -39,29 +75,41 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
     { name: "FAQ", path: "/faq" },
   ];
 
-  const handleAdminLogin = () => {
-    if (adminCode === "STAFF2840w") {
-      onAdminAccess(true);
-      setIsAdminDialogOpen(false);
-      setAdminCode("");
-      toast({
-        title: "Admin Access Granted",
-        description: "You now have access to edit content.",
+  const handleAdminLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-    } else {
+
+      if (error) throw error;
+
+      if (data.user) {
+        await checkAdminRole(data.user.id);
+        setIsAdminDialogOpen(false);
+        setEmail("");
+        setPassword("");
+        toast({
+          title: "Logged In",
+          description: isAdmin ? "Admin access granted." : "Logged in successfully.",
+        });
+      }
+    } catch (error: any) {
       toast({
-        title: "Access Denied",
-        description: "Invalid admin code.",
+        title: "Login Failed",
+        description: error.message,
         variant: "destructive",
       });
     }
   };
 
-  const handleAdminLogout = () => {
+  const handleAdminLogout = async () => {
+    await supabase.auth.signOut();
     onAdminAccess(false);
+    setUser(null);
     toast({
       title: "Logged Out",
-      description: "Admin access revoked.",
+      description: "You have been logged out.",
     });
   };
 
@@ -201,18 +249,24 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
               <DialogContent className="card-gradient">
                 <DialogHeader>
-                  <DialogTitle>Admin Access</DialogTitle>
+                  <DialogTitle>Admin Login</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <Input
                     type="password"
-                    placeholder="Enter admin code"
-                    value={adminCode}
-                    onChange={(e) => setAdminCode(e.target.value)}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
                   />
                   <Button onClick={handleAdminLogin} className="w-full">
-                    Access Admin Panel
+                    Login
                   </Button>
                 </div>
               </DialogContent>

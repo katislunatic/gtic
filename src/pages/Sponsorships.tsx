@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { HandshakeIcon, Plus, Trash2, Edit2, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Sponsor {
   id: string;
@@ -22,17 +23,7 @@ interface SponsorshipsProps {
 
 export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
   const { toast } = useToast();
-  const [sponsors, setSponsors] = useState<Sponsor[]>([
-    {
-      id: "1",
-      name: "Example Sponsor",
-      description: "Supporting competitive Gorilla Tag since day one.",
-      logo: "https://via.placeholder.com/200x100?text=Sponsor+Logo",
-      website: "https://example.com",
-      tier: "platinum"
-    }
-  ]);
-
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [newSponsor, setNewSponsor] = useState<Partial<Sponsor>>({
     name: "",
     description: "",
@@ -40,10 +31,36 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
     website: "",
     tier: "partner"
   });
-
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const addSponsor = () => {
+  useEffect(() => {
+    loadSponsors();
+  }, []);
+
+  const loadSponsors = async () => {
+    const { data, error } = await supabase
+      .from('sponsors')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error loading sponsors:', error);
+      return;
+    }
+
+    if (data) {
+      setSponsors(data.map(s => ({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        logo: s.logo || "https://via.placeholder.com/200x100?text=Logo",
+        website: s.website || "",
+        tier: s.tier as Sponsor["tier"]
+      })));
+    }
+  };
+
+  const addSponsor = async () => {
     if (!newSponsor.name || !newSponsor.description) {
       toast({
         title: "Error",
@@ -53,25 +70,49 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
       return;
     }
 
-    const sponsor: Sponsor = {
-      id: Date.now().toString(),
-      name: newSponsor.name,
-      description: newSponsor.description,
-      logo: newSponsor.logo || "https://via.placeholder.com/200x100?text=Logo",
-      website: newSponsor.website || "",
-      tier: newSponsor.tier as Sponsor["tier"]
-    };
+    const { error } = await supabase
+      .from('sponsors')
+      .insert([{
+        name: newSponsor.name,
+        description: newSponsor.description,
+        logo: newSponsor.logo || "https://via.placeholder.com/200x100?text=Logo",
+        website: newSponsor.website || "",
+        tier: newSponsor.tier
+      }]);
 
-    setSponsors([...sponsors, sponsor]);
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add sponsor: " + error.message,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setNewSponsor({ name: "", description: "", logo: "", website: "", tier: "partner" });
+    await loadSponsors();
     toast({
       title: "Success",
       description: "Sponsor added successfully"
     });
   };
 
-  const deleteSponsor = (id: string) => {
-    setSponsors(sponsors.filter(s => s.id !== id));
+  const deleteSponsor = async (id: string) => {
+    const { error } = await supabase
+      .from('sponsors')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete sponsor",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    await loadSponsors();
     toast({
       title: "Success",
       description: "Sponsor removed"
