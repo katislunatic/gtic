@@ -1,46 +1,143 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus, Trash2, Edit2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Team {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string | null;
+}
 
 interface OfficialTeamsProps {
   isAdmin: boolean;
 }
 
-const teams = [
-  { code: "SG", name: "Silly Goobers", returning: true },
-  { code: "SOB", name: "Standing On Business", returning: false },
-  { code: "VELO", name: "VELOCITY", returning: false },
-  { code: "FZE", name: "Faze", returning: false },
-  { code: "QHQ", name: "Quest Headquarters", returning: false },
-  { code: "MFA", name: "The Mafia", returning: false },
-  { code: "SSM", name: "Super Suspicious Monkeys", returning: true },
-  { code: "KP", name: "Krabby Patty", returning: false },
-  { code: "V4L", name: "Virgins4Life", returning: false },
-  { code: "TDB", name: "The Dusty B3rries", returning: false },
-  { code: "KW", name: "Kitty Warriors", returning: false },
-  { code: "VD", name: "Vivid Dream", returning: false },
-  { code: "DNA", name: "Dark Night", returning: false },
-  { code: "CNDY", name: "Candy", returning: false },
-  { code: "MB", name: "Moonlight Blazers", returning: false },
-  { code: "HC", name: "Hard Carry", returning: false },
-  { code: "MNTY", name: "Mentality", returning: false },
-  { code: "DTD", name: "Dusk Till Dawn", returning: false },
-  { code: "GLTY", name: "Glitchy", returning: false },
-  { code: "PRX", name: "Paper Rex", returning: true },
-  { code: "TTC", name: "The Time Cappers", returning: false },
-  { code: "TLM", name: "The Lazy Monkeys", returning: false },
-  { code: "S3XY", name: "S3XY", returning: false },
-  { code: "VLK", name: "Valkyrie", returning: false },
-  { code: "AWT", name: "Apex wild titans", returning: false },
-  { code: "SV", name: "Sugar Virus", returning: false },
-  { code: "TFR", name: "The Forest Runners", returning: false },
-  { code: "CDD", name: "Cod Doodle Destroyers", returning: false },
-  { code: "ITZ", name: "In The Zone", returning: false },
-  { code: "SVL", name: "SALVATION", returning: false },
-  { code: "TAM", name: "The Astro Monks", returning: false },
-  { code: "F3", name: "Formula 3", returning: false },
-];
-
 export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
+  const { toast } = useToast();
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [newTeam, setNewTeam] = useState({ name: "", emoji: "", description: "" });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Team | null>(null);
+
+  useEffect(() => {
+    loadTeams();
+  }, []);
+
+  const loadTeams = async () => {
+    const { data, error } = await supabase
+      .from('official_teams')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error loading teams:', error);
+      return;
+    }
+
+    if (data) {
+      setTeams(data);
+    }
+  };
+
+  const addTeam = async () => {
+    if (!newTeam.name || !newTeam.emoji) {
+      toast({
+        title: "Error",
+        description: "Please fill in name and emoji",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from('official_teams')
+      .insert([{
+        name: newTeam.name,
+        emoji: newTeam.emoji,
+        description: newTeam.description || null
+      }]);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add team: " + error.message,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setNewTeam({ name: "", emoji: "", description: "" });
+    await loadTeams();
+    toast({
+      title: "Success",
+      description: "Team added successfully"
+    });
+  };
+
+  const updateTeam = async () => {
+    if (!editForm) return;
+
+    const { error } = await supabase
+      .from('official_teams')
+      .update({
+        name: editForm.name,
+        emoji: editForm.emoji,
+        description: editForm.description
+      })
+      .eq('id', editForm.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update team",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setEditForm(null);
+    setEditingId(null);
+    await loadTeams();
+    toast({
+      title: "Success",
+      description: "Team updated successfully"
+    });
+  };
+
+  const deleteTeam = async (id: string) => {
+    const { error } = await supabase
+      .from('official_teams')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete team",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    await loadTeams();
+    toast({
+      title: "Success",
+      description: "Team removed"
+    });
+  };
+
+  const startEdit = (team: Team) => {
+    setEditForm(team);
+    setEditingId(team.id);
+  };
+
   return (
     <div className="min-h-screen pt-20 pb-8">
       <div className="container mx-auto px-4">
@@ -49,6 +146,39 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
             <span className="hero-text">Official Teams</span>
           </h1>
         </div>
+
+        {/* Admin Add Team */}
+        {isAdmin && (
+          <Card className="admin-panel mb-8 animate-fade-in">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Plus className="mr-2 h-5 w-5" />
+                Add New Team
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Input
+                placeholder="Team name"
+                value={newTeam.name}
+                onChange={(e) => setNewTeam({...newTeam, name: e.target.value})}
+              />
+              <Input
+                placeholder="Emoji (e.g., 🔄)"
+                value={newTeam.emoji}
+                onChange={(e) => setNewTeam({...newTeam, emoji: e.target.value})}
+              />
+              <Textarea
+                placeholder="Description (optional)"
+                value={newTeam.description}
+                onChange={(e) => setNewTeam({...newTeam, description: e.target.value})}
+                rows={2}
+              />
+              <Button onClick={addTeam} className="w-full">
+                Add Team
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Emoji Key */}
         <Card className="team-card mb-8">
@@ -66,15 +196,49 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
           <CardContent className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {teams.map((team, index) => (
-                <div 
-                  key={team.code} 
-                  className="flex items-center space-x-3 p-3 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors animate-fade-in"
-                  style={{animationDelay: `${index * 50}ms`}}
-                >
-                  <span className="font-bold text-primary min-w-fit">{team.code}</span>
-                  <span className="text-muted-foreground">|</span>
-                  <span className="flex-1">{team.name}</span>
-                  {team.returning && <span className="text-lg">🔄</span>}
+                <div key={team.id}>
+                  {editingId === team.id && editForm ? (
+                    <Card className="p-4 space-y-3 bg-muted/20">
+                      <Input
+                        placeholder="Team name"
+                        value={editForm.name}
+                        onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                      />
+                      <Input
+                        placeholder="Emoji"
+                        value={editForm.emoji}
+                        onChange={(e) => setEditForm({...editForm, emoji: e.target.value})}
+                      />
+                      <Textarea
+                        placeholder="Description"
+                        value={editForm.description || ""}
+                        onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                        rows={2}
+                      />
+                      <div className="flex space-x-2">
+                        <Button size="sm" onClick={updateTeam} className="flex-1">Save</Button>
+                        <Button size="sm" variant="outline" onClick={() => { setEditingId(null); setEditForm(null); }} className="flex-1">Cancel</Button>
+                      </div>
+                    </Card>
+                  ) : (
+                    <div 
+                      className="flex items-center space-x-3 p-3 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors animate-fade-in"
+                      style={{animationDelay: `${index * 50}ms`}}
+                    >
+                      <span className="flex-1">{team.name}</span>
+                      {team.emoji && <span className="text-lg">{team.emoji}</span>}
+                      {isAdmin && (
+                        <div className="flex space-x-1">
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(team)}>
+                            <Edit2 className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => deleteTeam(team.id)}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
