@@ -32,6 +32,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
     tier: "partner"
   });
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Sponsor | null>(null);
 
   useEffect(() => {
     loadSponsors();
@@ -97,6 +98,38 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
     });
   };
 
+  const updateSponsor = async () => {
+    if (!editForm) return;
+
+    const { error } = await supabase
+      .from('sponsors')
+      .update({
+        name: editForm.name,
+        description: editForm.description,
+        logo: editForm.logo,
+        website: editForm.website,
+        tier: editForm.tier
+      })
+      .eq('id', editForm.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update sponsor",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setEditForm(null);
+    setEditingId(null);
+    await loadSponsors();
+    toast({
+      title: "Success",
+      description: "Sponsor updated successfully"
+    });
+  };
+
   const deleteSponsor = async (id: string) => {
     const { error } = await supabase
       .from('sponsors')
@@ -117,6 +150,11 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
       title: "Success",
       description: "Sponsor removed"
     });
+  };
+
+  const startEdit = (sponsor: Sponsor) => {
+    setEditForm(sponsor);
+    setEditingId(sponsor.id);
   };
 
   const getTierColor = (tier: string) => {
@@ -203,40 +241,82 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedSponsors.map((sponsor, index) => (
             <Card key={sponsor.id} className="team-card animate-fade-in" style={{animationDelay: `${index * 100}ms`}}>
-              <CardHeader>
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`text-sm font-semibold ${getTierColor(sponsor.tier)}`}>
-                    {getTierLabel(sponsor.tier)}
-                  </span>
-                  {isAdmin && (
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm" onClick={() => setEditingId(sponsor.id)}>
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => deleteSponsor(sponsor.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+              {editingId === sponsor.id && editForm ? (
+                <CardContent className="p-6 space-y-4">
+                  <Input
+                    placeholder="Sponsor name"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                  />
+                  <Textarea
+                    placeholder="Description"
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                    rows={3}
+                  />
+                  <Input
+                    placeholder="Logo URL"
+                    value={editForm.logo}
+                    onChange={(e) => setEditForm({...editForm, logo: e.target.value})}
+                  />
+                  <Input
+                    placeholder="Website URL"
+                    value={editForm.website}
+                    onChange={(e) => setEditForm({...editForm, website: e.target.value})}
+                  />
+                  <select
+                    value={editForm.tier}
+                    onChange={(e) => setEditForm({...editForm, tier: e.target.value as Sponsor["tier"]})}
+                    className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                  >
+                    <option value="platinum">Platinum</option>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="partner">Partner</option>
+                  </select>
+                  <div className="flex space-x-2">
+                    <Button onClick={updateSponsor} className="flex-1">Save</Button>
+                    <Button variant="outline" onClick={() => { setEditingId(null); setEditForm(null); }} className="flex-1">Cancel</Button>
+                  </div>
+                </CardContent>
+              ) : (
+                <>
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`text-sm font-semibold ${getTierColor(sponsor.tier)}`}>
+                        {getTierLabel(sponsor.tier)}
+                      </span>
+                      {isAdmin && (
+                        <div className="flex space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(sponsor)}>
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => deleteSponsor(sponsor.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="flex justify-center mb-4 bg-white/5 rounded-lg p-4">
-                  <img src={sponsor.logo} alt={`${sponsor.name} logo`} className="h-24 object-contain" />
-                </div>
-                <CardTitle className="text-center">{sponsor.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-center mb-4">
-                  {sponsor.description}
-                </p>
-                {sponsor.website && (
-                  <Button variant="outline" className="w-full" asChild>
-                    <a href={sponsor.website} target="_blank" rel="noopener noreferrer">
-                      Visit Website
-                      <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                )}
-              </CardContent>
+                    <div className="flex justify-center mb-4 bg-white/5 rounded-lg p-4">
+                      <img src={sponsor.logo} alt={`${sponsor.name} logo`} className="h-24 object-contain" />
+                    </div>
+                    <CardTitle className="text-center">{sponsor.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground text-center mb-4">
+                      {sponsor.description}
+                    </p>
+                    {sponsor.website && (
+                      <Button variant="outline" className="w-full" asChild>
+                        <a href={sponsor.website} target="_blank" rel="noopener noreferrer">
+                          Visit Website
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                    )}
+                  </CardContent>
+                </>
+              )}
             </Card>
           ))}
         </div>

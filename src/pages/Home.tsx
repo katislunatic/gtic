@@ -26,6 +26,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [newAnnouncement, setNewAnnouncement] = useState({ title: "", content: "", type: "news" as const });
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Announcement | null>(null);
 
   useEffect(() => {
     loadAnnouncements();
@@ -89,6 +90,36 @@ export const Home = ({ isAdmin }: HomeProps) => {
     });
   };
 
+  const updateAnnouncement = async () => {
+    if (!editForm) return;
+
+    const { error } = await supabase
+      .from('announcements')
+      .update({
+        title: editForm.title,
+        content: editForm.content,
+        type: editForm.type
+      })
+      .eq('id', editForm.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update announcement",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setEditForm(null);
+    setEditingId(null);
+    await loadAnnouncements();
+    toast({
+      title: "Success",
+      description: "Announcement updated successfully"
+    });
+  };
+
   const deleteAnnouncement = async (id: string) => {
     const { error } = await supabase
       .from('announcements')
@@ -109,6 +140,11 @@ export const Home = ({ isAdmin }: HomeProps) => {
       title: "Success", 
       description: "Announcement deleted"
     });
+  };
+
+  const startEdit = (announcement: Announcement) => {
+    setEditForm(announcement);
+    setEditingId(announcement.id);
   };
 
   const getTypeColor = (type: string) => {
@@ -238,29 +274,60 @@ export const Home = ({ isAdmin }: HomeProps) => {
         <div className="space-y-6">
           {announcements.map((announcement, index) => (
             <Card key={announcement.id} className="team-card animate-fade-in" style={{animationDelay: `${index * 100}ms`}}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                     <Badge className={getTypeColor(announcement.type)}>
-                       {announcement.type.charAt(0).toUpperCase() + announcement.type.slice(1)}
-                     </Badge>
-                   </div>
-                  {isAdmin && (
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm" onClick={() => setEditingId(announcement.id)}>
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => deleteAnnouncement(announcement.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+              {editingId === announcement.id && editForm ? (
+                <CardContent className="p-6 space-y-4">
+                  <input
+                    type="text"
+                    value={editForm.title}
+                    onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                    className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                  />
+                  <Textarea
+                    value={editForm.content}
+                    onChange={(e) => setEditForm({...editForm, content: e.target.value})}
+                    rows={3}
+                  />
+                  <select
+                    value={editForm.type}
+                    onChange={(e) => setEditForm({...editForm, type: e.target.value as any})}
+                    className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                  >
+                    <option value="news">News</option>
+                    <option value="tournament">Tournament</option>
+                    <option value="update">Update</option>
+                  </select>
+                  <div className="flex space-x-2">
+                    <Button onClick={updateAnnouncement} className="flex-1">Save</Button>
+                    <Button variant="outline" onClick={() => { setEditingId(null); setEditForm(null); }} className="flex-1">Cancel</Button>
+                  </div>
+                </CardContent>
+              ) : (
+                <>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Badge className={getTypeColor(announcement.type)}>
+                          {announcement.type.charAt(0).toUpperCase() + announcement.type.slice(1)}
+                        </Badge>
+                      </div>
+                      {isAdmin && (
+                        <div className="flex space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(announcement)}>
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => deleteAnnouncement(announcement.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <CardTitle>Welcome to the official GTIC Website!</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{announcement.content}</p>
-              </CardContent>
+                    <CardTitle>{announcement.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{announcement.content}</p>
+                  </CardContent>
+                </>
+              )}
             </Card>
           ))}
         </div>
