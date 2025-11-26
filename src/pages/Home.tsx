@@ -216,16 +216,12 @@ export const Home = ({ isAdmin }: HomeProps) => {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <GamepadIcon className="mr-2 h-5 w-5 text-secondary" />
-                Tournament
+                Introducing Season 3R — Revived. Restarted. Ready.
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Watch or participate against the best Gorilla Tag teams in the GTIC tournament. For more info join the{" "}
-                <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                  Discord
-                </a>
-                .
+                GTIC is returning with a rebuilt Season 3, now called Season 3R. The "R" stands for Revived / Restart, representing a clean slate for the league. With mostly all-new teams, a refreshed structure, and a renewed commitment to competition, this season marks the official reboot of GTIC.
               </p>
             </CardContent>
           </Card>
