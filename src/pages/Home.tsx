@@ -216,6 +216,24 @@ export const Home = ({ isAdmin }: HomeProps) => {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <GamepadIcon className="mr-2 h-5 w-5 text-secondary" />
+                Tournament
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Watch or participate against the best Gorilla Tag teams in the GTIC tournament. For more info join the{" "}
+                <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                  Discord
+                </a>
+                .
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="team-card animate-fade-in" style={{animationDelay: '200ms'}}>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Zap className="mr-2 h-5 w-5 text-primary" />
                 Introducing Season 3R — Revived. Restarted. Ready.
               </CardTitle>
             </CardHeader>
