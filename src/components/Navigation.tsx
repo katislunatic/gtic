@@ -67,12 +67,13 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   };
 
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "Official Teams", path: "/teams" },
-    { name: "Bracket", path: "/bracket" },
-    { name: "Color Code Selector", path: "/color-selector" },
-    { name: "Sponsorships", path: "/sponsorships" },
-    { name: "FAQ", path: "/faq" },
+    { name: "Home", path: "/", external: false },
+    { name: "Official Teams", path: "/teams", external: false },
+    { name: "Bracket", path: "/bracket", external: false },
+    { name: "Color Code Selector", path: "/color-selector", external: false },
+    { name: "Sponsorships", path: "/sponsorships", external: false },
+    { name: "FAQ", path: "/faq", external: false },
+    { name: "Redeem", path: "https://gtic-redeem.netlify.app/", external: true },
   ];
 
   const handleAdminLogin = async () => {
@@ -127,15 +128,27 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.external ? (
+                <a
+                  key={item.name}
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`nav-link`}
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
           </div>
 
           {/* Social Media Icons & Admin Button */}
@@ -288,16 +301,29 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
         {isMenuOpen && (
           <div className="md:hidden pb-4 animate-slide-in">
             <div className="flex flex-col space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item) =>
+                item.external ? (
+                  <a
+                    key={item.name}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`nav-link`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              )}
               <div className="pt-2 border-t border-border">
                 {/* Social Media Links */}
                 <div className="flex justify-center space-x-2 mb-4">
