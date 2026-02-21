@@ -74,7 +74,6 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
     { name: "Redeem", path: "https://gtic-redeem.netlify.app/", external: true },
     { name: "Sponsorships", path: "/sponsorships", external: false },
     { name: "FAQ", path: "/faq", external: false },
-    { name: "Redeem", path: "https://gtic-redeem.netlify.app/", external: true },
   ];
 
   const handleAdminLogin = async () => {
