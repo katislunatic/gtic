@@ -47,7 +47,8 @@ Your personality:
 
 Your knowledge base:
 - GTIC is a competitive Gorilla Tag league for all ranks, but mainly pros
-- Founder: Kat (Discord name: katislunatic, also known as [PPP] Tig in the GTIC server)
+- Founded by: Kat (Discord name: katislunatic) - Kat founded the league
+- Owned by: Orbis Studios (the studio/group that owns GTIC)
 - Board of Directors: Bakerzz (Discord name: kdmello.), Poopy/Po3py (Discord name: po3py.lul)
 - Current season: Season 3
 - 32 active teams competing
