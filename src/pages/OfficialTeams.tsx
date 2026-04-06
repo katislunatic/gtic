@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import championCrown from "@/assets/champion-crown.png";
+import championStar from "@/assets/champion-star.png";
 
 interface Team {
   id: string;
@@ -184,10 +186,22 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
         <Card className="team-card mb-8">
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-4 text-center">Key</h2>
-            <div className="flex items-center justify-center space-x-2 text-sm">
-              <span className="text-lg">🔄</span>
-              <span className="font-medium">= Returning Team</span>
-              <span className="text-muted-foreground">— Teams returning from last season competing again this season.</span>
+            <div className="flex flex-col items-center space-y-2 text-sm">
+              <div className="flex items-center space-x-2">
+                <img src={championCrown} alt="Crown" className="h-5 w-5 object-contain" />
+                <span className="font-medium">= Reigning GTIC Champion</span>
+                <span className="text-muted-foreground">— Teams that have recently won and are defending their crown.</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <img src={championStar} alt="Star" className="h-5 w-5 object-contain" />
+                <span className="font-medium">= Past GTIC Champion</span>
+                <span className="text-muted-foreground">— Teams that have won in previous seasons. (number of stars = number of seasons won)</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-lg">🔄</span>
+                <span className="font-medium">= Returning Team</span>
+                <span className="text-muted-foreground">— Teams returning from last season competing again this season.</span>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -226,7 +240,19 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
                       style={{animationDelay: `${index * 50}ms`}}
                     >
                       <span className="flex-1">{team.name}</span>
-                      {team.emoji && <span className="text-lg">{team.emoji}</span>}
+                      {team.emoji && (
+                        <span className="flex items-center space-x-1">
+                          {team.emoji.includes('crown') && (
+                            <img src={championCrown} alt="Reigning Champion" className="h-5 w-5 object-contain" />
+                          )}
+                          {team.emoji.split(',').filter(e => e.trim() === 'star').map((_, i) => (
+                            <img key={i} src={championStar} alt="Past Champion" className="h-5 w-5 object-contain" />
+                          ))}
+                          {(team.emoji.includes('returning') || team.emoji === '🔄') && (
+                            <span className="text-lg">🔄</span>
+                          )}
+                        </span>
+                      )}
                       {isAdmin && (
                         <div className="flex space-x-1">
                           <Button variant="ghost" size="sm" onClick={() => startEdit(team)}>
