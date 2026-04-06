@@ -240,7 +240,19 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
                       style={{animationDelay: `${index * 50}ms`}}
                     >
                       <span className="flex-1">{team.name}</span>
-                      {team.emoji && <span className="text-lg">{team.emoji}</span>}
+                      {team.emoji && (
+                        <span className="flex items-center space-x-1">
+                          {team.emoji.includes('crown') && (
+                            <img src={championCrown} alt="Reigning Champion" className="h-5 w-5 object-contain" />
+                          )}
+                          {team.emoji.split(',').filter(e => e.trim() === 'star').map((_, i) => (
+                            <img key={i} src={championStar} alt="Past Champion" className="h-5 w-5 object-contain" />
+                          ))}
+                          {(team.emoji.includes('returning') || team.emoji === '🔄') && (
+                            <span className="text-lg">🔄</span>
+                          )}
+                        </span>
+                      )}
                       {isAdmin && (
                         <div className="flex space-x-1">
                           <Button variant="ghost" size="sm" onClick={() => startEdit(team)}>
