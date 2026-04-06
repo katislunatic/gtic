@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Footer } from "@/components/Footer";
-import bracketImage from "@/assets/season-3-bracket.png";
+const bracketImage = "/images/Season_3R_Bracket.png";
 
 interface BracketProps {
   isAdmin: boolean;
@@ -16,13 +16,13 @@ export const Bracket = ({ isAdmin }: BracketProps) => {
             <span className="hero-text">Tournament Bracket</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Follow the current GTIC Season 3 tournament bracket and see which teams advance through each round.
+            Follow the current GTIC Season 3R tournament bracket and see which teams advance through each round.
           </p>
         </div>
 
         <Card className="card-gradient max-w-7xl mx-auto border">
           <CardHeader>
-            <CardTitle className="text-center">GTIC Season 3 Bracket</CardTitle>
+            <CardTitle className="text-center">GTIC Season 3R Bracket</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <Dialog>
@@ -30,7 +30,7 @@ export const Bracket = ({ isAdmin }: BracketProps) => {
                 <div className="flex justify-center cursor-pointer group">
                   <img 
                     src={bracketImage} 
-                    alt="GTIC Season 3 Tournament Bracket" 
+                    alt="GTIC Season 3R Tournament Bracket" 
                     className="w-full max-w-6xl h-auto rounded-lg shadow-lg transition-transform group-hover:scale-[1.02]"
                   />
                 </div>
@@ -38,14 +38,14 @@ export const Bracket = ({ isAdmin }: BracketProps) => {
               <DialogContent className="max-w-[98vw] max-h-[98vh] w-auto h-auto p-2 border-0 bg-transparent">
                 <img 
                   src={bracketImage} 
-                  alt="GTIC Season 3 Tournament Bracket - Full View" 
+                  alt="GTIC Season 3R Tournament Bracket - Full View" 
                   className="w-full h-auto max-h-[96vh] object-contain rounded-lg"
                 />
               </DialogContent>
             </Dialog>
             <div className="mt-6 text-center">
               <p className="text-muted-foreground">
-                32 teams competing in single elimination format. Stay tuned for live updates as the tournament progresses!
+                16 teams competing in single elimination format. Stay tuned for live updates as the tournament progresses!
               </p>
             </div>
           </CardContent>
