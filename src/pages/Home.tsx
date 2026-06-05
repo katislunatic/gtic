@@ -156,9 +156,9 @@ export const Home = ({ isAdmin }: HomeProps) => {
   };
 
   const stats = [
-    { icon: Trophy, label: "Active Teams", value: "16", color: "text-primary" },
-    { icon: Users, label: "Members", value: "1000+", color: "text-secondary" },
-    { icon: Calendar, label: "Current Season", value: "3R", color: "text-primary" }
+    { icon: Trophy, label: "Active Teams", value: "26", color: "text-primary" },
+    { icon: Users, label: "Members", value: "1,600+", color: "text-secondary" },
+    { icon: Calendar, label: "Current Season", value: "4", color: "text-primary" }
   ];
 
   return (
@@ -226,20 +226,6 @@ export const Home = ({ isAdmin }: HomeProps) => {
                   Discord
                 </a>
                 .
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="team-card animate-fade-in" style={{animationDelay: '200ms'}}>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Zap className="mr-2 h-5 w-5 text-primary" />
-                Introducing Season 3R — Revived. Restarted. Ready.
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                GTEC is returning with a rebuilt Season 3, now called Season 3R. The "R" stands for Revived / Restart, representing a clean slate for the league. With mostly all-new teams, a refreshed structure, and a renewed commitment to competition, this season marks the official reboot of GTEC.
               </p>
             </CardContent>
           </Card>

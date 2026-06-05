@@ -69,9 +69,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   const navItems = [
     { name: "Home", path: "/", external: false },
     { name: "Official Teams", path: "/teams", external: false },
-    { name: "Bracket", path: "/bracket", external: false },
     { name: "Color Code Selector", path: "/color-selector", external: false },
-    { name: "Redeem", path: "https://gtic-redeem.netlify.app/", external: true },
     { name: "Sponsorships", path: "/sponsorships", external: false },
     { name: "FAQ", path: "/faq", external: false },
   ];
