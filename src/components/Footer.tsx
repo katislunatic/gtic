@@ -5,7 +5,7 @@ export const Footer = () => {
         <div className="text-center">
           <h3 className="text-sm font-semibold mb-2 text-muted-foreground">LEGAL NOTICE</h3>
           <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
-            Gorilla Tag Intermediate COMP is in no way affiliated with Another Axiom, LLC, nor should it be considered a company endorsed by Another Axiom, LLC.
+            Gorilla Tag Elite COMP is in no way affiliated with Another Axiom, LLC, nor should it be considered a company endorsed by Another Axiom, LLC.
           </p>
         </div>
       </div>
