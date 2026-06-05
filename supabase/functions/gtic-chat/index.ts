@@ -57,7 +57,7 @@ Your knowledge base:
 
 Website navigation help:
 - Home: Main page with announcements and info
-- Official Teams: List of all 16 registered teams
+- Official Teams: List of all 26 registered teams
 - Color Code Selector: Tool to test and pick in-game colors
 - FAQ: Common questions and answers
 - Sponsorships: Information about GTEC sponsorships
