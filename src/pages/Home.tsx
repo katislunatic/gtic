@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
-import gticLogo from "@/assets/gtec-logo.png";
+import gticLogo from "@/assets/gtic-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Announcement {

@@ -14,7 +14,7 @@ import tiktokLogo from "@/assets/tiktok-logo.svg";
 import twitchLogo from "@/assets/twitch-logo.svg";
 import discordLogo from "@/assets/discord-logo.svg";
 import { useToast } from "@/hooks/use-toast";
-import gticLogo from "@/assets/gtec-logo.png";
+import gticLogo from "@/assets/gtic-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 
 interface NavigationProps {
