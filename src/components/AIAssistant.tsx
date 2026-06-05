@@ -370,7 +370,7 @@ export const AIAssistant = () => {
       setMessages([
         {
           role: "assistant",
-          content: "Hey there! 👋 I'm the GTIC Assistant. Need help finding something or have questions about the league?",
+          content: "Hey there! 👋 I'm the GTEC Assistant. Need help finding something or have questions about the league?",
         },
       ]);
     }
@@ -395,7 +395,7 @@ export const AIAssistant = () => {
           <div className="flex items-center justify-between p-4 border-b border-border bg-primary/10 rounded-t-2xl">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-lg">GTIC Assistant</h3>
+              <h3 className="font-semibold text-lg">GTEC Assistant</h3>
               <div className="flex gap-1 ml-2">
                 <Button
                   variant={chatMode === "text" ? "default" : "ghost"}
@@ -513,7 +513,7 @@ export const AIAssistant = () => {
                     ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask me anything about GTIC..."
+                    placeholder="Ask me anything about GTEC..."
                     disabled={isLoading}
                     className="flex-1"
                   />

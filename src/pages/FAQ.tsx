@@ -8,8 +8,8 @@ interface FAQProps {
 
 const faqData = [
   {
-    question: "What is GTIC?",
-    answer: "GTIC stands for Gorilla Tag Intermediate COMP. It's a competitive Gorilla Tag league that focuses on the game's unique movement system and unites players of all skill levels."
+    question: "What is GTEC?",
+    answer: "GTEC stands for Gorilla Tag Elite COMP. It's a competitive Gorilla Tag league that focuses on the game's unique movement system and unites players of all skill levels."
   },
   {
     question: "How do I register my team?",
@@ -17,7 +17,7 @@ const faqData = [
   },
   {
     question: "What are the team requirements?",
-    answer: "Teams must have a designated captain and follow the official GTIC rules and guidelines. Specific requirements are detailed in our Discord server."
+    answer: "Teams must have a designated captain and follow the official GTEC rules and guidelines. Specific requirements are detailed in our Discord server."
   },
   {
     question: "When do tournaments take place?",
@@ -40,7 +40,7 @@ const faqData = [
     answer: "Yes, you can change teams after signing up. Please contact the moderation team in our Discord server for assistance with team transfers."
   },
   {
-    question: "How can I stay updated with GTIC news?",
+    question: "How can I stay updated with GTEC news?",
     answer: "Follow us on all our social platforms: Discord (discord.gg/hB4V4ywqxj), YouTube (@gticleague), TikTok (@gtic_league), and Twitch (gticleague). This website also features the latest announcements."
   },
   {
@@ -58,7 +58,7 @@ export const FAQ = ({ isAdmin }: FAQProps) => {
             <span className="hero-text">Frequently Asked Questions</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Find answers to common questions about GTIC, tournaments, registration, and more.
+            Find answers to common questions about GTEC, tournaments, registration, and more.
           </p>
         </div>
 

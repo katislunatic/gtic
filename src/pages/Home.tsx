@@ -167,10 +167,10 @@ export const Home = ({ isAdmin }: HomeProps) => {
         {/* Hero Section */}
         <div className="text-center py-12 animate-fade-in">
           <div className="flex justify-center mb-6">
-            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-64 w-64 animate-float" />
+            <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-64 w-64 animate-float" />
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="hero-text">Gorilla Tag Intermediate COMP</span>
+            <span className="hero-text">Gorilla Tag Elite COMP</span>
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-muted-foreground">
             Unleash Your Inner Gorilla.
@@ -202,12 +202,12 @@ export const Home = ({ isAdmin }: HomeProps) => {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Info className="mr-2 h-5 w-5 text-primary" />
-                What is Gorilla Tag Intermediate COMP?
+                What is Gorilla Tag Elite COMP?
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                GTIC is a competitive Gorilla Tag league, focusing on Gorilla Tag and its one-of-a-kind movement system. GTIC unites players of all skills and is the hub for all competitive Gorilla Tag players.
+                GTEC is a competitive Gorilla Tag league, focusing on Gorilla Tag and its one-of-a-kind movement system. GTEC unites players of all skills and is the hub for all competitive Gorilla Tag players.
               </p>
             </CardContent>
           </Card>
@@ -221,7 +221,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Watch or participate against the best Gorilla Tag teams in the GTIC tournament. For more info join the{" "}
+                Watch or participate against the best Gorilla Tag teams in the GTEC tournament. For more info join the{" "}
                 <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                   Discord
                 </a>
@@ -239,7 +239,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                GTIC is returning with a rebuilt Season 3, now called Season 3R. The "R" stands for Revived / Restart, representing a clean slate for the league. With mostly all-new teams, a refreshed structure, and a renewed commitment to competition, this season marks the official reboot of GTIC.
+                GTEC is returning with a rebuilt Season 3, now called Season 3R. The "R" stands for Revived / Restart, representing a clean slate for the league. With mostly all-new teams, a refreshed structure, and a renewed commitment to competition, this season marks the official reboot of GTEC.
               </p>
             </CardContent>
           </Card>
