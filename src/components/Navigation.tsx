@@ -14,7 +14,7 @@ import tiktokLogo from "@/assets/tiktok-logo.svg";
 import twitchLogo from "@/assets/twitch-logo.svg";
 import discordLogo from "@/assets/discord-logo.svg";
 import { useToast } from "@/hooks/use-toast";
-import gticLogo from "@/assets/gtic-logo.png";
+import gticLogo from "@/assets/gtec-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 
 interface NavigationProps {
@@ -122,8 +122,8 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <img src={gticLogo} alt="Gorilla Tag Intermediate COMP Logo" className="h-10 w-10" />
-            <span className="text-xl font-bold hero-text">Gorilla Tag Intermediate COMP</span>
+            <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-10 w-10" />
+            <span className="text-xl font-bold hero-text">Gorilla Tag Elite COMP</span>
           </Link>
 
           {/* Desktop Navigation */}

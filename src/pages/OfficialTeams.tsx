@@ -189,12 +189,12 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
             <div className="flex flex-col items-center space-y-2 text-sm">
               <div className="flex items-center space-x-2">
                 <img src={championCrown} alt="Crown" className="h-5 w-5 object-contain" />
-                <span className="font-medium">= Reigning GTIC Champion</span>
+                <span className="font-medium">= Reigning GTEC Champion</span>
                 <span className="text-muted-foreground">— Teams that have recently won and are defending their crown.</span>
               </div>
               <div className="flex items-center space-x-2">
                 <img src={championStar} alt="Star" className="h-5 w-5 object-contain" />
-                <span className="font-medium">= Past GTIC Champion</span>
+                <span className="font-medium">= Past GTEC Champion</span>
                 <span className="text-muted-foreground">— Teams that have won in previous seasons. (number of stars = number of seasons won)</span>
               </div>
               <div className="flex items-center space-x-2">
