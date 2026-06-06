@@ -284,7 +284,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
                       <span className={`text-sm font-semibold ${getTierColor(sponsor.tier)}`}>
-                        {getTierLabel(sponsor.tier)}
+                        {sponsor.name === "APEXINNO" ? "Sponsor" : getTierLabel(sponsor.tier)}
                       </span>
                       {isAdmin && (
                         <div className="flex space-x-2">
@@ -297,7 +297,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-center mb-4 bg-white/5 rounded-lg p-4">
+                    <div className="flex justify-center mb-4 bg-white rounded-lg p-4">
                       <img src={sponsor.logo} alt={`${sponsor.name} logo`} className="h-24 object-contain" />
                     </div>
                     <CardTitle className="text-center">{sponsor.name}</CardTitle>
