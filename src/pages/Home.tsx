@@ -159,7 +159,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
     { icon: Trophy, label: "Active Teams", value: "26", color: "text-primary" },
     { icon: Users, label: "Members", value: "1,600+", color: "text-secondary" },
     { icon: Calendar, label: "Current Season", value: "4", color: "text-primary" },
-    { icon: Zap, label: "Week", value: "Week 1 of Seeding", color: "text-secondary" }
+    { icon: Zap, label: "Seeding", value: "Week 1", color: "text-secondary" }
   ];
 
   return (
