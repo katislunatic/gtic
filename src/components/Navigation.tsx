@@ -125,7 +125,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-1">
             {navItems.map((item) =>
               item.external ? (
                 <a
@@ -150,7 +150,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
           </div>
 
           {/* Social Media Icons & Admin Button */}
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden lg:flex items-center space-x-2">
             {/* Social Media Links */}
             <a
               href="https://www.youtube.com/@gticleague"
@@ -288,7 +288,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -297,7 +297,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4 animate-slide-in">
+          <div className="lg:hidden pb-4 animate-slide-in">
             <div className="flex flex-col space-y-2">
               {navItems.map((item) =>
                 item.external ? (

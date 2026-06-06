@@ -16,7 +16,6 @@ import { Sponsorships } from "./pages/Sponsorships";
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
 import { CookieConsent } from "./components/CookieConsent";
-import { AIAssistant } from "./components/AIAssistant";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +41,6 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
         <CookieConsent />
-        <AIAssistant />
           </div>
         </BrowserRouter>
       </TooltipProvider>
