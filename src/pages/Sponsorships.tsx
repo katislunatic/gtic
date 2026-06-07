@@ -297,7 +297,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-center mb-4 rounded-lg p-4" style={{ backgroundColor: "#000100" }}>
+                    <div className="flex justify-center mb-4 rounded-lg p-4" style={{ backgroundColor: "#FFFFFF" }}>
                       <img src={sponsor.logo} alt={`${sponsor.name} logo`} className="h-24 object-contain" />
                     </div>
                     <CardTitle className="text-center">{sponsor.name}</CardTitle>
