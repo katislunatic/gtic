@@ -41,24 +41,6 @@ export type Database = {
         }
         Relationships: []
       }
-      conversations: {
-        Row: {
-          created_at: string
-          id: string
-          title: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          title?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          title?: string
-        }
-        Relationships: []
-      }
       official_teams: {
         Row: {
           created_at: string
