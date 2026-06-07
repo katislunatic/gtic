@@ -71,6 +71,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
     { name: "Official Teams", path: "/teams", external: false },
     { name: "Color Code Selector", path: "/color-selector", external: false },
     { name: "Sponsorships", path: "/sponsorships", external: false },
+    { name: "Appeal", path: "/appeal", external: false },
     { name: "FAQ", path: "/faq", external: false },
   ];
 
