@@ -7,7 +7,7 @@ import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon, E
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
 import gticLogo from "@/assets/gtic-logo.png";
-import apexinnoLogo from "@/assets/apexinno-logo.png";
+import apexinnoLogo from "@/assets/gtec-x-apexinno.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Announcement {
