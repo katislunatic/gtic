@@ -7,7 +7,7 @@ import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon, E
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
 import gticLogo from "@/assets/gtic-logo.png";
-import apexinnoLogo from "@/assets/apexinno-logo.png";
+import apexinnoLogo from "@/assets/gtec-x-apexinno.png.asset.json";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Announcement {
@@ -205,7 +205,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
             <div className="relative flex flex-col md:flex-row items-center gap-6">
               <div className="flex-shrink-0">
                 <img
-                  src={apexinnoLogo}
+                  src={apexinnoLogo.url}
                   alt="APEXINNO Logo"
                   className="h-16 md:h-20 object-contain"
                 />
