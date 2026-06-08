@@ -205,7 +205,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
             <div className="relative flex flex-col md:flex-row items-center gap-6">
               <div className="flex-shrink-0">
                 <img
-                  src={apexinnoLogo}
+                  src={apexinnoLogo.url}
                   alt="APEXINNO Logo"
                   className="h-16 md:h-20 object-contain"
                 />
