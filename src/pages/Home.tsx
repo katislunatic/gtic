@@ -28,9 +28,23 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [newAnnouncement, setNewAnnouncement] = useState({ title: "", content: "", type: "news" as const });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Announcement | null>(null);
+  const [memberCount, setMemberCount] = useState<string>("1,600+");
 
   useEffect(() => {
     loadAnnouncements();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchCount = async () => {
+      const { data, error } = await supabase.functions.invoke('discord-member-count');
+      if (!cancelled && !error && data?.member_count) {
+        setMemberCount(Number(data.member_count).toLocaleString());
+      }
+    };
+    fetchCount();
+    const id = setInterval(fetchCount, 60_000);
+    return () => { cancelled = true; clearInterval(id); };
   }, []);
 
   const loadAnnouncements = async () => {
@@ -158,7 +172,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
 
   const stats = [
     { icon: Trophy, label: "Active Teams", value: "26", color: "text-primary" },
-    { icon: Users, label: "Members", value: "1,600+", color: "text-secondary" },
+    { icon: Users, label: "Members", value: memberCount, color: "text-secondary" },
     { icon: Calendar, label: "Current Season", value: "4", color: "text-primary" },
     { icon: Zap, label: "Seeding", value: "Week 1", color: "text-secondary" }
   ];
