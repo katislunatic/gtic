@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon } from "lucide-react";
+import { Trophy, Users, Calendar, Zap, Plus, Edit2, Trash2, Info, GamepadIcon, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/Footer";
 import gticLogo from "@/assets/gtic-logo.png";
