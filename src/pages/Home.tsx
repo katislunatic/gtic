@@ -198,6 +198,30 @@ export const Home = ({ isAdmin }: HomeProps) => {
           ))}
         </div>
 
+        {/* Sponsor Announcement */}
+        <a href="/sponsorships" className="block mb-12 animate-fade-in">
+          <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 md:p-8">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary/20 rounded-full blur-2xl" />
+            <div className="relative flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <img
+                  src={apexinnoLogo}
+                  alt="APEXINNO Logo"
+                  className="h-16 md:h-20 object-contain"
+                />
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-1">New Official Sponsor</p>
+                <h2 className="text-xl md:text-2xl font-bold mb-2">APEXINNO Joins GTEC!</h2>
+                <p className="text-muted-foreground text-sm md:text-base">
+                  We're thrilled to welcome APEXINNO as an official sponsor of Gorilla Tag Elite COMP. Check out our Sponsorships page to learn more!
+                </p>
+              </div>
+              <ExternalLink className="h-5 w-5 text-primary flex-shrink-0 hidden md:block" />
+            </div>
+          </div>
+        </a>
+
         {/* Info Sections */}
         <div className="space-y-8 mb-12">
           <Card className="team-card animate-fade-in">
