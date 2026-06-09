@@ -17,6 +17,7 @@ import { Appeal } from "./pages/Appeal";
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
 import { CookieConsent } from "./components/CookieConsent";
+import { OfflineNotice } from "./components/OfflineNotice";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
         <CookieConsent />
+        <OfflineNotice />
           </div>
         </BrowserRouter>
       </TooltipProvider>
