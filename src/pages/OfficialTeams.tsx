@@ -9,6 +9,18 @@ import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import championCrown from "@/assets/champion-crown.png";
 import championStar from "@/assets/champion-star.png";
+import rank1 from "@/assets/ranks/1_golden.png.asset.json";
+import rank2 from "@/assets/ranks/2_silver.png.asset.json";
+import rank3 from "@/assets/ranks/3_bronze.png.asset.json";
+import rank4 from "@/assets/ranks/blue_4.png.asset.json";
+import rank5 from "@/assets/ranks/blue_5.png.asset.json";
+import rank6 from "@/assets/ranks/blue_6.png.asset.json";
+import rank7 from "@/assets/ranks/blue_7.png.asset.json";
+import rank8 from "@/assets/ranks/blue_8.png.asset.json";
+import rank9 from "@/assets/ranks/blue_9.png.asset.json";
+import rank10 from "@/assets/ranks/blue_10.png.asset.json";
+
+const rankIcons = [rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10];
 
 interface Team {
   id: string;
@@ -239,6 +251,13 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
                       className="flex items-center space-x-3 p-3 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors animate-fade-in"
                       style={{animationDelay: `${index * 50}ms`}}
                     >
+                      {rankIcons[index] && (
+                        <img
+                          src={rankIcons[index].url}
+                          alt={`Rank ${index + 1}`}
+                          className="h-8 w-8 object-contain flex-shrink-0"
+                        />
+                      )}
                       <span className="flex-1">{team.name}</span>
                       {team.emoji && (
                         <span className="flex items-center space-x-1">
