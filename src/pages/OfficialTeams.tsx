@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Plus, Trash2, Edit2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -19,8 +20,42 @@ import rank7 from "@/assets/ranks/blue_7.png.asset.json";
 import rank8 from "@/assets/ranks/blue_8.png.asset.json";
 import rank9 from "@/assets/ranks/blue_9.png.asset.json";
 import rank10 from "@/assets/ranks/blue_10.png.asset.json";
+import rank11 from "@/assets/ranks/blue_11.png.asset.json";
+import rank12 from "@/assets/ranks/blue_12.png.asset.json";
+import rank13 from "@/assets/ranks/blue_13.png.asset.json";
+import rank14 from "@/assets/ranks/blue_14.png.asset.json";
+import rank15 from "@/assets/ranks/blue_15.png.asset.json";
+import rank16 from "@/assets/ranks/blue_16.png.asset.json";
+import blueDash from "@/assets/ranks/dash.png.asset.json";
+import redDash from "@/assets/ranks/red_dash.png.asset.json";
 
-const rankIcons = [rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10];
+const rankIcons = [
+  rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8,
+  rank9, rank10, rank11, rank12, rank13, rank14, rank15, rank16,
+];
+
+function getRankInfo(index: number): { url: string; tooltip: string; alt: string } {
+  if (index < 16) {
+    const n = index + 1;
+    return {
+      url: rankIcons[index].url,
+      tooltip: `Current seeding rank #${n} — locked into the bracket if seeding ended today.`,
+      alt: `Seeding rank ${n}`,
+    };
+  }
+  if (index < 22) {
+    return {
+      url: blueDash.url,
+      tooltip: "Outside the top 16 — will not make the bracket if seeding ends here.",
+      alt: "Outside top 16",
+    };
+  }
+  return {
+    url: redDash.url,
+    tooltip: "Team has disbanded and is no longer competing.",
+    alt: "Disbanded team",
+  };
+}
 
 interface Team {
   id: string;
@@ -251,13 +286,23 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
                       className="flex items-center space-x-3 p-3 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors animate-fade-in"
                       style={{animationDelay: `${index * 50}ms`}}
                     >
-                      {rankIcons[index] && (
-                        <img
-                          src={rankIcons[index].url}
-                          alt={`Rank ${index + 1}`}
-                          className="h-8 w-8 object-contain flex-shrink-0"
-                        />
-                      )}
+                      {(() => {
+                        const info = getRankInfo(index);
+                        return (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img
+                                src={info.url}
+                                alt={info.alt}
+                                className="h-8 w-8 object-contain flex-shrink-0 cursor-help"
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-xs">
+                              {info.tooltip}
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })()}
                       <span className="flex-1">{team.name}</span>
                       {team.emoji && (
                         <span className="flex items-center space-x-1">
