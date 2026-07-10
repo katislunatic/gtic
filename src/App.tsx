@@ -14,6 +14,7 @@ import { CookiePolicy } from "./pages/CookiePolicy";
 import { Sponsorships } from "./pages/Sponsorships";
 import { Appeal } from "./pages/Appeal";
 import { Wallpapers } from "./pages/Wallpapers";
+import { Bracket } from "./pages/Bracket";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "./components/Footer";
@@ -39,6 +40,7 @@ const App = () => {
               <Route path="/color-selector" element={<ColorCodeSelector isAdmin={isAdmin} />} />
               <Route path="/sponsorships" element={<Sponsorships isAdmin={isAdmin} />} />
               <Route path="/wallpapers" element={<Wallpapers isAdmin={isAdmin} />} />
+            <Route path="/bracket" element={<Bracket />} />
               <Route path="/appeal" element={<Appeal isAdmin={isAdmin} />} />
               <Route path="/faq" element={<FAQ isAdmin={isAdmin} />} />
               <Route path="/policy/privacy" element={<PrivacyPolicy />} />

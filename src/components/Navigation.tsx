@@ -69,6 +69,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   const navItems = [
     { name: "Home", path: "/", external: false },
     { name: "Official Teams", path: "/teams", external: false },
+    { name: "Bracket", path: "/bracket", external: false },
     { name: "Color Code Selector", path: "/color-selector", external: false },
     { name: "Sponsorships", path: "/sponsorships", external: false },
     { name: "Wallpapers", path: "/wallpapers", external: false },
@@ -155,7 +156,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
           <div className="hidden lg:flex items-center space-x-2">
             {/* Social Media Links */}
             <a
-              href="https://www.youtube.com/@gticleague"
+              href="https://www.youtube.com/@GTECLeague"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -165,7 +166,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               </Button>
             </a>
             <a
-              href="https://www.tiktok.com/@gtic_league?_t=ZT-8xSOoLf3VDJ&_r=1"
+              href="https://www.tiktok.com/@gtec_league"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -328,7 +329,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                 {/* Social Media Links */}
                 <div className="flex justify-center space-x-2 mb-4">
                   <a
-                    href="https://www.youtube.com/@gticleague"
+                    href="https://www.youtube.com/@GTECLeague"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-primary transition-colors"
@@ -338,7 +339,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     </Button>
                   </a>
                   <a
-                    href="https://www.tiktok.com/@gtic_league?_t=ZT-8xSOoLf3VDJ&_r=1"
+                    href="https://www.tiktok.com/@gtec_league"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-primary transition-colors"
