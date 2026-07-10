@@ -286,13 +286,23 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
                       className="flex items-center space-x-3 p-3 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors animate-fade-in"
                       style={{animationDelay: `${index * 50}ms`}}
                     >
-                      {rankIcons[index] && (
-                        <img
-                          src={rankIcons[index].url}
-                          alt={`Rank ${index + 1}`}
-                          className="h-8 w-8 object-contain flex-shrink-0"
-                        />
-                      )}
+                      {(() => {
+                        const info = getRankInfo(index);
+                        return (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <img
+                                src={info.url}
+                                alt={info.alt}
+                                className="h-8 w-8 object-contain flex-shrink-0 cursor-help"
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-xs">
+                              {info.tooltip}
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })()}
                       <span className="flex-1">{team.name}</span>
                       {team.emoji && (
                         <span className="flex items-center space-x-1">
