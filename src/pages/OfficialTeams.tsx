@@ -289,15 +289,21 @@ export const OfficialTeams = ({ isAdmin }: OfficialTeamsProps) => {
                       {(() => {
                         const info = getRankInfo(index);
                         return (
-                          <Tooltip>
+                          <Tooltip delayDuration={100}>
                             <TooltipTrigger asChild>
-                              <img
-                                src={info.url}
-                                alt={info.alt}
-                                className="h-8 w-8 object-contain flex-shrink-0 cursor-help"
-                              />
+                              <button
+                                type="button"
+                                aria-label={info.alt}
+                                className="flex-shrink-0 cursor-help bg-transparent border-0 p-0"
+                              >
+                                <img
+                                  src={info.url}
+                                  alt={info.alt}
+                                  className="h-8 w-8 object-contain pointer-events-none"
+                                />
+                              </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top" className="max-w-xs">
+                            <TooltipContent side="top" className="max-w-xs z-50">
                               {info.tooltip}
                             </TooltipContent>
                           </Tooltip>
