@@ -22,7 +22,7 @@ export const CookieConsent = () => {
 
   return (
     <div className="fixed bottom-4 left-4 z-50 max-w-sm animate-in slide-in-from-bottom-5">
-      <Card className="p-4 shadow-lg border-border bg-card">
+      <Card className="p-4 glass-panel rounded-[1.5rem]">
         <p className="text-sm text-card-foreground mb-4 text-center">
           By using our website you agree to our{" "}
           <Link to="/policy/privacy" className="text-primary hover:underline">

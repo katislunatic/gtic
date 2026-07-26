@@ -162,7 +162,7 @@ export const Wallpapers = ({ isAdmin }: WallpapersProps) => {
             const isOwned = owned.includes(w.id);
             const inCart = cart.includes(w.id);
             return (
-              <Card key={w.id} className="overflow-hidden card-gradient border-border flex flex-col">
+              <Card key={w.id} className="overflow-hidden glass-panel rounded-[1.5rem] flex flex-col">
                 <div className={`relative bg-muted ${w.orientation === "portrait" ? "aspect-[9/16]" : "aspect-video"}`}>
                   <img src={w.url} alt={w.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                   {isOwned && (

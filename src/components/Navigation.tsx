@@ -268,7 +268,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
 
               {/* Admin Dialog */}
               <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-                <DialogContent className="card-gradient">
+                <DialogContent className="glass-panel">
                   <DialogHeader>
                     <DialogTitle>Admin Login</DialogTitle>
                   </DialogHeader>
