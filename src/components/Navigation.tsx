@@ -118,190 +118,24 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
   const isActivePage = (path: string) => location.pathname === path;
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-10 w-10" />
-            <span className="text-xl font-bold hero-text">Gorilla Tag Elite COMP</span>
-          </Link>
+    <nav className="fixed top-3 left-3 right-3 z-50 max-w-7xl mx-auto">
+      {/* Liquid glass floating shell */}
+      <div className="relative overflow-hidden bg-background/45 backdrop-blur-2xl backdrop-saturate-150 border border-white/20 rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
+        {/* Top refractive highlight */}
+        <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+        {/* Bottom soft glow */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-white/5 to-transparent pointer-events-none" />
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
-            {navItems.map((item) =>
-              item.external ? (
-                <a
-                  key={item.name}
-                  href={item.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`nav-link`}
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
-                >
-                  {item.name}
-                </Link>
-              )
-            )}
-          </div>
+        <div className="relative container mx-auto px-4">
+          <div className="flex items-center justify-between h-14">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-10 w-10" />
+              <span className="text-xl font-bold hero-text">Gorilla Tag Elite COMP</span>
+            </Link>
 
-          {/* Social Media Icons & Admin Button */}
-          <div className="hidden lg:flex items-center space-x-2">
-            {/* Social Media Links */}
-            <a
-              href="https://www.youtube.com/@GTECLeague"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Button variant="ghost" size="icon">
-                <img src={youtubeLogo} alt="YouTube" className="h-4 w-4" />
-              </Button>
-            </a>
-            <a
-              href="https://www.tiktok.com/@gtec_league"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Button variant="ghost" size="icon">
-                <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
-              </Button>
-            </a>
-            <a
-              href="https://www.twitch.tv/gticleague"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Button variant="ghost" size="icon">
-                <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
-              </Button>
-            </a>
-            <a
-              href="https://discord.gg/hB4V4ywqxj"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Button variant="ghost" size="icon">
-                <img src={discordLogo} alt="Discord" className="h-4 w-4" />
-              </Button>
-            </a>
-            
-            {/* Settings Menu */}
-            <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 bg-popover" align="end">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-lg">Settings</h3>
-                  
-                  {/* Theme Toggle */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">Theme</Label>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Moon className="h-4 w-4" />
-                        <span className="text-sm">Dark Mode</span>
-                      </div>
-                      <Switch
-                        checked={theme === "light"}
-                        onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
-                      />
-                      <div className="flex items-center gap-2">
-                        <Sun className="h-4 w-4" />
-                        <span className="text-sm">Light Mode</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  {/* Admin Access */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">Admin Access</Label>
-                    {isAdmin ? (
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          handleAdminLogout();
-                          setIsSettingsOpen(false);
-                        }} 
-                        className="w-full text-secondary"
-                      >
-                        Logout Admin
-                      </Button>
-                    ) : (
-                      <Button 
-                        variant="outline"
-                        onClick={() => {
-                          setIsAdminDialogOpen(true);
-                          setIsSettingsOpen(false);
-                        }}
-                        className="w-full"
-                      >
-                        Admin Login
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-
-            {/* Admin Dialog */}
-            <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-              <DialogContent className="card-gradient">
-                <DialogHeader>
-                  <DialogTitle>Admin Login</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
-                  />
-                  <Button onClick={handleAdminLogin} className="w-full">
-                    Login
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="lg:hidden pb-4 animate-slide-in">
-            <div className="flex flex-col space-y-2">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-1">
               {navItems.map((item) =>
                 item.external ? (
                   <a
@@ -310,7 +144,6 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`nav-link`}
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
                   </a>
@@ -319,72 +152,247 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     key={item.name}
                     to={item.path}
                     className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
                 )
               )}
-              <div className="pt-2 border-t border-border">
-                {/* Social Media Links */}
-                <div className="flex justify-center space-x-2 mb-4">
-                  <a
-                    href="https://www.youtube.com/@GTECLeague"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Button variant="ghost" size="icon">
-                      <img src={youtubeLogo} alt="YouTube" className="h-4 w-4" />
-                    </Button>
-                  </a>
-                  <a
-                    href="https://www.tiktok.com/@gtec_league"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Button variant="ghost" size="icon">
-                      <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
-                    </Button>
-                  </a>
-                  <a
-                    href="https://www.twitch.tv/gticleague"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Button variant="ghost" size="icon">
-                      <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
-                    </Button>
-                  </a>
-                  <a
-                    href="https://discord.gg/hB4V4ywqxj"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Button variant="ghost" size="icon">
-                      <img src={discordLogo} alt="Discord" className="h-4 w-4" />
-                    </Button>
-                  </a>
-                </div>
-                
-                <Button 
-                  variant="ghost" 
-                  className="w-full"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    setIsSettingsOpen(true);
-                  }}
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
+            </div>
+
+            {/* Social Media Icons & Admin Button */}
+            <div className="hidden lg:flex items-center space-x-2">
+              {/* Social Media Links */}
+              <a
+                href="https://www.youtube.com/@GTECLeague"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Button variant="ghost" size="icon">
+                  <img src={youtubeLogo} alt="YouTube" className="h-4 w-4" />
                 </Button>
+              </a>
+              <a
+                href="https://www.tiktok.com/@gtec_league"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Button variant="ghost" size="icon">
+                  <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
+                </Button>
+              </a>
+              <a
+                href="https://www.twitch.tv/gticleague"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Button variant="ghost" size="icon">
+                  <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
+                </Button>
+              </a>
+              <a
+                href="https://discord.gg/hB4V4ywqxj"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Button variant="ghost" size="icon">
+                  <img src={discordLogo} alt="Discord" className="h-4 w-4" />
+                </Button>
+              </a>
+              
+              {/* Settings Menu */}
+              <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 bg-popover" align="end">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-lg">Settings</h3>
+                    
+                    {/* Theme Toggle */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">Theme</Label>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Moon className="h-4 w-4" />
+                          <span className="text-sm">Dark Mode</span>
+                        </div>
+                        <Switch
+                          checked={theme === "light"}
+                          onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
+                        />
+                        <div className="flex items-center gap-2">
+                          <Sun className="h-4 w-4" />
+                          <span className="text-sm">Light Mode</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Admin Access */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">Admin Access</Label>
+                      {isAdmin ? (
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            handleAdminLogout();
+                            setIsSettingsOpen(false);
+                          }} 
+                          className="w-full text-secondary"
+                        >
+                          Logout Admin
+                        </Button>
+                      ) : (
+                        <Button 
+                          variant="outline"
+                          onClick={() => {
+                            setIsAdminDialogOpen(true);
+                            setIsSettingsOpen(false);
+                          }}
+                          className="w-full"
+                        >
+                          Admin Login
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Admin Dialog */}
+              <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
+                <DialogContent className="card-gradient">
+                  <DialogHeader>
+                    <DialogTitle>Admin Login</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <Input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+                    />
+                    <Button onClick={handleAdminLogin} className="w-full">
+                      Login
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="lg:hidden pb-4 animate-slide-in">
+              <div className="flex flex-col space-y-2">
+                {navItems.map((item) =>
+                  item.external ? (
+                    <a
+                      key={item.name}
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`nav-link`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  )
+                )}
+                <div className="pt-2 border-t border-border/50">
+                  {/* Social Media Links */}
+                  <div className="flex justify-center space-x-2 mb-4">
+                    <a
+                      href="https://www.youtube.com/@GTECLeague"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Button variant="ghost" size="icon">
+                        <img src={youtubeLogo} alt="YouTube" className="h-4 w-4" />
+                      </Button>
+                    </a>
+                    <a
+                      href="https://www.tiktok.com/@gtec_league"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Button variant="ghost" size="icon">
+                        <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
+                      </Button>
+                    </a>
+                    <a
+                      href="https://www.twitch.tv/gticleague"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Button variant="ghost" size="icon">
+                        <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
+                      </Button>
+                    </a>
+                    <a
+                      href="https://discord.gg/hB4V4ywqxj"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Button variant="ghost" size="icon">
+                        <img src={discordLogo} alt="Discord" className="h-4 w-4" />
+                      </Button>
+                    </a>
+                  </div>
+                  
+                  <Button 
+                    variant="ghost" 
+                    className="w-full"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setIsSettingsOpen(true);
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </nav>
   );
