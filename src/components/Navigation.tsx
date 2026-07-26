@@ -268,7 +268,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
 
               {/* Admin Dialog */}
               <Dialog open={isAdminDialogOpen} onOpenChange={setIsAdminDialogOpen}>
-                <DialogContent className="card-gradient">
+                <DialogContent className="glass-panel">
                   <DialogHeader>
                     <DialogTitle>Admin Login</DialogTitle>
                   </DialogHeader>
@@ -298,25 +298,42 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
+              className="lg:hidden relative"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              <span className="relative block h-6 w-6">
+                <Menu
+                  className={`absolute inset-0 h-6 w-6 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isMenuOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
+                  }`}
+                />
+                <X
+                  className={`absolute inset-0 h-6 w-6 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isMenuOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"
+                  }`}
+                />
+              </span>
             </Button>
           </div>
 
           {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="lg:hidden pb-4 animate-slide-in">
-              <div className="flex flex-col space-y-2">
-                {navItems.map((item) =>
+          <div
+            className={`lg:hidden grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              isMenuOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            }`}
+          >
+            <div className="overflow-hidden">
+              <div className="flex flex-col space-y-2 pb-4">
+                {navItems.map((item, index) =>
                   item.external ? (
                     <a
                       key={item.name}
                       href={item.path}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`nav-link`}
+                      className="nav-link"
+                      style={{ animationDelay: `${index * 35}ms` }}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.name}
@@ -325,7 +342,8 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     <Link
                       key={item.name}
                       to={item.path}
-                      className={`nav-link ${isActivePage(item.path) ? "active" : ""}`}
+                      className={`nav-link ${isActivePage(item.path) ? "active" : ""} ${isMenuOpen ? "animate-menu-item" : ""}`}
+                      style={{ animationDelay: `${index * 35}ms` }}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.name}
@@ -391,7 +409,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </nav>

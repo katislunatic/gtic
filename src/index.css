@@ -162,6 +162,24 @@ All colors MUST be HSL.
 }
 
 @layer components {
+  /* Liquid glass surface — matches the floating navigation */
+  .glass-panel {
+    @apply relative overflow-hidden bg-background/45 backdrop-blur-2xl backdrop-saturate-150 border border-white/20 rounded-[2rem];
+    box-shadow: 0 20px 50px -12px hsl(210 100% 4% / 0.5);
+  }
+
+  .glass-panel::before {
+    content: '';
+    @apply absolute top-0 left-6 right-6 h-px pointer-events-none;
+    background: linear-gradient(to right, transparent, hsl(0 0% 100% / 0.4), transparent);
+  }
+
+  .glass-panel::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none;
+    background: linear-gradient(to top, hsl(0 0% 100% / 0.05), transparent);
+  }
+
   .nav-link {
     @apply relative px-4 py-2 rounded-lg transition-all duration-300 hover:bg-muted/50;
   }
@@ -179,12 +197,30 @@ All colors MUST be HSL.
   }
 
   .team-card {
-    @apply card-gradient rounded-xl p-6 border transition-all duration-300 hover:scale-105 hover:shadow-lg;
+    @apply glass-panel rounded-[1.5rem] p-6 transition-all duration-300 hover:scale-[1.03] hover:bg-background/60;
   }
 
   .admin-panel {
-    @apply card-gradient rounded-xl p-6 border backdrop-blur-sm;
+    @apply glass-panel p-6;
   }
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes menu-item-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-menu-in {
+  animation: menu-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-menu-item {
+  animation: menu-item-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes float {

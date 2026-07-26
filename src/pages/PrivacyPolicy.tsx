@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export const PrivacyPolicy = () => {
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
-      <Card className="card-gradient border">
+      <Card className="glass-panel">
         <CardHeader>
           <CardTitle className="text-3xl">Privacy Policy</CardTitle>
         </CardHeader>
