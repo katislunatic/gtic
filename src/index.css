@@ -245,3 +245,25 @@ All colors MUST be HSL.
 #lovable-badge, .lovable-edit-button { 
   display: none !important; 
 }
+
+/* Smooth light/dark theme crossfade */
+html.theme-animating,
+html.theme-animating *,
+html.theme-animating *::before,
+html.theme-animating *::after {
+  transition: background-color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+              fill 450ms cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 450ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 450ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-animating,
+  html.theme-animating *,
+  html.theme-animating *::before,
+  html.theme-animating *::after {
+    transition: none !important;
+  }
+}
