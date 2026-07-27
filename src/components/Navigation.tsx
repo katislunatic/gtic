@@ -219,15 +219,32 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                       <Label className="text-sm font-medium">Theme</Label>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Moon className="h-4 w-4" />
+                          <Moon
+                            className={`h-4 w-4 transition-all duration-500 ${
+                              theme === "light"
+                                ? "opacity-40 -rotate-90 scale-75"
+                                : "opacity-100 rotate-0 scale-100 text-primary"
+                            }`}
+                          />
                           <span className="text-sm">Dark Mode</span>
                         </div>
                         <Switch
                           checked={theme === "light"}
-                          onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
+                          onCheckedChange={(checked) => {
+                            const root = document.documentElement;
+                            root.classList.add("theme-animating");
+                            window.setTimeout(() => root.classList.remove("theme-animating"), 550);
+                            setTheme(checked ? "light" : "dark");
+                          }}
                         />
                         <div className="flex items-center gap-2">
-                          <Sun className="h-4 w-4" />
+                          <Sun
+                            className={`h-4 w-4 transition-all duration-500 ${
+                              theme === "light"
+                                ? "opacity-100 rotate-0 scale-100 text-primary"
+                                : "opacity-40 rotate-90 scale-75"
+                            }`}
+                          />
                           <span className="text-sm">Light Mode</span>
                         </div>
                       </div>
