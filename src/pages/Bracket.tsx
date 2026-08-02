@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Footer } from "@/components/Footer";
-import bracketAsset from "@/assets/gtec-season-4-bracket.png.asset.json";
+import bracketAsset from "@/assets/gtec-season-4-bracket-r2.png.asset.json";
 
 export const Bracket = () => {
   const [open, setOpen] = useState(false);
