@@ -213,7 +213,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
                 {"sub" in stat && stat.sub && (
                   <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-                    <span className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
+                    <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
                     {stat.sub}
                   </div>
                 )}
