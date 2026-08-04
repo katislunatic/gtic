@@ -29,6 +29,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Announcement | null>(null);
   const [memberCount, setMemberCount] = useState<string>("1,600+");
+  const [onlineCount, setOnlineCount] = useState<string | null>(null);
 
   useEffect(() => {
     loadAnnouncements();
@@ -40,6 +41,9 @@ export const Home = ({ isAdmin }: HomeProps) => {
       const { data, error } = await supabase.functions.invoke('discord-member-count');
       if (!cancelled && !error && data?.member_count) {
         setMemberCount(Number(data.member_count).toLocaleString());
+      }
+      if (!cancelled && !error && data?.presence_count != null) {
+        setOnlineCount(Number(data.presence_count).toLocaleString());
       }
     };
     fetchCount();
@@ -172,7 +176,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
 
   const stats = [
     { icon: Trophy, label: "Teams", value: "26", color: "text-primary" },
-    { icon: Users, label: "Members", value: memberCount, color: "text-secondary" },
+    { icon: Users, label: "Members", value: memberCount, color: "text-secondary", sub: onlineCount ? `${onlineCount} online` : undefined },
     { icon: Calendar, label: "Current Season", value: "4", color: "text-primary" },
     { icon: Zap, label: "Elimination", value: "Round 2", color: "text-secondary" }
   ];
@@ -207,6 +211,12 @@ export const Home = ({ isAdmin }: HomeProps) => {
                 <stat.icon className={`h-8 w-8 mx-auto mb-2 ${stat.color}`} />
                 <div className="text-2xl font-bold mb-1">{stat.value}</div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
+                {"sub" in stat && stat.sub && (
+                  <div className="mt-2 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+                    <span className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
+                    {stat.sub}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
