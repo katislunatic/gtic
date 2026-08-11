@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import gticLogo from "@/assets/gtic-logo.png";
 import apexinnoLogo from "@/assets/gtec-x-apexinno.png";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 interface Announcement {
   id: string;
@@ -30,6 +31,8 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [editForm, setEditForm] = useState<Announcement | null>(null);
   const [memberCount, setMemberCount] = useState<string>("1,600+");
   const [onlineCount, setOnlineCount] = useState<string | null>(null);
+  const { settings, saveSettings } = useSiteSettings();
+  const [statsForm, setStatsForm] = useState<Record<string, string> | null>(null);
 
   useEffect(() => {
     loadAnnouncements();
@@ -175,11 +178,22 @@ export const Home = ({ isAdmin }: HomeProps) => {
   };
 
   const stats = [
-    { icon: Trophy, label: "Teams", value: "26", color: "text-primary" },
+    { icon: Trophy, label: "Teams", value: settings.teams_count || "26", color: "text-primary" },
     { icon: Users, label: "Members", value: memberCount, color: "text-secondary", sub: onlineCount ? `${onlineCount} online` : undefined },
-    { icon: Calendar, label: "Current Season", value: "4", color: "text-primary" },
-    { icon: Zap, label: "Elimination", value: "Round 2", color: "text-secondary" }
+    { icon: Calendar, label: "Current Season", value: settings.season || "4", color: "text-primary" },
+    { icon: Zap, label: settings.stage_label || "Elimination", value: settings.stage_value || "Round 2", color: "text-secondary" }
   ];
+
+  const saveStats = async () => {
+    if (!statsForm) return;
+    const error = await saveSettings(statsForm);
+    if (error) {
+      toast({ title: "Error", description: "Failed to save stats", variant: "destructive" });
+      return;
+    }
+    setStatsForm(null);
+    toast({ title: "Success", description: "Homepage stats updated" });
+  };
 
   return (
     <div className="min-h-screen pt-20 pb-8">
@@ -221,6 +235,81 @@ export const Home = ({ isAdmin }: HomeProps) => {
             </Card>
           ))}
         </div>
+
+        {/* Admin Edit Stats */}
+        {isAdmin && (
+          <Card className="admin-panel mb-8 animate-fade-in">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Edit2 className="mr-2 h-5 w-5" />
+                Edit Homepage Stats
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {statsForm ? (
+                <>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="text-sm text-muted-foreground">Teams</label>
+                      <input
+                        type="text"
+                        value={statsForm.teams_count}
+                        onChange={(e) => setStatsForm({ ...statsForm, teams_count: e.target.value })}
+                        className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Current Season</label>
+                      <input
+                        type="text"
+                        value={statsForm.season}
+                        onChange={(e) => setStatsForm({ ...statsForm, season: e.target.value })}
+                        className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Stage label (e.g. Elimination)</label>
+                      <input
+                        type="text"
+                        value={statsForm.stage_label}
+                        onChange={(e) => setStatsForm({ ...statsForm, stage_label: e.target.value })}
+                        className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-muted-foreground">Stage value (e.g. Round 2)</label>
+                      <input
+                        type="text"
+                        value={statsForm.stage_value}
+                        onChange={(e) => setStatsForm({ ...statsForm, stage_value: e.target.value })}
+                        className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Member count updates automatically from Discord.</p>
+                  <div className="flex space-x-2">
+                    <Button onClick={saveStats} className="flex-1">Save</Button>
+                    <Button variant="outline" onClick={() => setStatsForm(null)} className="flex-1">Cancel</Button>
+                  </div>
+                </>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setStatsForm({
+                      teams_count: settings.teams_count || "26",
+                      season: settings.season || "4",
+                      stage_label: settings.stage_label || "Elimination",
+                      stage_value: settings.stage_value || "Round 2",
+                    })
+                  }
+                >
+                  Edit stats
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Sponsor Announcement */}
         <a href="/sponsorships" className="block mb-12 animate-fade-in">

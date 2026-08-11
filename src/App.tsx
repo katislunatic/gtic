@@ -40,7 +40,7 @@ const App = () => {
               <Route path="/color-selector" element={<ColorCodeSelector isAdmin={isAdmin} />} />
               <Route path="/sponsorships" element={<Sponsorships isAdmin={isAdmin} />} />
               <Route path="/wallpapers" element={<Wallpapers isAdmin={isAdmin} />} />
-            <Route path="/bracket" element={<Bracket />} />
+            <Route path="/bracket" element={<Bracket isAdmin={isAdmin} />} />
               <Route path="/appeal" element={<Appeal isAdmin={isAdmin} />} />
               <Route path="/faq" element={<FAQ isAdmin={isAdmin} />} />
               <Route path="/policy/privacy" element={<PrivacyPolicy />} />
