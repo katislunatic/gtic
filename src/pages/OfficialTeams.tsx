@@ -10,24 +10,24 @@ import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import championCrown from "@/assets/champion-crown.png";
 import championStar from "@/assets/champion-star.png";
-import rank1 from "@/assets/ranks/1_golden.png.asset.json";
-import rank2 from "@/assets/ranks/2_silver.png.asset.json";
-import rank3 from "@/assets/ranks/3_bronze.png.asset.json";
-import rank4 from "@/assets/ranks/blue_4.png.asset.json";
-import rank5 from "@/assets/ranks/blue_5.png.asset.json";
-import rank6 from "@/assets/ranks/blue_6.png.asset.json";
-import rank7 from "@/assets/ranks/blue_7.png.asset.json";
-import rank8 from "@/assets/ranks/blue_8.png.asset.json";
-import rank9 from "@/assets/ranks/blue_9.png.asset.json";
-import rank10 from "@/assets/ranks/blue_10.png.asset.json";
-import rank11 from "@/assets/ranks/blue_11.png.asset.json";
-import rank12 from "@/assets/ranks/blue_12.png.asset.json";
-import rank13 from "@/assets/ranks/blue_13.png.asset.json";
-import rank14 from "@/assets/ranks/blue_14.png.asset.json";
-import rank15 from "@/assets/ranks/blue_15.png.asset.json";
-import rank16 from "@/assets/ranks/blue_16.png.asset.json";
-import blueDash from "@/assets/ranks/dash.png.asset.json";
-import redDash from "@/assets/ranks/red_dash.png.asset.json";
+import rank1 from "@/assets/ranks/1_golden.png";
+import rank2 from "@/assets/ranks/2_silver.png";
+import rank3 from "@/assets/ranks/3_bronze.png";
+import rank4 from "@/assets/ranks/blue_4.png";
+import rank5 from "@/assets/ranks/blue_5.png";
+import rank6 from "@/assets/ranks/blue_6.png";
+import rank7 from "@/assets/ranks/blue_7.png";
+import rank8 from "@/assets/ranks/blue_8.png";
+import rank9 from "@/assets/ranks/blue_9.png";
+import rank10 from "@/assets/ranks/blue_10.png";
+import rank11 from "@/assets/ranks/blue_11.png";
+import rank12 from "@/assets/ranks/blue_12.png";
+import rank13 from "@/assets/ranks/blue_13.png";
+import rank14 from "@/assets/ranks/blue_14.png";
+import rank15 from "@/assets/ranks/blue_15.png";
+import rank16 from "@/assets/ranks/blue_16.png";
+import blueDash from "@/assets/ranks/dash.png";
+import redDash from "@/assets/ranks/red_dash.png";
 
 const rankIcons = [
   rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8,
@@ -38,20 +38,20 @@ function getRankInfo(index: number): { url: string; tooltip: string; alt: string
   if (index < 16) {
     const n = index + 1;
     return {
-      url: rankIcons[index].url,
+      url: rankIcons[index],
       tooltip: `Current seeding rank #${n} — locked into the bracket if seeding ended today.`,
       alt: `Seeding rank ${n}`,
     };
   }
   if (index < 22) {
     return {
-      url: blueDash.url,
+      url: blueDash,
       tooltip: "Outside the top 16 — will not make the bracket if seeding ends here.",
       alt: "Outside top 16",
     };
   }
   return {
-    url: redDash.url,
+    url: redDash,
     tooltip: "Team has disbanded and is no longer competing.",
     alt: "Disbanded team",
   };

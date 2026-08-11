@@ -5,12 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShoppingCart, Download, Check, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import wp1 from "@/assets/wallpapers/wallpaper-1.png.asset.json";
-import wp2 from "@/assets/wallpapers/wallpaper-2.png.asset.json";
-import wp3 from "@/assets/wallpapers/wallpaper-3.png.asset.json";
-import wp4 from "@/assets/wallpapers/wallpaper-4.png.asset.json";
-import wp5 from "@/assets/wallpapers/wallpaper-5.png.asset.json";
-import wp6 from "@/assets/wallpapers/wallpaper-6.png.asset.json";
+import wp1 from "@/assets/wallpapers/wallpaper-1.png";
+import wp2 from "@/assets/wallpapers/wallpaper-2.png";
+import wp3 from "@/assets/wallpapers/wallpaper-3.png";
+import wp4 from "@/assets/wallpapers/wallpaper-4.png";
+import wp5 from "@/assets/wallpapers/wallpaper-5.png";
+import wp6 from "@/assets/wallpapers/wallpaper-6.png";
 
 interface Wallpaper {
   id: string;
@@ -21,12 +21,12 @@ interface Wallpaper {
 }
 
 const WALLPAPERS: Wallpaper[] = [
-  { id: "wp1", name: "Brushstroke Split", url: wp1.url, filename: "gtec-brushstroke-split.png", orientation: "landscape" },
-  { id: "wp2", name: "GTEC Poster", url: wp2.url, filename: "gtec-poster.png", orientation: "portrait" },
-  { id: "wp3", name: "Mountain Horizon", url: wp3.url, filename: "gtec-mountain-horizon.png", orientation: "landscape" },
-  { id: "wp4", name: "Cloud Gradient", url: wp4.url, filename: "gtec-cloud-gradient.png", orientation: "portrait" },
-  { id: "wp5", name: "GTEC Watermark", url: wp5.url, filename: "gtec-watermark.png", orientation: "portrait" },
-  { id: "wp6", name: "Classic Split", url: wp6.url, filename: "gtec-classic-split.png", orientation: "portrait" },
+  { id: "wp1", name: "Brushstroke Split", url: wp1, filename: "gtec-brushstroke-split.png", orientation: "landscape" },
+  { id: "wp2", name: "GTEC Poster", url: wp2, filename: "gtec-poster.png", orientation: "portrait" },
+  { id: "wp3", name: "Mountain Horizon", url: wp3, filename: "gtec-mountain-horizon.png", orientation: "landscape" },
+  { id: "wp4", name: "Cloud Gradient", url: wp4, filename: "gtec-cloud-gradient.png", orientation: "portrait" },
+  { id: "wp5", name: "GTEC Watermark", url: wp5, filename: "gtec-watermark.png", orientation: "portrait" },
+  { id: "wp6", name: "Classic Split", url: wp6, filename: "gtec-classic-split.png", orientation: "portrait" },
 ];
 
 const OWNED_KEY = "gtec_owned_wallpapers";
