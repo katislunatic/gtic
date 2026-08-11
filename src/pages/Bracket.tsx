@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Footer } from "@/components/Footer";
-import bracketAsset from "@/assets/gtec-season-4-bracket-r2b.png.asset.json";
+import bracketAsset from "@/assets/gtec-season-4-bracket-r2b.png";
 
 export const Bracket = () => {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ export const Bracket = () => {
           className="block w-full rounded-lg overflow-hidden border border-border hover:opacity-90 transition-opacity"
         >
           <img
-            src={bracketAsset.url}
+            src={bracketAsset}
             alt="GTEC Season 4 Tournament Bracket"
             className="w-full h-auto"
           />
@@ -30,7 +30,7 @@ export const Bracket = () => {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="max-w-[95vw] w-[95vw] p-2 sm:p-4">
             <img
-              src={bracketAsset.url}
+              src={bracketAsset}
               alt="GTEC Season 4 Tournament Bracket"
               className="w-full h-auto"
             />
