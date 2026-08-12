@@ -125,16 +125,19 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
         {/* Bottom soft glow */}
         <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-white/5 to-transparent pointer-events-none" />
 
-        <div className="relative container mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
+        <div className="relative container mx-auto px-3 sm:px-4">
+          <div className="flex items-center justify-between gap-2 h-14">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-              <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-10 w-10" />
-              <span className="text-xl font-bold hero-text">Gorilla Tag Elite COMP</span>
+            <Link to="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
+              <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
+              <span className="hidden sm:inline xl:hidden 2xl:inline text-base sm:text-lg font-bold hero-text truncate">
+                Gorilla Tag Elite COMP
+              </span>
+              <span className="sm:hidden xl:inline 2xl:hidden text-base font-bold hero-text">GTEC</span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center space-x-1">
+            <div className="hidden xl:flex items-center gap-0.5 text-sm">
               {navItems.map((item) =>
                 item.external ? (
                   <a
