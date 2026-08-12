@@ -134,7 +134,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
+            <div className="hidden xl:flex items-center space-x-1">
               {navItems.map((item) =>
                 item.external ? (
                   <a
@@ -159,7 +159,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             </div>
 
             {/* Social Media Icons & Admin Button */}
-            <div className="hidden lg:flex items-center space-x-2">
+            <div className="hidden xl:flex items-center space-x-2">
               {/* Social Media Links */}
               <a
                 href="https://www.youtube.com/@GTECLeague"
@@ -314,7 +314,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden relative"
+              className="xl:hidden relative"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -335,7 +335,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
 
           {/* Mobile Navigation */}
           <div
-            className={`lg:hidden grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`xl:hidden grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               isMenuOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
             }`}
           >
