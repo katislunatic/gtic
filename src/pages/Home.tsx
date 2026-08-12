@@ -210,7 +210,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
             Unleash Your Inner Gorilla.
           </p>
           <Button size="lg" className="glow-primary" asChild>
-            <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer">
+            <a href="https://discord.gg/gtecleague" target="_blank" rel="noopener noreferrer">
               <Trophy className="mr-2 h-5 w-5" />
               Join the Competition
             </a>
@@ -361,7 +361,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
             <CardContent>
               <p className="text-muted-foreground">
                 Watch or participate against the best Gorilla Tag teams in the GTEC tournament. For more info join the{" "}
-                <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                <a href="https://discord.gg/gtecleague" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                   Discord
                 </a>
                 .

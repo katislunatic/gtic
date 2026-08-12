@@ -113,6 +113,80 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      staff_members: {
+        Row: {
+          avatar_url: string | null
+          banner_url: string | null
+          category_id: string
+          created_at: string
+          discord_user_id: string | null
+          display_name: string
+          id: string
+          sort_order: number
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          category_id: string
+          created_at?: string
+          discord_user_id?: string | null
+          display_name?: string
+          id?: string
+          sort_order?: number
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          category_id?: string
+          created_at?: string
+          discord_user_id?: string | null
+          display_name?: string
+          id?: string
+          sort_order?: number
+          updated_at?: string
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_members_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "staff_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string

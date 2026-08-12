@@ -330,7 +330,7 @@ export const Sponsorships = ({ isAdmin }: SponsorshipsProps) => {
               Join our growing community of sponsors and partners. Help support Gorilla Tag Elite COMP and reach thousands of passionate players.
             </p>
             <Button size="lg" className="glow-primary" asChild>
-              <a href="https://discord.gg/hB4V4ywqxj" target="_blank" rel="noopener noreferrer">
+              <a href="https://discord.gg/gtecleague" target="_blank" rel="noopener noreferrer">
                 Contact Us on Discord
               </a>
             </Button>

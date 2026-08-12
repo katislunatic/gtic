@@ -13,7 +13,7 @@ const faqData = [
   },
   {
     question: "How do I register my team?",
-    answer: "To register your team, join our Discord server at discord.gg/hB4V4ywqxj and follow the registration instructions in the appropriate channels."
+    answer: "To register your team, join our Discord server at discord.gg/gtecleague and follow the registration instructions in the appropriate channels."
   },
   {
     question: "What are the team requirements?",
@@ -41,7 +41,7 @@ const faqData = [
   },
   {
     question: "How can I stay updated with GTEC news?",
-    answer: "Follow us on all our social platforms: Discord (discord.gg/hB4V4ywqxj), YouTube (@gticleague), TikTok (@gtic_league), and Twitch (gticleague). This website also features the latest announcements."
+    answer: "Follow us on all our social platforms: Discord (discord.gg/gtecleague), YouTube (@gticleague), TikTok (@gtic_league), and Twitch (gticleague). This website also features the latest announcements."
   },
   {
     question: "Who can I contact for support?",
@@ -90,7 +90,7 @@ export const FAQ = ({ isAdmin }: FAQProps) => {
                 Can't find what you're looking for? Join our Discord community for real-time support and discussions.
               </p>
               <a
-                href="https://discord.gg/hB4V4ywqxj"
+                href="https://discord.gg/gtecleague"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
