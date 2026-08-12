@@ -343,7 +343,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
             }`}
           >
             <div className="overflow-hidden">
-              <div className="flex flex-col space-y-2 pb-4">
+              <div className="flex flex-col space-y-2 pb-4 max-h-[70vh] overflow-y-auto">
                 {navItems.map((item, index) =>
                   item.external ? (
                     <a
