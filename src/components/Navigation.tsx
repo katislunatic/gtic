@@ -193,7 +193,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                 </Button>
               </a>
               <a
-                href="https://discord.gg/hB4V4ywqxj"
+                href="https://discord.gg/gtecleague"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
@@ -401,7 +401,7 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                       </Button>
                     </a>
                     <a
-                      href="https://discord.gg/hB4V4ywqxj"
+                      href="https://discord.gg/gtecleague"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground hover:text-primary transition-colors"
