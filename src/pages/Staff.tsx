@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Footer } from "@/components/Footer";
-import { MessageCircle, Plus, Trash2, Users } from "lucide-react";
+import { MessageCircle, Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,6 +20,7 @@ interface StaffCategory {
   name: string;
   color: string | null;
   sort_order: number;
+  discord_role_id: string | null;
 }
 
 interface StaffMember {
@@ -31,6 +32,7 @@ interface StaffMember {
   banner_url: string | null;
   discord_user_id: string | null;
   sort_order: number;
+  is_synced?: boolean;
 }
 
 interface StaffProps {
@@ -45,8 +47,9 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
   const [members, setMembers] = useState<StaffMember[]>([]);
   const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
-  const [newCategory, setNewCategory] = useState({ name: "", color: "#5865F2" });
+  const [newCategory, setNewCategory] = useState({ name: "", color: "#5865F2", discord_role_id: "" });
   const [newMember, setNewMember] = useState({
     category_id: "",
     username: "",
@@ -68,6 +71,27 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
   useEffect(() => {
     load();
   }, []);
+
+  // Auto-sync from Discord (throttled server-side to once every 5 minutes)
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.functions.invoke("discord-staff-sync");
+      if (data && !(data as any).skipped) load();
+    })();
+  }, []);
+
+  const syncNow = async () => {
+    setSyncing(true);
+    const { data, error } = await supabase.functions.invoke("discord-staff-sync?force=1");
+    setSyncing(false);
+    const err = error?.message ?? (data as any)?.error;
+    if (err) {
+      toast({ title: "Sync failed", description: err, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Synced", description: `${(data as any)?.synced ?? 0} staff members updated from Discord.` });
+    load();
+  };
 
   // Resolve storage paths to signed URLs
   useEffect(() => {
@@ -109,6 +133,7 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
     const { error } = await supabase.from("staff_categories").insert({
       name: newCategory.name.trim(),
       color: newCategory.color || null,
+      discord_role_id: newCategory.discord_role_id.trim() || null,
       sort_order: categories.length,
     });
     setBusy(false);
@@ -116,7 +141,7 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
       toast({ title: "Error", description: error.message, variant: "destructive" });
       return;
     }
-    setNewCategory({ name: "", color: "#5865F2" });
+    setNewCategory({ name: "", color: "#5865F2", discord_role_id: "" });
     toast({ title: "Role added" });
     load();
   };
