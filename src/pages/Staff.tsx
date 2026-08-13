@@ -233,9 +233,26 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
                     className="h-10 w-24 p-1"
                   />
                 </div>
-                <Button onClick={addCategory} disabled={busy} className="w-full">
-                  Add Role
-                </Button>
+                <div className="space-y-2">
+                  <Label>Discord role ID (optional — enables auto-sync)</Label>
+                  <Input
+                    value={newCategory.discord_role_id}
+                    onChange={(e) => setNewCategory({ ...newCategory, discord_role_id: e.target.value })}
+                    placeholder="123456789012345678"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Roles are ranked by the order they're created — the first one a member has wins.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={addCategory} disabled={busy} className="flex-1">
+                    Add Role
+                  </Button>
+                  <Button onClick={syncNow} disabled={syncing} variant="outline" className="gap-2">
+                    <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+                    {syncing ? "Syncing…" : "Sync now"}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
