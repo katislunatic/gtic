@@ -117,6 +117,7 @@ export type Database = {
         Row: {
           color: string | null
           created_at: string
+          discord_role_id: string | null
           id: string
           name: string
           sort_order: number
@@ -125,6 +126,7 @@ export type Database = {
         Insert: {
           color?: string | null
           created_at?: string
+          discord_role_id?: string | null
           id?: string
           name: string
           sort_order?: number
@@ -133,6 +135,7 @@ export type Database = {
         Update: {
           color?: string | null
           created_at?: string
+          discord_role_id?: string | null
           id?: string
           name?: string
           sort_order?: number
@@ -149,6 +152,8 @@ export type Database = {
           discord_user_id: string | null
           display_name: string
           id: string
+          is_synced: boolean
+          last_synced_at: string | null
           sort_order: number
           updated_at: string
           username: string
@@ -161,6 +166,8 @@ export type Database = {
           discord_user_id?: string | null
           display_name?: string
           id?: string
+          is_synced?: boolean
+          last_synced_at?: string | null
           sort_order?: number
           updated_at?: string
           username: string
@@ -173,6 +180,8 @@ export type Database = {
           discord_user_id?: string | null
           display_name?: string
           id?: string
+          is_synced?: boolean
+          last_synced_at?: string | null
           sort_order?: number
           updated_at?: string
           username?: string
