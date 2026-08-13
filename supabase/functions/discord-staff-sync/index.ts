@@ -70,49 +70,47 @@ Deno.serve(async (req) => {
       after = batch[batch.length - 1].user.id
     }
 
+    // Assign each member to their highest-priority linked role (first match wins).
+    const assignments = new Map<string, { category: Category; member: any }>()
+    for (const category of categories) {
+      for (const m of members) {
+        const roles: string[] = m.roles ?? []
+        if (!roles.includes(category.discord_role_id!)) continue
+        if (assignments.has(m.user.id)) continue
+        assignments.set(m.user.id, { category, member: m })
+      }
+    }
+
     const rows: any[] = []
     let order = 0
-    for (const category of categories) {
-      const matched = members.filter((m) => {
-        const roles: string[] = m.roles ?? []
-        if (!roles.includes(category.discord_role_id!)) return false
-        // highest role only: skip if the member also has a higher-priority linked role
-        return !categories.some(
-          (c) => c.sort_order < category.sort_order || (c.sort_order === category.sort_order && c.id !== category.id && false)
-            ? roles.includes(c.discord_role_id!) && c !== category && c.sort_order < category.sort_order
-            : false,
-        )
+    for (const { category, member: m } of assignments.values()) {
+      const user = m.user
+      let banner: string | null = null
+      const profile = await fetch(`${DISCORD_API}/users/${user.id}`, {
+        headers: { Authorization: `Bot ${token}` },
       })
-
-      for (const m of matched) {
-        const user = m.user
-        let banner: string | null = null
-        const profile = await fetch(`${DISCORD_API}/users/${user.id}`, {
-          headers: { Authorization: `Bot ${token}` },
-        })
-        if (profile.ok) {
-          const u = await profile.json()
-          if (u.banner) banner = cdn(`banners/${user.id}`, u.banner)
-        }
-
-        const avatar = m.avatar
-          ? cdn(`guilds/${guildId}/users/${user.id}/avatars`, m.avatar)
-          : user.avatar
-          ? cdn(`avatars/${user.id}`, user.avatar)
-          : null
-
-        rows.push({
-          category_id: category.id,
-          discord_user_id: user.id,
-          username: user.username,
-          display_name: m.nick || user.global_name || user.username,
-          avatar_url: avatar,
-          banner_url: banner,
-          is_synced: true,
-          last_synced_at: new Date().toISOString(),
-          sort_order: order++,
-        })
+      if (profile.ok) {
+        const u = await profile.json()
+        if (u.banner) banner = cdn(`banners/${user.id}`, u.banner)
       }
+
+      const avatar = m.avatar
+        ? cdn(`guilds/${guildId}/users/${user.id}/avatars`, m.avatar)
+        : user.avatar
+        ? cdn(`avatars/${user.id}`, user.avatar)
+        : null
+
+      rows.push({
+        category_id: category.id,
+        discord_user_id: user.id,
+        username: user.username,
+        display_name: m.nick || user.global_name || user.username,
+        avatar_url: avatar,
+        banner_url: banner,
+        is_synced: true,
+        last_synced_at: new Date().toISOString(),
+        sort_order: order++,
+      })
     }
 
     if (rows.length > 0) {
