@@ -21,7 +21,7 @@ const faqData = [
   },
   {
     question: "When do tournaments take place?",
-    answer: "Tournament schedules are announced in our Discord server and on our social media channels. Make sure to follow our YouTube, TikTok, and Twitch for updates."
+    answer: "Tournament schedules are announced in our Discord server and on our social media channels. Make sure to follow our YouTube and TikTok for updates."
   },
   {
     question: "How do I use the Color Code Selector?",
@@ -29,7 +29,7 @@ const faqData = [
   },
   {
     question: "Can I watch matches if I'm not competing?",
-    answer: "Absolutely! You can watch matches on our Twitch channel at twitch.tv/gticleague and catch highlights on our YouTube channel."
+    answer: "Absolutely! You can watch matches and catch highlights on our YouTube channel at youtube.com/@GTECLeague."
   },
   {
     question: "Are there any age restrictions for joining?",
@@ -41,7 +41,7 @@ const faqData = [
   },
   {
     question: "How can I stay updated with GTEC news?",
-    answer: "Follow us on all our social platforms: Discord (discord.gg/gtecleague), YouTube (@gticleague), TikTok (@gtic_league), and Twitch (gticleague). This website also features the latest announcements."
+    answer: "Follow us on all our social platforms: Discord (discord.gg/gtecleague), YouTube (@GTECLeague) and TikTok (@gtec_league). This website also features the latest announcements."
   },
   {
     question: "Who can I contact for support?",
