@@ -11,7 +11,6 @@ import { Settings, Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import youtubeLogo from "@/assets/youtube-logo.svg";
 import tiktokLogo from "@/assets/tiktok-logo.svg";
-import twitchLogo from "@/assets/twitch-logo.svg";
 import discordLogo from "@/assets/discord-logo.svg";
 import { useToast } from "@/hooks/use-toast";
 import gticLogo from "@/assets/gtic-logo.png";
@@ -182,16 +181,6 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
               >
                 <Button variant="ghost" size="icon">
                   <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
-                </Button>
-              </a>
-              <a
-                href="https://www.twitch.tv/gticleague"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Button variant="ghost" size="icon">
-                  <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
                 </Button>
               </a>
               <a
@@ -390,16 +379,6 @@ export const Navigation = ({ onAdminAccess, isAdmin }: NavigationProps) => {
                     >
                       <Button variant="ghost" size="icon">
                         <img src={tiktokLogo} alt="TikTok" className="h-4 w-4" />
-                      </Button>
-                    </a>
-                    <a
-                      href="https://www.twitch.tv/gticleague"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Button variant="ghost" size="icon">
-                        <img src={twitchLogo} alt="Twitch" className="h-4 w-4" />
                       </Button>
                     </a>
                     <a

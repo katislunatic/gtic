@@ -98,12 +98,17 @@ Deno.serve(async (req) => {
     for (const { category, member: m } of assignments.values()) {
       const user = m.user
       let banner: string | null = null
+      let decoration: string | null = null
       const profile = await fetch(`${DISCORD_API}/users/${user.id}`, {
         headers: { Authorization: `Bot ${token}` },
       })
       if (profile.ok) {
         const u = await profile.json()
         if (u.banner) banner = cdn(`banners/${user.id}`, u.banner)
+        const deco = m.user?.avatar_decoration_data ?? u.avatar_decoration_data
+        if (deco?.asset) {
+          decoration = `https://cdn.discordapp.com/avatar-decoration-presets/${deco.asset}.png?size=160&passthrough=false`
+        }
       }
 
       const avatar = m.avatar
@@ -119,6 +124,7 @@ Deno.serve(async (req) => {
         display_name: m.nick || user.global_name || user.username,
         avatar_url: avatar,
         banner_url: banner,
+        decoration_url: decoration,
         badge: badges.get(user.id) ?? null,
         is_synced: true,
         last_synced_at: new Date().toISOString(),
