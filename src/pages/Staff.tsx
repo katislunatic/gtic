@@ -35,6 +35,7 @@ interface StaffMember {
   sort_order: number;
   is_synced?: boolean;
   badge?: string | null;
+  decoration_url?: string | null;
 }
 
 interface StaffProps {
@@ -370,11 +371,21 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
                             }
                           />
                           <CardContent className="p-6 pt-0 -mt-10 text-center space-y-3">
-                            <div className="mx-auto h-20 w-20 rounded-full overflow-hidden border-4 border-background bg-muted flex items-center justify-center">
-                              {avatar ? (
-                                <img src={avatar} alt={`${member.display_name} profile picture`} className="h-full w-full object-cover" />
-                              ) : (
-                                <Users className="h-8 w-8 text-muted-foreground" />
+                            <div className="relative mx-auto h-20 w-20">
+                              <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-background bg-muted flex items-center justify-center">
+                                {avatar ? (
+                                  <img src={avatar} alt={`${member.display_name} profile picture`} className="h-full w-full object-cover" />
+                                ) : (
+                                  <Users className="h-8 w-8 text-muted-foreground" />
+                                )}
+                              </div>
+                              {member.decoration_url && (
+                                <img
+                                  src={member.decoration_url}
+                                  alt=""
+                                  aria-hidden="true"
+                                  className="pointer-events-none absolute left-1/2 top-1/2 h-[124%] w-[124%] -translate-x-1/2 -translate-y-1/2 max-w-none"
+                                />
                               )}
                             </div>
                             <div>
