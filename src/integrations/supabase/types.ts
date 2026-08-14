@@ -153,6 +153,7 @@ export type Database = {
           banner_url: string | null
           category_id: string
           created_at: string
+          decoration_url: string | null
           discord_user_id: string | null
           display_name: string
           id: string
@@ -168,6 +169,7 @@ export type Database = {
           banner_url?: string | null
           category_id: string
           created_at?: string
+          decoration_url?: string | null
           discord_user_id?: string | null
           display_name?: string
           id?: string
@@ -183,6 +185,7 @@ export type Database = {
           banner_url?: string | null
           category_id?: string
           created_at?: string
+          decoration_url?: string | null
           discord_user_id?: string | null
           display_name?: string
           id?: string
