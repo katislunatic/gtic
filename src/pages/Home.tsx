@@ -181,7 +181,8 @@ export const Home = ({ isAdmin }: HomeProps) => {
     { icon: Trophy, label: "Teams", value: settings.teams_count || "26", color: "text-primary" },
     { icon: Users, label: "Members", value: memberCount, color: "text-secondary", sub: onlineCount ? `${onlineCount} online` : undefined },
     { icon: Calendar, label: "Current Season", value: settings.season || "4", color: "text-primary" },
-    { icon: Zap, label: settings.stage_label || "Elimination", value: settings.stage_value || "Round 2", color: "text-secondary" }
+    { icon: Zap, label: settings.stage_label || "Elimination", value: settings.stage_value || "Round 2", color: "text-secondary" },
+    { icon: TrendingUp, label: "Largest Gorilla Tag League", value: "#5", color: "text-primary" }
   ];
 
   const saveStats = async () => {
