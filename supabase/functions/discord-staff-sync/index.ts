@@ -4,7 +4,13 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const DISCORD_API = 'https://discord.com/api/v10'
 const THROTTLE_MS = 5 * 60 * 1000
 
-type Category = { id: string; name: string; sort_order: number; discord_role_id: string | null }
+type Category = {
+  id: string
+  name: string
+  sort_order: number
+  discord_role_id: string | null
+  is_badge_only: boolean
+}
 
 const cdn = (path: string, hash: string) =>
   `https://cdn.discordapp.com/${path}/${hash}.${hash.startsWith('a_') ? 'gif' : 'png'}?size=512`
@@ -45,7 +51,7 @@ Deno.serve(async (req) => {
 
     const { data: cats } = await admin
       .from('staff_categories')
-      .select('id,name,sort_order,discord_role_id')
+      .select('id,name,sort_order,discord_role_id,is_badge_only')
       .not('discord_role_id', 'is', null)
       .order('sort_order')
       .order('created_at')
@@ -70,14 +76,20 @@ Deno.serve(async (req) => {
       after = batch[batch.length - 1].user.id
     }
 
-    // Assign each member to their highest-priority linked role (first match wins).
-    const assignments = new Map<string, { category: Category; member: any }>()
+    // Assign each member to their highest-priority linked section role (first match wins).
+    // Badge-only roles don't create a section — they add a title to the member's card.
+    const assignments = new Map<string, { category: Category; member: any; badge: string | null }>()
+    const badges = new Map<string, string>()
     for (const category of categories) {
       for (const m of members) {
         const roles: string[] = m.roles ?? []
         if (!roles.includes(category.discord_role_id!)) continue
+        if (category.is_badge_only) {
+          if (!badges.has(m.user.id)) badges.set(m.user.id, category.name)
+          continue
+        }
         if (assignments.has(m.user.id)) continue
-        assignments.set(m.user.id, { category, member: m })
+        assignments.set(m.user.id, { category, member: m, badge: null })
       }
     }
 
@@ -107,6 +119,7 @@ Deno.serve(async (req) => {
         display_name: m.nick || user.global_name || user.username,
         avatar_url: avatar,
         banner_url: banner,
+        badge: badges.get(user.id) ?? null,
         is_synced: true,
         last_synced_at: new Date().toISOString(),
         sort_order: order++,

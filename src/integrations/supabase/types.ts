@@ -119,6 +119,7 @@ export type Database = {
           created_at: string
           discord_role_id: string | null
           id: string
+          is_badge_only: boolean
           name: string
           sort_order: number
           updated_at: string
@@ -128,6 +129,7 @@ export type Database = {
           created_at?: string
           discord_role_id?: string | null
           id?: string
+          is_badge_only?: boolean
           name: string
           sort_order?: number
           updated_at?: string
@@ -137,6 +139,7 @@ export type Database = {
           created_at?: string
           discord_role_id?: string | null
           id?: string
+          is_badge_only?: boolean
           name?: string
           sort_order?: number
           updated_at?: string
@@ -146,6 +149,7 @@ export type Database = {
       staff_members: {
         Row: {
           avatar_url: string | null
+          badge: string | null
           banner_url: string | null
           category_id: string
           created_at: string
@@ -160,6 +164,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          badge?: string | null
           banner_url?: string | null
           category_id: string
           created_at?: string
@@ -174,6 +179,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          badge?: string | null
           banner_url?: string | null
           category_id?: string
           created_at?: string

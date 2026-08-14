@@ -21,6 +21,7 @@ interface StaffCategory {
   color: string | null;
   sort_order: number;
   discord_role_id: string | null;
+  is_badge_only?: boolean;
 }
 
 interface StaffMember {
@@ -33,6 +34,7 @@ interface StaffMember {
   discord_user_id: string | null;
   sort_order: number;
   is_synced?: boolean;
+  badge?: string | null;
 }
 
 interface StaffProps {
@@ -330,7 +332,7 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
         )}
 
         <div className="space-y-12">
-          {categories.map((category) => {
+          {categories.filter((c) => !c.is_badge_only).map((category) => {
             const list = members.filter((m) => m.category_id === category.id);
             return (
               <section key={category.id}>
@@ -351,12 +353,12 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
                 {list.length === 0 ? (
                   <p className="text-center text-sm text-muted-foreground">No members in this role yet.</p>
                 ) : (
-                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="flex flex-wrap justify-center gap-6">
                     {list.map((member) => {
                       const banner = resolve(member.banner_url);
                       const avatar = resolve(member.avatar_url);
                       return (
-                        <Card key={member.id} className="team-card overflow-hidden">
+                        <Card key={member.id} className="team-card overflow-hidden w-full sm:w-[320px]">
                           <div
                             className="h-24 w-full bg-muted"
                             style={
@@ -378,6 +380,18 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
                             <div>
                               <h3 className="text-lg font-semibold">{member.display_name}</h3>
                               <p className="text-sm text-muted-foreground">@{member.username}</p>
+                              {member.badge && (
+                                <span
+                                  className="mt-2 inline-block rounded-full border px-3 py-1 text-xs font-medium"
+                                  style={
+                                    category.color
+                                      ? { borderColor: category.color, color: category.color }
+                                      : undefined
+                                  }
+                                >
+                                  {member.badge}
+                                </span>
+                              )}
                             </div>
                             {member.discord_user_id && (
                               <a
