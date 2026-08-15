@@ -26,6 +26,8 @@ export default defineConfig(({ mode }) => {
           navigateFallback: `${repoName}index.html`,
           navigateFallbackDenylist: [/^\/~oauth/],
           cleanupOutdatedCaches: true,
+          skipWaiting: true,
+          clientsClaim: true,
           runtimeCaching: [
             {
               urlPattern: ({ request }) => request.mode === "navigate",
