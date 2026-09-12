@@ -1,0 +1,43 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+
+export const CookieConsent = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const hasAccepted = localStorage.getItem("cookieConsentAccepted_v2");
+    if (!hasAccepted) {
+      setIsVisible(true);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem("cookieConsentAccepted_v2", "true");
+    setIsVisible(false);
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed bottom-4 left-4 z-50 max-w-sm animate-in slide-in-from-bottom-5">
+      <Card className="p-4 glass-panel rounded-[1.5rem]">
+        <p className="text-sm text-card-foreground mb-4 text-center">
+          By using our website you agree to our{" "}
+          <Link to="/policy/privacy" className="text-primary hover:underline">
+            Privacy Policy
+          </Link>{" "}
+          and{" "}
+          <Link to="/policy/cookie" className="text-primary hover:underline">
+            Cookie Policy
+          </Link>
+          .
+        </p>
+        <Button onClick={handleAccept} className="w-full">
+          Understood
+        </Button>
+      </Card>
+    </div>
+  );
+};

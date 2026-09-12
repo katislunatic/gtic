@@ -1,0 +1,24 @@
+{
+  "name": "Gorilla Tag Elite COMP",
+  "short_name": "GTEC",
+  "description": "Welcome to GTEC | Built for teams, players, and competition.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a12",
+  "theme_color": "#0a0a12",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://storage.googleapis.com/gpt-engineer-file-uploads/RhtVE5JDElWyTpkGFarqOrxwtdm2/uploads/1758757791223-GTIC_Logo2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://storage.googleapis.com/gpt-engineer-file-uploads/RhtVE5JDElWyTpkGFarqOrxwtdm2/uploads/1758757791223-GTIC_Logo2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

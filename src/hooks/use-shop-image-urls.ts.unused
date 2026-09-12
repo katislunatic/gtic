@@ -1,0 +1,39 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+const BUCKET = "site-assets";
+
+/**
+ * Resolves shop product image storage paths to signed URLs. Paths that are
+ * already full URLs (e.g. external links) are passed through unchanged.
+ */
+export const useShopImageUrls = (paths: string[]) => {
+  const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const toResolve = paths.filter((p) => p && !p.startsWith("http") && !p.startsWith("/") && !signedUrls[p]);
+    if (toResolve.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      const entries: Record<string, string> = {};
+      for (const p of toResolve) {
+        const { data } = await supabase.storage.from(BUCKET).createSignedUrl(p, 60 * 60 * 24 * 365);
+        if (data?.signedUrl) entries[p] = data.signedUrl;
+      }
+      if (!cancelled && Object.keys(entries).length) {
+        setSignedUrls((prev) => ({ ...prev, ...entries }));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(paths)]);
+
+  const resolve = (path: string | null | undefined) => {
+    if (!path) return undefined;
+    return path.startsWith("http") || path.startsWith("/") ? path : signedUrls[path];
+  };
+
+  return { resolve };
+};

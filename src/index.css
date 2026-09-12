@@ -1,0 +1,445 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* GTIC Gaming Theme - Dark with Blue/Red Accents */
+    --background: 210 100% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 210 50% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 210 50% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 212 100% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 100% 65%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 210 50% 12%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 212 100% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 50% 15%;
+    --input: 210 50% 12%;
+    --ring: 212 100% 60%;
+
+    --radius: 0.75rem;
+
+    /* GTIC Custom Design Tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(212 100% 60%), hsl(212 100% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(0 100% 65%), hsl(0 100% 50%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 6%), hsl(210 50% 8%));
+    --gradient-card: linear-gradient(145deg, hsl(210 50% 8%), hsl(210 50% 10%));
+
+    --shadow-glow: 0 0 20px hsl(212 100% 60% / 0.3);
+    --shadow-glow-secondary: 0 0 20px hsl(0 100% 65% / 0.3);
+    --shadow-card: 0 10px 30px -10px hsl(210 100% 6% / 0.8);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .light {
+    /* Light mode - brighter version with same color scheme */
+    --background: 210 40% 94%;
+    --foreground: 210 20% 15%;
+
+    --card: 210 30% 97%;
+    --card-foreground: 210 20% 15%;
+
+    --popover: 210 30% 97%;
+    --popover-foreground: 210 20% 15%;
+
+    --primary: 212 100% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 100% 65%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 210 30% 90%;
+    --muted-foreground: 215 20% 45%;
+
+    --accent: 212 100% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 30% 85%;
+    --input: 210 30% 92%;
+    --ring: 212 100% 60%;
+
+    /* Light mode custom tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(210 40% 94%), hsl(210 30% 97%));
+    --gradient-card: linear-gradient(145deg, hsl(210 30% 97%), hsl(210 30% 98%));
+    --shadow-card: 0 10px 30px -10px hsl(210 60% 40% / 0.15);
+  }
+
+  .dark {
+    /* Dark mode uses same theme as default for GTIC */
+    --background: 210 100% 6%;
+    --foreground: 0 0% 98%;
+    --card: 210 50% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 210 50% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 212 100% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 100% 65%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 210 50% 12%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 212 100% 60%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 50% 15%;
+    --input: 210 50% 12%;
+    --ring: 212 100% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* Fixes the black flash on iOS Safari when scrolling past the top/bottom
+       of a short page — without this, the rubber-band overscroll area shows
+       the browser's own default background instead of the site's. */
+    background: var(--gradient-hero);
+    min-height: 100%;
+    /* Always reserve space for the vertical scrollbar, even on pages/states
+       that don't need it yet (e.g. while a page is still loading and is
+       shorter than the viewport). Without this, the scrollbar appearing or
+       disappearing changes the available viewport width, which visibly
+       nudges the centered fixed nav bar sideways for a frame. */
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    background: var(--gradient-hero);
+    min-height: 100dvh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  .hero-text {
+    @apply font-display font-normal tracking-wide bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-secondary {
+    box-shadow: var(--shadow-glow-secondary);
+  }
+
+  .card-gradient {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+  }
+}
+
+@layer components {
+  /* Default glass surface — clean and understated. This is what everyone
+     sees unless they turn on Liquid Glass mode in Settings.
+     backdrop-blur-md (not -xl) deliberately: this class is applied to the
+     always-visible fixed nav bar plus every card on the site, and blur is
+     one of the more GPU-expensive filters to keep compositing continuously
+     — a lighter blur radius still reads as "glass" but is noticeably
+     cheaper to render everywhere at once. */
+  .glass-panel {
+    @apply relative overflow-hidden bg-background/70 backdrop-blur-md border border-border/60 rounded-[1.5rem];
+    box-shadow: 0 8px 30px -8px hsl(210 100% 4% / 0.35);
+    transition: background 500ms ease, backdrop-filter 500ms ease, border-color 500ms ease, box-shadow 500ms ease;
+  }
+
+  .glass-panel::before {
+    content: '';
+    @apply absolute top-0 left-6 right-6 h-px pointer-events-none;
+    background: linear-gradient(to right, transparent, hsl(0 0% 100% / 0.18), transparent);
+  }
+
+  .glass-panel::after {
+    content: none;
+  }
+
+  /* ---- Liquid Glass mode (opt-in via Settings) ---- */
+  /* Chromium-only: SVG filters inside backdrop-filter aren't supported in
+     Safari/Firefox yet, so those browsers just keep the clean look above. */
+  @supports (backdrop-filter: url(#liquid-glass-distort)) {
+    html.liquid-glass .glass-panel {
+      background: hsl(var(--background) / 0.4);
+      backdrop-filter: url(#liquid-glass-distort) blur(10px) saturate(130%);
+      border: 1px solid hsl(0 0% 100% / 0.22);
+      box-shadow:
+        0 12px 32px -12px hsl(210 100% 4% / 0.5),
+        inset 0 1px 1px hsl(0 0% 100% / 0.3);
+    }
+
+    /* Bright rim light along the top edge — the "specular highlight" */
+    html.liquid-glass .glass-panel::before {
+      content: '';
+      @apply absolute top-0 left-6 right-6 h-px pointer-events-none;
+      background: linear-gradient(to right, transparent, hsl(0 0% 100% / 0.75), transparent);
+    }
+
+    /* Soft glow lifting off the bottom, like light catching the inside curve */
+    html.liquid-glass .glass-panel::after {
+      content: '';
+      @apply absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none;
+      background: linear-gradient(to top, hsl(0 0% 100% / 0.06), transparent);
+    }
+  }
+
+  .nav-link {
+    @apply relative px-3 py-2 rounded-lg whitespace-nowrap transition-all duration-300 hover:bg-muted/50;
+  }
+
+  .nav-link.active {
+    @apply bg-primary/10 text-primary;
+  }
+
+  .nav-link.active::after {
+    @apply content-[''] absolute bottom-0 left-1/2 w-1/2 h-0.5 bg-primary rounded-full transform -translate-x-1/2;
+  }
+
+  .tournament-bracket {
+    @apply grid gap-4 p-6 card-gradient rounded-xl border;
+  }
+
+  .team-card {
+    @apply glass-panel rounded-[1.5rem] p-6 transition-[transform,background-color,box-shadow] duration-300 ease-out will-change-transform hover:scale-[1.02] hover:-translate-y-1 hover:bg-background/60 hover:shadow-xl hover:shadow-primary/10;
+  }
+
+  .admin-panel {
+    @apply glass-panel p-6;
+  }
+
+  /* Patch-style CTA — stamped badge look instead of a plain rounded button */
+  .btn-patch {
+    @apply relative inline-flex items-center gap-2 rounded-xl border-2 border-white/15 px-6 py-3 font-display font-normal tracking-wide text-base shadow-[0_6px_0_0_rgba(0,0,0,0.35)] transition-all duration-150 ease-out active:shadow-[0_2px_0_0_rgba(0,0,0,0.35)] active:translate-y-1 hover:-translate-y-0.5 hover:shadow-[0_8px_0_0_rgba(0,0,0,0.35)];
+  }
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes menu-item-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-menu-in {
+  animation: menu-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-menu-item {
+  animation: menu-item-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(1deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.15); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+/* Custom scrollbar — desktop only (fine pointer), matches site theme */
+@media (pointer: fine) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.6) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(212 100% 60% / 0.7), hsl(0 100% 65% / 0.7));
+    border-radius: 9999px;
+    border: 2px solid hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(212 100% 60% / 0.9), hsl(0 100% 65% / 0.9));
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: hsl(var(--background));
+  }
+}
+
+/* Hide Lovable badge */
+#lovable-badge, .lovable-edit-button { 
+  display: none !important; 
+}
+
+/* Smooth light/dark theme crossfade */
+/* Kept to background/border/color only (dropped fill, stroke, box-shadow) —
+   this transition applies to every element on the page via the universal
+   selector, so each extra animated property multiplies the paint work the
+   browser has to do on every frame. This is the fallback path for browsers
+   without View Transitions support (see theme-wiping below), so it's worth
+   keeping as light as possible. */
+html.theme-animating,
+html.theme-animating *,
+html.theme-animating *::before,
+html.theme-animating *::after {
+  transition: background-color 350ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 350ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 350ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-animating,
+  html.theme-animating *,
+  html.theme-animating *::before,
+  html.theme-animating *::after {
+    transition: none !important;
+  }
+}
+
+/* Circular wipe transition for the theme toggle (Chromium/Edge/Discord browser) */
+@supports (view-transition-name: root) {
+  html.theme-wiping::view-transition-old(root),
+  html.theme-wiping::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  html.theme-wiping::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  html.theme-wiping::view-transition-new(root) {
+    z-index: 2;
+    animation: theme-circle-reveal 650ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  @keyframes theme-circle-reveal {
+    from {
+      clip-path: circle(0px at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+    }
+    to {
+      clip-path: circle(var(--theme-toggle-r, 150%) at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+    }
+  }
+}
+
+/* Desktop Settings popover — instead of a plain fade/zoom, this unfurls out
+   of the gear button like an iOS control-centre reveal: it starts as a small
+   pill near the trigger and expands (via clip-path, not just transform) into
+   the full rounded panel, with a tiny overshoot for a springy finish. */
+@keyframes settings-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.05, 0.04);
+    border-radius: 9999px;
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.01, 1.015);
+    border-radius: 1.1rem;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+    border-radius: 1rem;
+  }
+}
+
+@keyframes settings-pop-out {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+    border-radius: 1rem;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.05, 0.04);
+    border-radius: 9999px;
+  }
+}
+
+/* !important because this needs to fully replace the base Popover
+   component's default fade/zoom/slide animate-in classes, not blend with
+   them — two competing `animation` declarations on the same element would
+   otherwise fight over which one actually plays. Targeted via the plain
+   `.settings-popover-content` class + Radix's own data-state attribute,
+   since Tailwind's data-[state=]: prefix only works on Tailwind's own
+   utilities — it silently does nothing when combined with a custom class
+   like this one. */
+.settings-popover-content[data-state="open"] {
+  transform-origin: top right;
+  will-change: transform, border-radius;
+  animation: settings-pop-in 480ms cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.settings-popover-content[data-state="closed"] {
+  transform-origin: top right;
+  will-change: transform, border-radius;
+  animation: settings-pop-out 260ms cubic-bezier(0.4, 0, 1, 1) both !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-popover-content[data-state="open"],
+  .settings-popover-content[data-state="closed"] {
+    animation: none !important;
+  }
+}

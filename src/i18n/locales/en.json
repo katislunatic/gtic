@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "teams": "Teams",
+    "bracket": "Bracket",
+    "shop": "Shop",
+    "staff": "Staff",
+    "voting": "Voting",
+    "colorSelector": "Color Code Selector",
+    "sponsorships": "Sponsorships",
+    "faq": "FAQ"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "liquidGlass": "Liquid Glass",
+    "liquidGlassDesc": "Experimental glass refraction effect",
+    "language": "Language",
+    "searchLanguage": "Search language...",
+    "adminAccess": "Admin Access",
+    "adminLogout": "Logout Admin",
+    "adminLogin": "Admin Login"
+  },
+  "home": {
+    "heroTitleLine1": "Gorilla Tag",
+    "heroTitleLine2": "Elite COMP",
+    "heroSubtitle": "Unleash Your Inner Gorilla.",
+    "joinButton": "Join the Competition",
+    "shopBannerTag": "Official Merch",
+    "shopBannerTitle": "Check Out the GTEC Shop",
+    "statTeams": "Teams",
+    "statMembers": "Members",
+    "statOnline": "online",
+    "statSeason": "Current Season",
+    "statRank": "Largest Gorilla Tag League",
+    "sponsorTag": "New Official Sponsor",
+    "sponsorTitle": "APEXINNO Joins GTEC!",
+    "sponsorDesc": "We're thrilled to welcome APEXINNO as an official sponsor of Gorilla Tag Elite COMP. Check out our Sponsorships page to learn more!",
+    "whatIsTitle": "What is Gorilla Tag Elite COMP?",
+    "whatIsDesc": "GTEC is a competitive Gorilla Tag league, focusing on Gorilla Tag and its one-of-a-kind movement system. GTEC unites players of all skills and is the hub for all competitive Gorilla Tag players.",
+    "tournamentTitle": "Tournament",
+    "tournamentDescPrefix": "Watch or participate against the best Gorilla Tag teams in the GTEC tournament. For more info join the",
+    "tournamentDescLink": "Discord"
+  }
+}
