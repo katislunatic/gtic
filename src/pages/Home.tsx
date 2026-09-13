@@ -255,6 +255,9 @@ export const Home = ({ isAdmin }: HomeProps) => {
           </a>
         </div>
 
+        {/* Live on YouTube — only renders when GTEC is actually streaming */}
+        <LiveStreamBanner />
+
         {/* Shop Banner — hidden entirely for regular visitors while the shop
             is disabled; admins still see it so they can preview/manage. */}
         {(settings.shop_enabled !== "false" || isAdmin) && (
