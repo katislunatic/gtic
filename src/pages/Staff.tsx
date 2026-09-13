@@ -14,7 +14,7 @@ import {
 import { Footer } from "@/components/Footer";
 import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
 import { SortableList } from "@/components/SortableList";
-import { ChevronDown, MessageCircle, Plus, RefreshCw, Trash2, Users } from "lucide-react";
+import { ChevronDown, Plus, RefreshCw, Trash2, User, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -369,7 +369,7 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Discord user ID (for Open DMs)</Label>
+                  <Label>Discord user ID (for Open Profile)</Label>
                   <Input
                     value={newMember.discord_user_id}
                     onChange={(e) => setNewMember({ ...newMember, discord_user_id: e.target.value })}
@@ -534,8 +534,8 @@ export const Staff = ({ isAdmin = false }: StaffProps) => {
                                 rel="noopener noreferrer"
                               >
                                 <Button variant="outline" size="sm" className="gap-2">
-                                  <MessageCircle className="h-4 w-4" />
-                                  Open DMs
+                                  <User className="h-4 w-4" />
+                                  Open Profile
                                 </Button>
                               </a>
                             )}
