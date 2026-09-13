@@ -387,9 +387,6 @@ export const Home = ({ isAdmin }: HomeProps) => {
           </Card>
         )}
 
-        {/* Live on YouTube — only renders when GTEC is actually streaming */}
-        <LiveStreamBanner />
-
         {/* Sponsor Announcement */}
         <a href="/sponsorships" className="block mb-12 animate-fade-in">
           <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 md:p-8">
