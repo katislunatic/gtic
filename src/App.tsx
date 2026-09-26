@@ -29,6 +29,7 @@ const Credits = lazy(() => import("./pages/Credits").then((m) => ({ default: m.C
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const DiscordCallback = lazy(() => import("./pages/DiscordCallback"));
 const Officials = lazy(() => import("./pages/Officials").then((m) => ({ default: m.Officials })));
+const DownloadRedirect = lazy(() => import("./pages/DownloadRedirect"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 import { Footer } from "./components/Footer";
@@ -123,6 +124,20 @@ const App = () => {
   const maintenanceMode = siteSettings.maintenance_mode === "true";
   const isPopupLoginRoute =
     typeof window !== "undefined" && window.location.pathname === "/admin-login";
+  const isDownloadRoute =
+    typeof window !== "undefined" && window.location.pathname === "/download/file";
+
+  // The one-time app-download link: a solid white, chrome-less page that
+  // immediately redirects to the Pi — see DownloadRedirect.tsx. Bypassing
+  // the normal layout here (same as the admin-login popup below) means the
+  // site's dark theme/nav/footer never flash before the redirect fires.
+  if (isDownloadRoute) {
+    return (
+      <Suspense fallback={<div style={{ background: "#ffffff", minHeight: "100vh" }} />}>
+        <DownloadRedirect />
+      </Suspense>
+    );
+  }
 
   // The admin-login popup window is intentionally chrome-less (no nav bar,
   // footer, cookie banner) — it's meant to be a small standalone window, not
