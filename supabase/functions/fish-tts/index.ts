@@ -64,7 +64,8 @@ Deno.serve(async (req) => {
     // different each time. Cache the first result per (voice, model, text)
     // in a private storage bucket and replay it forever after, so every
     // player's name always sounds identical.
-    const cacheKey = await sha256(`${FISH_VOICE_ID ?? 'default'}|${FISH_TTS_MODEL}|${trimmedText}`)
+    // Bump the version prefix whenever voice settings change so old clips regenerate.
+    const cacheKey = await sha256(`v2|${FISH_VOICE_ID ?? 'default'}|${FISH_TTS_MODEL}|${trimmedText}`)
     const cachePath = `${cacheKey}.mp3`
     const admin = createClient(
       Deno.env.get('SUPABASE_URL')!,
@@ -94,6 +95,9 @@ Deno.serve(async (req) => {
         ...(FISH_VOICE_ID ? { reference_id: FISH_VOICE_ID } : {}),
         format: 'mp3',
         latency: 'normal',
+        normalize: true,
+        sample_rate: 44100,
+        mp3_bitrate: 192,
         temperature: 0.3,
         top_p: 0.5,
       }),
