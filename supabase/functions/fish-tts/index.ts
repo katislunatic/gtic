@@ -51,9 +51,6 @@ Deno.serve(async (req) => {
     }
 
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-    if (rateLimited(ip)) {
-      return json({ error: 'Too many requests — wait a moment and try again.' }, 429)
-    }
 
     const { text } = await req.json()
     if (!text || typeof text !== 'string') {
