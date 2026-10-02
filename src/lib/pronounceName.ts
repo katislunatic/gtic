@@ -98,13 +98,31 @@ export function normalizeForSpeech(text: string): string {
   return out;
 }
 
+// Turns gamer-style names into something a voice reads cleanly:
+// "xX_DarkWolf99_Xx" -> "Dark Wolf 99." Splits camelCase and letter/number
+// boundaries, drops symbols/emoji, and ends with a period so the voice
+// says it as a clear, finished word instead of trailing off.
+export function toSpeakable(text: string): string {
+  let s = text
+    .replace(/^[xX]+[_\-.]+|[_\-.]+[xX]+$/g, " ")
+    .replace(/[_\-.|~]+/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/([A-Za-z])(\d)/g, "$1 $2")
+    .replace(/(\d)([A-Za-z])/g, "$1 $2")
+    .replace(/[^\p{L}\p{N}' ]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!s) s = text.trim();
+  return s ? `${s}.` : s;
+}
+
 // Plays a much more natural/human voice via the fish-tts Supabase edge
 // function (Fish Audio). Falls back to the browser's built-in (robotic)
 // speech synthesis if Fish Audio isn't configured yet, errors, or the
 // person is offline -- so the pronounce button still does *something*
 // either way rather than silently failing.
 export async function speakName(name: string) {
-  const cleaned = normalizeForSpeech(name);
+  const cleaned = toSpeakable(normalizeForSpeech(name));
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
 
