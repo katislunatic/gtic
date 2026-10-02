@@ -1,4 +1,10 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+
+async function sha256(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s))
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('')
+}
 
 // Text-to-speech proxy for the "pronounce name" button on player profiles,
 // using Fish Audio instead of the browser's built-in (robotic) TTS for a
@@ -57,6 +63,28 @@ Deno.serve(async (req) => {
     // much longer than a display name through this endpoint.
     const trimmedText = text.slice(0, 100)
 
+    // Fish's generation is random per call, so the same name sounds
+    // different each time. Cache the first result per (voice, model, text)
+    // in a private storage bucket and replay it forever after, so every
+    // player's name always sounds identical.
+    const cacheKey = await sha256(`${FISH_VOICE_ID ?? 'default'}|${FISH_TTS_MODEL}|${trimmedText}`)
+    const cachePath = `${cacheKey}.mp3`
+    const admin = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+    )
+
+    const cached = await admin.storage.from('tts-cache').download(cachePath)
+    if (cached.data) {
+      return new Response(cached.data, {
+        headers: { ...corsHeaders, 'Content-Type': 'audio/mpeg', 'Cache-Control': 'public, max-age=86400' },
+      })
+    }
+
+    if (rateLimited(ip)) {
+      return json({ error: 'Too many requests — wait a moment and try again.' }, 429)
+    }
+
     const fishRes = await fetch('https://api.fish.audio/v1/tts', {
       method: 'POST',
       headers: {
@@ -69,6 +97,8 @@ Deno.serve(async (req) => {
         ...(FISH_VOICE_ID ? { reference_id: FISH_VOICE_ID } : {}),
         format: 'mp3',
         latency: 'normal',
+        temperature: 0.3,
+        top_p: 0.5,
       }),
     })
 
@@ -78,8 +108,14 @@ Deno.serve(async (req) => {
       return json({ error: 'Text-to-speech failed.' }, 502)
     }
 
-    return new Response(fishRes.body, {
-      headers: { ...corsHeaders, 'Content-Type': 'audio/mpeg' },
+    const audio = new Uint8Array(await fishRes.arrayBuffer())
+    const up = await admin.storage
+      .from('tts-cache')
+      .upload(cachePath, audio, { contentType: 'audio/mpeg', upsert: true })
+    if (up.error) console.error('TTS cache upload failed:', up.error.message)
+
+    return new Response(audio, {
+      headers: { ...corsHeaders, 'Content-Type': 'audio/mpeg', 'Cache-Control': 'public, max-age=86400' },
     })
   } catch (e) {
     return json({ error: String(e) }, 500)
