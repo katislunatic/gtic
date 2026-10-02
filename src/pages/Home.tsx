@@ -13,6 +13,7 @@ import gticLogo from "@/assets/gtic-logo.png";
 import apexinnoLogo from "@/assets/gtec-x-apexinno.png";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { fetchTeams } from "@/lib/gtecApi";
 
 interface Announcement {
   id: string;
@@ -36,6 +37,8 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [memberCount, setMemberCount] = useState<string | null>(null);
   const [onlineCount, setOnlineCount] = useState<string | null>(null);
   const [countsLoaded, setCountsLoaded] = useState(false);
+  const [officialTeamsCount, setOfficialTeamsCount] = useState<string | null>(null);
+  const [allTeamsCount, setAllTeamsCount] = useState<string | null>(null);
   const { settings, saveSettings } = useSiteSettings();
   const [statsForm, setStatsForm] = useState<Record<string, string> | null>(null);
 
@@ -60,6 +63,25 @@ export const Home = ({ isAdmin }: HomeProps) => {
     };
     fetchCount();
     const id = setInterval(fetchCount, 60_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchTeamCounts = async () => {
+      try {
+        const teams = await fetchTeams({ official: "all" });
+        if (cancelled) return;
+        const officialCount = teams.filter((t) => t.official).length;
+        setOfficialTeamsCount(officialCount.toLocaleString());
+        setAllTeamsCount(teams.length.toLocaleString());
+      } catch {
+        // Pi API unreachable -- leave counts as loading/last-known rather
+        // than showing a wrong number.
+      }
+    };
+    fetchTeamCounts();
+    const id = setInterval(fetchTeamCounts, 60_000);
     return () => { cancelled = true; clearInterval(id); };
   }, []);
 
@@ -187,7 +209,13 @@ export const Home = ({ isAdmin }: HomeProps) => {
   };
 
   const stats = [
-    { icon: Trophy, label: t("home.statTeams"), value: settings.teams_count || "26", color: "text-primary" },
+    {
+      icon: Trophy,
+      label: t("home.statTeams"),
+      value: officialTeamsCount ?? <LoadingDots label="Loading" />,
+      color: "text-primary",
+      sub: allTeamsCount ? `${allTeamsCount} total teams` : undefined
+    },
     {
       icon: Users,
       label: t("home.statMembers"),
@@ -316,15 +344,6 @@ export const Home = ({ isAdmin }: HomeProps) => {
                 <>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <label className="text-sm text-muted-foreground">Teams</label>
-                      <input
-                        type="text"
-                        value={statsForm.teams_count}
-                        onChange={(e) => setStatsForm({ ...statsForm, teams_count: e.target.value })}
-                        className="w-full p-3 rounded-lg bg-input border border-border text-foreground"
-                      />
-                    </div>
-                    <div>
                       <label className="text-sm text-muted-foreground">Current Season</label>
                       <input
                         type="text"
@@ -361,7 +380,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
                       />
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">Member count updates automatically from Discord.</p>
+                  <p className="text-xs text-muted-foreground">Member and team counts update automatically.</p>
                   <div className="flex space-x-2">
                     <Button onClick={saveStats} className="flex-1">Save</Button>
                     <Button variant="outline" onClick={() => setStatsForm(null)} className="flex-1">Cancel</Button>
@@ -372,7 +391,6 @@ export const Home = ({ isAdmin }: HomeProps) => {
                   variant="outline"
                   onClick={() =>
                     setStatsForm({
-                      teams_count: settings.teams_count || "26",
                       season: settings.season || "4",
                       stage_label: settings.stage_label || "Elimination",
                       stage_value: settings.stage_value || "Round 2",

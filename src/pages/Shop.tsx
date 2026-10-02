@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -40,10 +40,22 @@ const getPriceValue = (price: string): number => {
 };
 
 export const Shop = () => {
+  const [searchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortOption>("relevance");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<StatusFilter[]>([]);
+
+  // Lets nav links like /shop?category=Shirts land pre-filtered. Only runs
+  // when the query param actually changes (e.g. clicking another category
+  // link while already on the Shop page), not on every render.
+  useEffect(() => {
+    const category = searchParams.get("category");
+    if (category) {
+      setSelectedCategories([category]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get("category")]);
 
   const categories = useMemo(
     () => Array.from(new Set(shopProducts.map((p) => p.category))).sort(),

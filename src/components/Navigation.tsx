@@ -16,7 +16,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Menu, X, Sun, Moon, ShoppingCart, Globe, Eye, Users, BarChart3, ShieldCheck, ChevronRight, ChevronLeft } from "lucide-react";
+import { Settings, Menu, X, Sun, Moon, ShoppingCart, Globe, Eye, Users, BarChart3, ShieldCheck, ChevronRight, ChevronLeft, ChevronDown, MoreHorizontal } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { LanguagePicker } from "@/components/LanguagePicker";
@@ -228,10 +228,17 @@ export const Navigation = ({
   const navItems = [
     { name: t("nav.home"), path: "/", external: false },
     { name: t("nav.teams"), path: "/teams", external: false },
+    { name: t("nav.players", "Players"), path: "/players", external: false },
     { name: t("nav.bracket"), path: "/bracket", external: false },
     ...(shopEnabled || isAdmin ? [{ name: t("nav.shop"), path: "/shop", external: false }] : []),
     { name: t("nav.staff"), path: "/staff", external: false },
     ...(hasActiveVote || isAdmin ? [{ name: t("nav.voting"), path: "/voting", external: false }] : []),
+  ];
+
+  // Lower-traffic pages, tucked behind a "More" menu on desktop so the main
+  // row doesn't have to fit every single link. Still listed inline (under a
+  // small divider) in the mobile menu, since that's already a scrolling list.
+  const moreNavItems = [
     { name: t("nav.colorSelector"), path: "/color-selector", external: false },
     { name: t("nav.sponsorships"), path: "/sponsorships", external: false },
     { name: t("nav.faq"), path: "/faq", external: false },
@@ -265,7 +272,7 @@ export const Navigation = ({
 
             {/* Desktop Navigation */}
             {!restricted && (
-              <div className="hidden xl:flex items-center gap-0.5 text-sm">
+              <div className="hidden xl:flex items-center gap-2 text-sm">
                 {navItems.map((item) =>
                   item.external ? (
                     <a
@@ -299,6 +306,36 @@ export const Navigation = ({
                     </Link>
                   )
                 )}
+                {/* "More" — the lower-traffic pages, tucked away so the main
+                    row stays readable instead of listing every page. Opens
+                    on hover, same as the Shop mega-menu. */}
+                <HoverCard openDelay={150} closeDelay={100}>
+                  <HoverCardTrigger asChild>
+                    <button
+                      className={`nav-link inline-flex items-center gap-1 ${
+                        moreNavItems.some((i) => isActivePage(i.path)) ? "active" : ""
+                      }`}
+                    >
+                      {t("nav.more", "More")}
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent align="start" className="w-56 p-1.5">
+                    <div className="space-y-0.5">
+                      {moreNavItems.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          className={`block rounded-sm px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground transition-colors ${
+                            isActivePage(item.path) ? "font-medium text-primary" : ""
+                          }`}
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             )}
 
@@ -650,6 +687,22 @@ export const Navigation = ({
                     </Link>
                   )
                 )}
+                {/* "More" group — same lower-traffic pages as the desktop
+                    dropdown, just listed inline since mobile is already a
+                    scrolling list rather than a single row. */}
+                <div className="pt-1 mt-1 border-t border-border/30 flex flex-col space-y-2">
+                  {moreNavItems.map((item, index) => (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={`nav-link ${isActivePage(item.path) ? "active" : ""} ${isMenuOpen ? "animate-menu-item" : ""}`}
+                      style={{ animationDelay: `${(navItems.length + index) * 35}ms` }}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
                 <div className="pt-2 border-t border-border/50">
                   {/* Social Media Links */}
                   <div className="flex justify-center space-x-2 mb-4">

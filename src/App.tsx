@@ -13,7 +13,11 @@ import { Home } from "./pages/Home";
 import { CartProvider } from "@/hooks/use-cart";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 
-const OfficialTeams = lazy(() => import("./pages/OfficialTeams").then((m) => ({ default: m.OfficialTeams })));
+const Roster = lazy(() => import("./pages/Roster").then((m) => ({ default: m.Roster })));
+const Players = lazy(() => import("./pages/Players").then((m) => ({ default: m.Players })));
+const RosterTeam = lazy(() => import("./pages/RosterTeam").then((m) => ({ default: m.RosterTeam })));
+const PlayerProfile = lazy(() => import("./pages/PlayerProfile").then((m) => ({ default: m.PlayerProfile })));
+const CreateTeam = lazy(() => import("./pages/CreateTeam").then((m) => ({ default: m.CreateTeam })));
 const ColorCodeSelector = lazy(() => import("./pages/ColorCodeSelector").then((m) => ({ default: m.ColorCodeSelector })));
 const FAQ = lazy(() => import("./pages/FAQ").then((m) => ({ default: m.FAQ })));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy").then((m) => ({ default: m.PrivacyPolicy })));
@@ -181,7 +185,11 @@ const App = () => {
                 <PageTransition>
                   <Routes>
                     <Route path="/" element={<Home isAdmin={effectiveIsAdmin} />} />
-                    <Route path="/teams" element={<OfficialTeams isAdmin={effectiveIsAdmin} />} />
+                    <Route path="/teams" element={<Roster />} />
+                    <Route path="/players" element={<Players />} />
+                    <Route path="/players/:id" element={<PlayerProfile />} />
+                    <Route path="/teams/create" element={<CreateTeam />} />
+                    <Route path="/teams/:id" element={<RosterTeam isAdmin={effectiveIsAdmin} />} />
                     <Route path="/color-selector" element={<ColorCodeSelector isAdmin={effectiveIsAdmin} />} />
                     <Route path="/sponsorships" element={<Sponsorships isAdmin={effectiveIsAdmin} />} />
                     <Route path="/bracket" element={<Bracket isAdmin={effectiveIsAdmin} />} />
