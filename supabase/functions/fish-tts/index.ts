@@ -61,13 +61,16 @@ Deno.serve(async (req) => {
     // Names are short; this is a hard cap against someone passing something
     // much longer than a display name through this endpoint.
     const trimmedText = text.slice(0, 100)
+    // Put a short natural pause between each word of the name so every part is
+    // spoken deliberately, without slowing (and distorting) the voice itself.
+    const spokenText = trimmedText.replace(/[.]+$/, '').split(/\s+/).filter(Boolean).join(', ') + '.'
 
     // Fish's generation is random per call, so the same name sounds
     // different each time. Cache the first result per (voice, model, text)
     // in a private storage bucket and replay it forever after, so every
     // player's name always sounds identical.
     // Bump the version prefix whenever voice settings change so old clips regenerate.
-    const cacheKey = await sha256(`v4|${FISH_VOICE_ID ?? 'default'}|${FISH_TTS_MODEL}|${trimmedText}`)
+    const cacheKey = await sha256(`v5|${FISH_VOICE_ID ?? 'default'}|${FISH_TTS_MODEL}|${trimmedText}`)
     const cachePath = `${cacheKey}.mp3`
     const admin = createClient(
       Deno.env.get('SUPABASE_URL')!,
@@ -93,7 +96,7 @@ Deno.serve(async (req) => {
         model: FISH_TTS_MODEL,
       },
       body: JSON.stringify({
-        text: trimmedText,
+        text: spokenText,
         ...(FISH_VOICE_ID ? { reference_id: FISH_VOICE_ID } : {}),
         format: 'mp3',
         latency: 'normal',
@@ -102,7 +105,7 @@ Deno.serve(async (req) => {
         mp3_bitrate: 192,
         temperature: 0.1,
         top_p: 0.3,
-        prosody: { speed: 0.75, volume: 0 },
+        prosody: { speed: 0.95, volume: 0 },
       }),
     })
 
