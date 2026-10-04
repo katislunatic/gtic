@@ -26,7 +26,7 @@ async function sha256(s: string): Promise<string> {
 const FISH_API_KEY = Deno.env.get('FISH_API_KEY')
 // Voice IDs are public library IDs, not secrets -- pinned here so changing
 // the voice is a one-line edit.
-const FISH_VOICE_ID = '5ecd89ee97ea434c984a3fe6420e22d8'
+const FISH_VOICE_ID = 'eb4bcc6dbb634e9eaee239c94266935e'
 const FISH_TTS_MODEL = Deno.env.get('FISH_TTS_MODEL') || 's2.1-pro-free'
 
 // Small per-IP rate limiter, same shape as ai-chat's -- this hits a paid-
