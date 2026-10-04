@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Footer } from "@/components/Footer";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ArrowLeft, Shield, ShieldQuestion, Users, Crown, Star, RotateCw, Pencil, Check, X } from "lucide-react";
 import { fetchTeam, logoUrl, resolveDiscordUsers, updateTeamBadges, updateTeamMessage } from "@/lib/gtecApi";
 import { useDiscordAuth } from "@/hooks/use-discord-auth";
@@ -143,7 +144,17 @@ export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
                 style={{ borderColor: team.color, backgroundColor: `${team.color}22` }}
               >
                 {team.hasLogo ? (
-                  <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="h-full w-full object-cover" />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button type="button" aria-label="Enlarge team logo" className="h-full w-full cursor-zoom-in">
+                        <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="h-full w-full object-cover" />
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-lg p-4 bg-card">
+                      <DialogTitle className="sr-only">{team.name} logo</DialogTitle>
+                      <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
+                    </DialogContent>
+                  </Dialog>
                 ) : (
                   <Users className="h-8 w-8" style={{ color: team.color }} />
                 )}
