@@ -150,7 +150,7 @@ export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
                         <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="h-full w-full object-cover" />
                       </button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-lg p-4 bg-card">
+                    <DialogContent className="max-w-lg p-0 bg-transparent border-0 shadow-none">
                       <DialogTitle className="sr-only">{team.name} logo</DialogTitle>
                       <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
                     </DialogContent>
