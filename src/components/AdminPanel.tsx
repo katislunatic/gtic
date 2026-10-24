@@ -9,12 +9,13 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { GripVertical, RefreshCw, X, Eye, BarChart3, Globe, Users, ShieldCheck } from "lucide-react";
+import { GripVertical, RefreshCw, X, Eye, BarChart3, Globe, Users, ShieldCheck, Palette } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { fetchPageViewStats, formatDuration, type PageViewStats } from "@/lib/analytics";
 import { OWNER_DISCORD_ID, useDiscordAuth } from "@/hooks/use-discord-auth";
+import { SITE_THEMES, SITE_THEME_IDS, type SiteThemeId } from "@/lib/siteThemes";
 
 interface AdminPanelProps {
   open: boolean;
@@ -27,6 +28,9 @@ interface AdminPanelProps {
   onMaintenanceModeChange: (enabled: boolean) => void;
   viewAsVisitor: boolean;
   onViewAsVisitorChange: (enabled: boolean) => void;
+  // Site-wide seasonal theme (saved to site_settings, so it applies to everyone).
+  siteTheme: SiteThemeId;
+  onSiteThemeChange: (id: SiteThemeId) => void;
   // Which category section to land on/expand when the panel opens — set from
   // the hover flyout on the nav trigger so clicking e.g. "Analytics" there
   // opens the panel with that category already expanded instead of always
@@ -49,6 +53,8 @@ export const AdminPanel = ({
   onMaintenanceModeChange,
   viewAsVisitor,
   onViewAsVisitorChange,
+  siteTheme,
+  onSiteThemeChange,
   initialSection,
 }: AdminPanelProps) => {
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
@@ -227,6 +233,47 @@ export const AdminPanel = ({
                   </p>
                 </div>
                 <Switch checked={maintenanceMode} onCheckedChange={onMaintenanceModeChange} />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Theme — switches the colors, logo and effects of the whole site
+              for everyone (layout never changes). */}
+          <AccordionItem value="theme" className="border-border">
+            <AccordionTrigger className="px-2 text-sm hover:no-underline">
+              <span className="flex items-center gap-2">
+                <Palette className="h-4 w-4" /> Theme
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="px-2 space-y-3">
+              <p className="text-xs text-muted-foreground">
+                Changes the colors, logo, and effects across the whole site for everyone.
+              </p>
+              <div className="space-y-2">
+                {SITE_THEME_IDS.map((id) => {
+                  const def = SITE_THEMES[id];
+                  const selected = siteTheme === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => onSiteThemeChange(id)}
+                      className={`w-full flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors ${
+                        selected ? "border-primary bg-primary/10" : "border-border hover:bg-muted/50"
+                      }`}
+                    >
+                      <span className="min-w-0">
+                        <span className="block text-sm font-medium">{def.label}</span>
+                        <span className="block text-xs text-muted-foreground">{def.description}</span>
+                      </span>
+                      <span className="flex shrink-0 gap-1">
+                        {def.swatch.map((color) => (
+                          <span key={color} className="h-4 w-4 rounded-full border border-border" style={{ background: color }} />
+                        ))}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>

@@ -16,7 +16,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings, Menu, X, Sun, Moon, ShoppingCart, Globe, Eye, Users, BarChart3, ShieldCheck, ChevronRight, ChevronLeft, ChevronDown, MoreHorizontal } from "lucide-react";
+import { Settings, Menu, X, Sun, Moon, ShoppingCart, Globe, Eye, Users, BarChart3, ShieldCheck, Palette, ChevronRight, ChevronLeft, ChevronDown, MoreHorizontal } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { LanguagePicker } from "@/components/LanguagePicker";
@@ -32,7 +32,9 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { AdminPanel } from "@/components/AdminPanel";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { DiscordAccountSection } from "@/components/DiscordAccountSection";
-import gticLogo from "@/assets/gtic-logo.png";
+import { ThemedLogo } from "@/components/ThemedLogo";
+import { SeasonalEffectsToggle } from "@/components/SeasonalEffectsToggle";
+import { normalizeSiteTheme, setActiveSiteTheme, type SiteThemeId } from "@/lib/siteThemes";
 import { supabase } from "@/integrations/supabase/client";
 
 interface NavigationProps {
@@ -207,6 +209,7 @@ export const Navigation = ({
   // one opens the panel with that category already expanded.
   const adminCategories = [
     { id: "site-visibility", label: "Site Visibility", icon: Globe },
+    { id: "theme", label: "Theme", icon: Palette },
     { id: "preview", label: "Preview", icon: Eye },
     { id: "staff", label: "Staff", icon: Users },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
@@ -263,7 +266,7 @@ export const Navigation = ({
           <div className={`flex items-center gap-2 h-14 ${restricted ? "justify-center" : "justify-between"}`}>
             {/* Logo */}
             <Link to="/" onClick={handleLogoTap} className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
-              <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
+              <ThemedLogo className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
               <span className="hidden sm:inline xl:hidden 2xl:inline text-base sm:text-lg font-bold hero-text truncate">
                 Gorilla Tag Elite COMP
               </span>
@@ -488,6 +491,9 @@ export const Navigation = ({
                     </div>
 
                     <Separator />
+
+                    {/* Seasonal effects on/off (only while a themed effect is active) */}
+                    <SeasonalEffectsToggle />
 
                     {/* Liquid Glass Mode */}
                     <div className="space-y-3 rounded-lg bg-muted/30 p-3">
@@ -840,6 +846,8 @@ export const Navigation = ({
 
                 <Separator />
 
+                <SeasonalEffectsToggle />
+
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
@@ -895,6 +903,12 @@ export const Navigation = ({
         onMaintenanceModeChange={(checked) => saveSettings({ maintenance_mode: checked ? "true" : "false" })}
         viewAsVisitor={viewAsVisitor}
         onViewAsVisitorChange={(checked) => onViewAsVisitorChange?.(checked)}
+        siteTheme={normalizeSiteTheme(settings.site_theme)}
+        onSiteThemeChange={(id: SiteThemeId) => {
+          // Show it immediately for the admin, then save it for everyone.
+          setActiveSiteTheme(id);
+          saveSettings({ site_theme: id });
+        }}
       />
 
       {/* Persistent "return to admin" banner — shown unconditionally whenever

@@ -60,6 +60,16 @@
         }
       } catch (e) {}
     </script>
+    <script>
+      // Apply the saved seasonal theme before first paint (read from the cached
+      // site settings) so a themed site never flashes the default colors.
+      try {
+        var cached = JSON.parse(localStorage.getItem('gtec-site-settings') || '{}');
+        if (cached.site_theme && cached.site_theme !== 'default') {
+          document.documentElement.setAttribute('data-site-theme', cached.site_theme);
+        }
+      } catch (e) {}
+    </script>
     <div id="root"></div>
     <!-- defer: lets the browser keep parsing/rendering the page instead of
          pausing to fetch this third-party script first. It still loads and

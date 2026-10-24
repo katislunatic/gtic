@@ -1,7 +1,7 @@
 // Thin fetch wrapper for the GTEC public API running on the Pi (bot + Mongo
-// team/player data), reached through a Cloudflare tunnel. See VITE_GTEC_API_URL
-// in .env -- that URL is NOT permanent, it changes if the Pi reboots or the
-// tunnel process restarts, so it's centralized here rather than hardcoded
+// team/player data), reached through Tailscale Funnel (port 8443 -> the API on
+// localhost:4100). See VITE_GTEC_API_URL in .env -- that URL is permanent and
+// survives Pi restarts, and it's centralized here rather than hardcoded
 // anywhere else.
 
 import { supabase } from "@/integrations/supabase/client";
@@ -117,13 +117,13 @@ export async function fetchPlayer(discordUserId: string): Promise<GtecPlayer> {
 export interface PlayerDirectoryEntry {
   discordUserId: string;
   identity: DiscordIdentity;
-  teamStatus: "official" | "unofficial" | "none";
+  teamStatus: "official" | "unofficial" | "past";
   teamName: string | null;
 }
 
 export async function searchPlayers(opts: {
   search?: string;
-  status?: "all" | "official" | "unofficial" | "none";
+  status?: "all" | "official" | "unofficial" | "past";
   limit?: number;
   offset?: number;
 } = {}): Promise<{ players: PlayerDirectoryEntry[]; total: number }> {
@@ -135,6 +135,40 @@ export async function searchPlayers(opts: {
   const qs = params.toString();
   const data = await request<{ players: PlayerDirectoryEntry[]; total: number }>(`/players${qs ? `?${qs}` : ""}`);
   return data;
+}
+
+// What the homepage stat cards show, worked out live from the seeding and
+// bracket bots' data. stageLabel/stageValue are null in the off-season, in
+// which case the site falls back to the values staff type in by hand.
+export interface LeagueStatus {
+  phase: "seeding" | "elimination" | "offseason";
+  season: string | null;
+  stageLabel: string | null;
+  stageValue: string | null;
+}
+
+export async function fetchLeagueStatus(): Promise<LeagueStatus> {
+  return request<LeagueStatus>("/league-status");
+}
+
+// Live elimination bracket. Slot keys are "R{round}-{index}", matching the
+// box positions in components/LiveBracket.tsx.
+export interface LiveBracketSlot {
+  abbr: string;
+  name: string | null;
+  seed: number | null;
+}
+
+export interface LiveBracketData {
+  active: boolean;
+  season: string | null;
+  round: number;
+  slots: Record<string, LiveBracketSlot>;
+  champion: { abbr: string; name: string | null } | null;
+}
+
+export async function fetchBracket(): Promise<LiveBracketData> {
+  return request<LiveBracketData>("/bracket");
 }
 
 export async function resolveDiscordUsers(ids: string[]): Promise<Record<string, DiscordIdentity>> {

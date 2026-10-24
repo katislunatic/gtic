@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Shield, ShieldQuestion, Users, Loader2 } from "lucide-react";
 import { searchPlayers, type PlayerDirectoryEntry } from "@/lib/gtecApi";
 
-type StatusFilter = "all" | "official" | "unofficial" | "none";
+type StatusFilter = "all" | "official" | "unofficial" | "past";
 
 const PAGE_SIZE = 30;
 
@@ -41,7 +41,7 @@ export const Players = () => {
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             <span className="hero-text">Players</span>
           </h1>
-          <p className="text-muted-foreground">Look up anyone in the server.</p>
+          <p className="text-muted-foreground">Look up players on a team, or who have been on one.</p>
         </div>
 
         <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3 mb-6 max-w-xl mx-auto">
@@ -58,7 +58,7 @@ export const Players = () => {
             ["all", "All"],
             ["official", "On Official Team"],
             ["unofficial", "On Unofficial Team"],
-            ["none", "No Team"],
+            ["past", "Past Teams"],
           ] as [StatusFilter, string][]).map(([value, label]) => (
             <Button
               key={value}
@@ -142,10 +142,10 @@ const PlayerCard = ({ player }: { player: PlayerDirectoryEntry }) => {
                   <span className="truncate">{player.teamName}</span>
                 </>
               )}
-              {player.teamStatus === "none" && (
+              {player.teamStatus === "past" && (
                 <>
                   <Users className="h-3 w-3 flex-shrink-0" />
-                  <span>No team</span>
+                  <span>Past team member</span>
                 </>
               )}
             </div>

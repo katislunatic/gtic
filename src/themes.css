@@ -1,0 +1,124 @@
+/* Seasonal site themes. Picked in Admin Panel -> Theme; applied to <html> as
+   data-site-theme="halloween" | "christmas" (see src/lib/siteThemes.ts).
+   Only colors, gradients and glows change -- never layout.
+
+   Specificity note: these selectors (html[data-site-theme]) deliberately beat
+   the plain `.dark` / `.light` blocks in index.css, and the `.light` variants
+   below beat the dark ones, so each theme works in both dark and light mode.
+   All values are HSL channels, same as index.css. */
+
+/* ───────────────────────── Halloween ───────────────────────── */
+html[data-site-theme="halloween"] {
+  --background: 270 45% 5%;
+  --foreground: 0 0% 98%;
+  --card: 270 35% 8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 270 35% 8%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 24 100% 55%;
+  --primary-foreground: 270 45% 6%;
+  --secondary: 275 80% 62%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 24 100% 55%;
+  --accent-foreground: 270 45% 6%;
+
+  --muted: 270 30% 12%;
+  --muted-foreground: 270 14% 68%;
+  --border: 270 30% 17%;
+  --input: 270 30% 12%;
+  --ring: 24 100% 55%;
+
+  --gradient-primary: linear-gradient(135deg, hsl(24 100% 55%), hsl(14 100% 45%));
+  --gradient-secondary: linear-gradient(135deg, hsl(275 80% 62%), hsl(275 80% 48%));
+  --gradient-hero: linear-gradient(135deg, hsl(270 45% 5%), hsl(268 40% 9%));
+  --gradient-card: linear-gradient(145deg, hsl(270 35% 8%), hsl(270 35% 11%));
+
+  --shadow-glow: 0 0 20px hsl(24 100% 55% / 0.3);
+  --shadow-glow-secondary: 0 0 20px hsl(275 80% 62% / 0.3);
+  --shadow-card: 0 10px 30px -10px hsl(270 45% 4% / 0.8);
+}
+
+html[data-site-theme="halloween"].light {
+  --background: 30 45% 94%;
+  --foreground: 270 30% 14%;
+  --card: 30 40% 97%;
+  --card-foreground: 270 30% 14%;
+  --popover: 30 40% 97%;
+  --popover-foreground: 270 30% 14%;
+
+  --primary: 24 95% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 275 70% 48%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 24 95% 48%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 30 30% 89%;
+  --muted-foreground: 270 15% 38%;
+  --border: 30 25% 82%;
+  --input: 30 30% 91%;
+  --ring: 24 95% 48%;
+
+  --gradient-hero: linear-gradient(135deg, hsl(30 45% 94%), hsl(30 40% 97%));
+  --gradient-card: linear-gradient(145deg, hsl(30 40% 97%), hsl(30 40% 98%));
+  --shadow-card: 0 10px 30px -10px hsl(270 40% 30% / 0.15);
+}
+
+/* ───────────────────────── Christmas ───────────────────────── */
+html[data-site-theme="christmas"] {
+  --background: 150 45% 5%;
+  --foreground: 0 0% 98%;
+  --card: 150 35% 8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 150 35% 8%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 0 80% 55%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 140 65% 42%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 0 80% 55%;
+  --accent-foreground: 0 0% 98%;
+
+  --muted: 150 28% 12%;
+  --muted-foreground: 150 12% 68%;
+  --border: 150 28% 16%;
+  --input: 150 28% 12%;
+  --ring: 0 80% 55%;
+
+  --gradient-primary: linear-gradient(135deg, hsl(0 80% 55%), hsl(0 80% 42%));
+  --gradient-secondary: linear-gradient(135deg, hsl(140 65% 42%), hsl(140 65% 32%));
+  --gradient-hero: linear-gradient(135deg, hsl(150 45% 5%), hsl(150 40% 9%));
+  --gradient-card: linear-gradient(145deg, hsl(150 35% 8%), hsl(150 35% 11%));
+
+  --shadow-glow: 0 0 20px hsl(0 80% 55% / 0.3);
+  --shadow-glow-secondary: 0 0 20px hsl(140 65% 42% / 0.3);
+  --shadow-card: 0 10px 30px -10px hsl(150 45% 4% / 0.8);
+}
+
+html[data-site-theme="christmas"].light {
+  --background: 140 30% 94%;
+  --foreground: 150 35% 12%;
+  --card: 140 25% 97%;
+  --card-foreground: 150 35% 12%;
+  --popover: 140 25% 97%;
+  --popover-foreground: 150 35% 12%;
+
+  --primary: 0 75% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 140 55% 32%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 0 75% 48%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 140 22% 89%;
+  --muted-foreground: 150 15% 36%;
+  --border: 140 20% 82%;
+  --input: 140 22% 91%;
+  --ring: 0 75% 48%;
+
+  --gradient-hero: linear-gradient(135deg, hsl(140 30% 94%), hsl(140 25% 97%));
+  --gradient-card: linear-gradient(145deg, hsl(140 25% 97%), hsl(140 25% 98%));
+  --shadow-card: 0 10px 30px -10px hsl(150 40% 25% / 0.15);
+}

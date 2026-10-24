@@ -11,13 +11,26 @@ import { ArrowLeft, Shield, ShieldQuestion, Users, Crown, Star, RotateCw, Pencil
 import { fetchTeam, logoUrl, resolveDiscordUsers, updateTeamBadges, updateTeamMessage } from "@/lib/gtecApi";
 import { useDiscordAuth } from "@/hooks/use-discord-auth";
 import { useToast } from "@/hooks/use-toast";
+import { ImageLightbox } from "@/components/ImageLightbox";
 
-// Sort order for displaying members grouped by role, captain first.
-const ROLE_ORDER: Record<string, number> = {
-  Captain: 0,
-  "Team Executive": 1,
-  "Co-Captain": 2,
-  "Team Member": 3,
+// Display label + sort rank for a member on the team page. Executive is
+// listed above Captain. If the Executive is also the Captain or a Co-Captain,
+// the label combines them ("Executive/Captain", "Executive/Co-Captain").
+// Executive is never combined with plain Team Member.
+const memberDisplay = (
+  team: { captainId: string | null; coCaptains: string[]; executiveId: string | null },
+  discordUserId: string
+): { label: string | null; rank: number } => {
+  const isExec = team.executiveId === discordUserId;
+  const isCaptain = team.captainId === discordUserId;
+  const isCoCaptain = team.coCaptains.includes(discordUserId);
+
+  if (isExec && isCaptain) return { label: "Executive/Captain", rank: 0 };
+  if (isExec && isCoCaptain) return { label: "Executive/Co-Captain", rank: 0 };
+  if (isExec) return { label: "Executive", rank: 0 };
+  if (isCaptain) return { label: "Captain", rank: 1 };
+  if (isCoCaptain) return { label: "Co-Captain", rank: 2 };
+  return { label: "Team Member", rank: 3 };
 };
 
 export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
@@ -126,7 +139,7 @@ export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
   }
 
   const sortedMembers = [...team.members].sort(
-    (a, b) => (ROLE_ORDER[a.role ?? ""] ?? 9) - (ROLE_ORDER[b.role ?? ""] ?? 9)
+    (a, b) => memberDisplay(team, a.discordUserId).rank - memberDisplay(team, b.discordUserId).rank
   );
 
   return (
@@ -144,17 +157,9 @@ export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
                 style={{ borderColor: team.color, backgroundColor: `${team.color}22` }}
               >
                 {team.hasLogo ? (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button type="button" aria-label="Enlarge team logo" className="h-full w-full cursor-zoom-in">
-                        <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="h-full w-full object-cover" />
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-lg p-0 bg-transparent border-0 shadow-none">
-                      <DialogTitle className="sr-only">{team.name} logo</DialogTitle>
-                      <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
-                    </DialogContent>
-                  </Dialog>
+                  <ImageLightbox src={logoUrl(team.id)} alt={`${team.name} logo`} className="block h-full w-full">
+                    <img src={logoUrl(team.id)} alt={`${team.name} logo`} className="h-full w-full object-cover" />
+                  </ImageLightbox>
                 ) : (
                   <Users className="h-8 w-8" style={{ color: team.color }} />
                 )}
@@ -302,6 +307,7 @@ export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
               <ul className="space-y-2">
                 {sortedMembers.map((m) => {
                   const identity = identities[m.discordUserId];
+                  const roleLabel = memberDisplay(team, m.discordUserId).label;
                   return (
                     <li key={m.discordUserId}>
                       <Link
@@ -322,8 +328,8 @@ export const RosterTeam = ({ isAdmin = false }: { isAdmin?: boolean }) => {
                             {identity ? identity.displayName : m.discordUserId}
                           </span>
                         </span>
-                        {m.role && (
-                          <span className="text-xs text-muted-foreground flex-shrink-0 ml-2">({m.role})</span>
+                        {roleLabel && (
+                          <span className="text-xs text-muted-foreground flex-shrink-0 ml-2">({roleLabel})</span>
                         )}
                       </Link>
                     </li>

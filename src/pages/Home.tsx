@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,11 +10,11 @@ import { Footer } from "@/components/Footer";
 import { LoadingDots } from "@/components/LoadingDots";
 import { LiveStreamBanner } from "@/components/LiveStreamBanner";
 import { useTranslation } from "react-i18next";
-import gticLogo from "@/assets/gtic-logo.png";
+import { ThemedLogo } from "@/components/ThemedLogo";
 import apexinnoLogo from "@/assets/gtec-x-apexinno.png";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/use-site-settings";
-import { fetchTeams } from "@/lib/gtecApi";
+import { fetchTeams, fetchLeagueStatus } from "@/lib/gtecApi";
 
 interface Announcement {
   id: string;
@@ -41,6 +42,16 @@ export const Home = ({ isAdmin }: HomeProps) => {
   const [allTeamsCount, setAllTeamsCount] = useState<string | null>(null);
   const { settings, saveSettings } = useSiteSettings();
   const [statsForm, setStatsForm] = useState<Record<string, string> | null>(null);
+
+  // Season / week / round come straight from the seeding and bracket bots, so
+  // they update by themselves. When nothing is running (off-season) the API
+  // sends nulls and the manual values below are used instead.
+  const { data: leagueStatus } = useQuery({
+    queryKey: ["gtec-league-status"],
+    queryFn: fetchLeagueStatus,
+    refetchInterval: 60_000,
+    retry: false,
+  });
 
   useEffect(() => {
     loadAnnouncements();
@@ -223,8 +234,13 @@ export const Home = ({ isAdmin }: HomeProps) => {
       color: "text-secondary",
       sub: onlineCount ? `${onlineCount} ${t("home.statOnline")}` : !countsLoaded ? <LoadingDots label="Loading" /> : undefined
     },
-    { icon: Calendar, label: t("home.statSeason"), value: settings.season || "4", color: "text-primary" },
-    { icon: Zap, label: settings.stage_label || "Elimination", value: settings.stage_value || "Round 2", color: "text-secondary" },
+    { icon: Calendar, label: t("home.statSeason"), value: leagueStatus?.season || settings.season || "4", color: "text-primary" },
+    {
+      icon: Zap,
+      label: leagueStatus?.stageLabel || settings.stage_label || "Elimination",
+      value: leagueStatus?.stageValue || settings.stage_value || "Round 2",
+      color: "text-secondary"
+    },
     { icon: TrendingUp, label: t("home.statRank"), value: settings.rank_value || "#5", color: "text-primary" }
   ];
 
@@ -262,7 +278,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
               className="pointer-events-none absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-[30%] -translate-y-1/2 rounded-full opacity-25 blur-2xl"
               style={{ background: "radial-gradient(circle, hsl(var(--secondary)) 0%, hsl(var(--secondary)) 35%, transparent 75%)" }}
             />
-            <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="relative h-56 w-56 sm:h-64 sm:w-64 drop-shadow-2xl" />
+            <ThemedLogo className="relative h-56 w-56 sm:h-64 sm:w-64 drop-shadow-2xl" />
           </div>
           <h1 className="relative text-5xl sm:text-6xl md:text-8xl mb-4 leading-[0.95]">
             <span className="hero-text inline-block -rotate-2">{t("home.heroTitleLine1")}</span>
@@ -380,7 +396,7 @@ export const Home = ({ isAdmin }: HomeProps) => {
                       />
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">Member and team counts update automatically.</p>
+                  <p className="text-xs text-muted-foreground">Member and team counts update automatically. Season, stage, and week/round also update automatically while seeding or the bracket is running; the values above are only used when nothing is running.</p>
                   <div className="flex space-x-2">
                     <Button onClick={saveStats} className="flex-1">Save</Button>
                     <Button variant="outline" onClick={() => setStatsForm(null)} className="flex-1">Cancel</Button>

@@ -10,6 +10,7 @@ import { fetchPlayer, logoUrl, updateMyBio } from "@/lib/gtecApi";
 import { useDiscordAuth } from "@/hooks/use-discord-auth";
 import { useToast } from "@/hooks/use-toast";
 import { speakName } from "@/lib/pronounceName";
+import { ImageLightbox } from "@/components/ImageLightbox";
 
 const BIO_MAX = 200;
 
@@ -88,11 +89,18 @@ export const PlayerProfile = () => {
           <div className="lg:col-span-2 space-y-6">
             <Card className="team-card">
               <CardContent className="p-6 flex items-center gap-4">
-                <img
-                  src={player.identity.avatarUrl}
+                <ImageLightbox
+                  src={player.identity.avatarUrl.replace(/size=\d+/, "size=512")}
                   alt={player.identity.displayName}
-                  className="h-20 w-20 rounded-full border flex-shrink-0"
-                />
+                  className="flex-shrink-0 rounded-full"
+                  imgClassName="rounded-full"
+                >
+                  <img
+                    src={player.identity.avatarUrl}
+                    alt={player.identity.displayName}
+                    className="h-20 w-20 rounded-full border flex-shrink-0"
+                  />
+                </ImageLightbox>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <h1 className="text-2xl md:text-3xl font-bold truncate">{player.identity.displayName}</h1>

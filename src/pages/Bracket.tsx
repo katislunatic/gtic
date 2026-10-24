@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +8,13 @@ import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useToast } from "@/hooks/use-toast";
+import { fetchBracket } from "@/lib/gtecApi";
+import { LiveBracket, BRACKET_TEMPLATE_URL } from "@/components/LiveBracket";
 import bracketAsset from "@/assets/gtec-season-4-bracket-r2b.png";
+
+// Round 3 of the 16-team bracket is the semifinals and round 4 the finals.
+const roundName = (round?: number) =>
+  round === 4 ? "Finals" : round === 3 ? "Semifinals" : `Round ${round ?? ""}`.trim();
 
 interface BracketProps {
   isAdmin?: boolean;
@@ -58,9 +65,28 @@ export const Bracket = ({ isAdmin = false }: BracketProps) => {
   const { settings, loading, saveSettings } = useSiteSettings();
   const { toast } = useToast();
 
+  // Live bracket from the bracket bot's data. While a bracket is running the
+  // page draws it itself and refreshes every minute; otherwise (off-season, API
+  // unreachable, or the blank template missing) it falls back to the uploaded
+  // image below, exactly as before.
+  const { data: liveBracket, isLoading: liveLoading } = useQuery({
+    queryKey: ["gtec-bracket"],
+    queryFn: fetchBracket,
+    refetchInterval: 60_000,
+    retry: false,
+  });
+  const [templateOk, setTemplateOk] = useState<boolean | null>(null);
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setTemplateOk(true);
+    img.onerror = () => setTemplateOk(false);
+    img.src = BRACKET_TEMPLATE_URL;
+  }, []);
+  const showLive = !!liveBracket?.active && templateOk === true;
+
   // Always derives from the Season stat — no separate manual override, so
   // there's no stale saved title that can drift out of sync with the season.
-  const title = `Season ${settings.season || "4"} Bracket`;
+  const title = `Season ${(showLive && liveBracket?.season) || settings.season || "4"} Bracket`;
 
   useEffect(() => {
     let cancelled = false;
@@ -126,7 +152,11 @@ export const Bracket = ({ isAdmin = false }: BracketProps) => {
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             <span className="hero-text">{title}</span>
           </h1>
-          <p className="text-muted-foreground">Click the bracket to view fullscreen</p>
+          <p className="text-muted-foreground">
+            {showLive
+              ? `${liveBracket?.champion ? `Champion: ${liveBracket.champion.abbr}` : roundName(liveBracket?.round)} • Updates automatically • Click the bracket to view fullscreen`
+              : "Click the bracket to view fullscreen"}
+          </p>
         </div>
 
         {isAdmin && (
@@ -138,6 +168,11 @@ export const Bracket = ({ isAdmin = false }: BracketProps) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {showLive && (
+                <p className="text-sm text-muted-foreground">
+                  A bracket is running, so the live bracket is shown automatically. The uploaded image below is only used when no bracket is running.
+                </p>
+              )}
               <div>
                 <label className="text-sm text-muted-foreground">Upload new bracket image</label>
                 <input
@@ -161,7 +196,7 @@ export const Bracket = ({ isAdmin = false }: BracketProps) => {
           </Card>
         )}
 
-        {loading || !imageReady ? (
+        {loading || liveLoading || templateOk === null || (!showLive && !imageReady) ? (
           <div className="flex items-center justify-center w-full min-h-[300px] rounded-lg border border-border bg-muted/30 text-muted-foreground">
             Loading bracket…
           </div>
@@ -170,13 +205,21 @@ export const Bracket = ({ isAdmin = false }: BracketProps) => {
             onClick={() => setOpen(true)}
             className="block w-full rounded-lg overflow-hidden border border-border hover:opacity-90 transition-opacity"
           >
-            <img src={imageUrl} alt={`GTEC ${title}`} className="w-full h-auto" />
+            {showLive && liveBracket ? (
+              <LiveBracket bracket={liveBracket} />
+            ) : (
+              <img src={imageUrl} alt={`GTEC ${title}`} className="w-full h-auto" />
+            )}
           </button>
         )}
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="max-w-[95vw] w-[95vw] p-2 sm:p-4">
-            <img src={imageUrl} alt={`GTEC ${title}`} className="w-full h-auto" />
+            {showLive && liveBracket ? (
+              <LiveBracket bracket={liveBracket} />
+            ) : (
+              <img src={imageUrl} alt={`GTEC ${title}`} className="w-full h-auto" />
+            )}
           </DialogContent>
         </Dialog>
       </div>

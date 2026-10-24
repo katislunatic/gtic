@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import youtubeLogo from "@/assets/youtube-logo.svg";
 import tiktokLogo from "@/assets/tiktok-logo.svg";
 import discordLogo from "@/assets/discord-logo.svg";
-import gticLogo from "@/assets/gtic-logo.png";
+import { ThemedLogo } from "@/components/ThemedLogo";
 
 const siteLinks = [
   { name: "Home", path: "/" },
@@ -36,7 +36,7 @@ export const Footer = () => {
           {/* Brand + socials */}
           <div className="col-span-2 sm:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-3 w-fit hover:opacity-80 transition-opacity">
-              <img src={gticLogo} alt="Gorilla Tag Elite COMP Logo" className="h-8 w-8" />
+              <ThemedLogo className="h-8 w-8" />
               <span className="font-bold hero-text text-sm">Gorilla Tag Elite COMP</span>
             </Link>
             <p className="text-xs text-muted-foreground mb-4 max-w-[220px]">
