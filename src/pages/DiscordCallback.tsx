@@ -38,7 +38,10 @@ const DiscordCallback = () => {
         setError(otpError.message);
         return;
       }
-      navigate("/", { replace: true });
+      // Appeal (and any future page) can ask to be returned to after login.
+      const returnTo = sessionStorage.getItem("gtec-post-login");
+      sessionStorage.removeItem("gtec-post-login");
+      navigate(returnTo && returnTo.startsWith("/") ? returnTo : "/", { replace: true });
     };
 
     void run();

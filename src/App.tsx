@@ -12,6 +12,8 @@ import { LoadingDots } from "@/components/LoadingDots";
 import { Home } from "./pages/Home";
 import { CartProvider } from "@/hooks/use-cart";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { ThemeEffects } from "@/components/ThemeEffects";
+import { normalizeSiteTheme, setActiveSiteTheme } from "@/lib/siteThemes";
 
 const Roster = lazy(() => import("./pages/Roster").then((m) => ({ default: m.Roster })));
 const Players = lazy(() => import("./pages/Players").then((m) => ({ default: m.Players })));
@@ -30,6 +32,7 @@ const ShopProduct = lazy(() => import("./pages/ShopProduct").then((m) => ({ defa
 const ShippingReturns = lazy(() => import("./pages/ShippingReturns").then((m) => ({ default: m.ShippingReturns })));
 const Staff = lazy(() => import("./pages/Staff").then((m) => ({ default: m.Staff })));
 const Credits = lazy(() => import("./pages/Credits").then((m) => ({ default: m.Credits })));
+const Appeal = lazy(() => import("./pages/Appeal").then((m) => ({ default: m.Appeal })));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const DiscordCallback = lazy(() => import("./pages/DiscordCallback"));
 const Officials = lazy(() => import("./pages/Officials").then((m) => ({ default: m.Officials })));
@@ -126,6 +129,14 @@ const App = () => {
   }, [isAdmin]);
   const { settings: siteSettings } = useSiteSettings();
   const maintenanceMode = siteSettings.maintenance_mode === "true";
+
+  // Site-wide seasonal theme (Admin Panel -> Theme). Applied to <html> as a
+  // data attribute that src/themes.css keys off, and shared with the logo and
+  // effects components through the tiny store in lib/siteThemes.ts.
+  const activeSiteTheme = normalizeSiteTheme(siteSettings.site_theme);
+  useEffect(() => {
+    setActiveSiteTheme(activeSiteTheme);
+  }, [activeSiteTheme]);
   const isPopupLoginRoute =
     typeof window !== "undefined" && window.location.pathname === "/admin-login";
   const isDownloadRoute =
@@ -168,6 +179,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <LiquidGlassDefs />
+          <ThemeEffects />
           <OfflineGate />
           <AnalyticsTracker />
           <div className="min-h-screen bg-background">
@@ -199,6 +211,7 @@ const App = () => {
                     <Route path="/shipping-returns" element={<ShippingReturns />} />
                     <Route path="/staff" element={<Staff isAdmin={effectiveIsAdmin} />} />
                     <Route path="/credits" element={<Credits isAdmin={effectiveIsAdmin} />} />
+                    <Route path="/appeal" element={<Appeal />} />
                     <Route path="/faq" element={<FAQ isAdmin={effectiveIsAdmin} />} />
                     <Route path="/policy/privacy" element={<PrivacyPolicy />} />
                     <Route path="/policy/cookie" element={<CookiePolicy />} />
