@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react";
+
 // Tiny store for the site-wide seasonal theme (Admin Panel -> Theme).
 //
 // App.tsx reads `site_theme` from the site settings, normalises it here, and
