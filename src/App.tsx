@@ -12,8 +12,6 @@ import { LoadingDots } from "@/components/LoadingDots";
 import { Home } from "./pages/Home";
 import { CartProvider } from "@/hooks/use-cart";
 import { useSiteSettings } from "@/hooks/use-site-settings";
-import { ThemeEffects } from "@/components/ThemeEffects";
-import { normalizeSiteTheme, setActiveSiteTheme } from "@/lib/siteThemes";
 
 const Roster = lazy(() => import("./pages/Roster").then((m) => ({ default: m.Roster })));
 const Players = lazy(() => import("./pages/Players").then((m) => ({ default: m.Players })));
@@ -130,13 +128,6 @@ const App = () => {
   const { settings: siteSettings } = useSiteSettings();
   const maintenanceMode = siteSettings.maintenance_mode === "true";
 
-  // Site-wide seasonal theme (Admin Panel -> Theme). Applied to <html> as a
-  // data attribute that src/themes.css keys off, and shared with the logo and
-  // effects components through the tiny store in lib/siteThemes.ts.
-  const activeSiteTheme = normalizeSiteTheme(siteSettings.site_theme);
-  useEffect(() => {
-    setActiveSiteTheme(activeSiteTheme);
-  }, [activeSiteTheme]);
   const isPopupLoginRoute =
     typeof window !== "undefined" && window.location.pathname === "/admin-login";
   const isDownloadRoute =
@@ -179,7 +170,6 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <LiquidGlassDefs />
-          <ThemeEffects />
           <OfflineGate />
           <AnalyticsTracker />
           <div className="min-h-screen bg-background">
